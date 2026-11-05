@@ -24,3 +24,16 @@ UI_EMO_NETRAL,netral,neutral
 UI_TOKO_KATA,Kata baru,New words
 UI_TOKO_TEMPLATE,Template baru,New templates
 UI_TOKO_KOSONG,Semua sudah dibeli,Everything is bought
+UI_PENGIKUT,Pengikut: %s,Followers: %s
+UI_KRED_HEAT,Kred %d · Panas %d,Cred %d · Heat %d
+UI_SEMUA_DISTRIK,Semua distrik,All districts
+UI_BIAYA,biaya %s,cost %s
+UI_HOAKS,HOAKS! %s,HOAX! %s
+UI_DIBONGKAR,Dibongkar! Kredibilitas -%d,Debunked! Credibility -%d
+UI_MUTASI,Mutasi: %s,Mutated: %s
+UI_MISI,Misi: %s,Mission: %s
+UI_MISI_SELESAI,Misi selesai: %s,Mission complete: %s
+UI_MISI_HABIS,Semua misi selesai,All missions complete
+UI_TERKUNCI,%s (%d pengikut),%s (%d followers)
+UI_SISA_DETIK,%d dtk,%ds
+UI_PEMBONGKAR,%d warga jadi kebal,%d citizens became immune

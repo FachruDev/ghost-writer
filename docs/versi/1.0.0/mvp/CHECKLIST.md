@@ -55,34 +55,34 @@ Semua pakai kotak abu-abu dan teks polos. **Jangan sentuh art.**
 
 **Konten**
 
-- [ ] ±40 kata (10 per kategori)
-- [ ] 3 template
-- [ ] 3 distrik (Pasar Lama, Kompleks Hijau, Gang Sempit)
-- [ ] 2 saluran: Merpati dan Koran
+- [x] ±40 kata (10 per kategori)
+- [x] 3 template
+- [x] 3 distrik (Pasar Lama, Kompleks Hijau, Gang Sempit)
+- [x] 2 saluran: Merpati dan Koran
 
 **Sistem**
 
-- [ ] Kredibilitas (0–100) dan heat (0–100)
-- [ ] Status warga **kebal** (biru)
-- [ ] Mutasi rumor (satu kata berganti saat menyebar)
-- [ ] Feed headline yang sedang beredar
-- [ ] Pengikut sebagai mata uang kedua
-- [ ] Misi sederhana (minimal 5 misi berurutan)
+- [x] Kredibilitas (0–100) dan heat (0–100)
+- [x] Status warga **kebal** (biru)
+- [x] Mutasi rumor (satu kata berganti saat menyebar)
+- [x] Feed headline yang sedang beredar
+- [x] Pengikut sebagai mata uang kedua
+- [x] Misi sederhana (minimal 5 misi berurutan)
 
 **Save dasar** (lihat [ADR-0002](../../../architecture/adr-0002-backend-save.md))
 
-- [ ] `SaveSystem`: `user://save.json` dengan tulis atomik (`.tmp` → `.bak`), `versi_skema`, migrasi
-- [ ] `GameState.ke_dict()` / `dari_dict()`; riwayat menyimpan `template_id` + `kata_ids`
-- [ ] Autosave tiap 30 detik dan saat aplikasi dijeda; rumor yang sedang menjalar disimpan sebagai proyeksi ([ADR-0003](../../../architecture/adr-0003-model-waktu.md))
-- [ ] Pengaturan (bahasa) di `user://settings.cfg`
+- [x] `SaveSystem`: `user://save.json` dengan tulis atomik (`.tmp` → `.bak`), `versi_skema`, migrasi
+- [x] `GameState.ke_dict()` / `dari_dict()`; riwayat menyimpan `template_id` + `kata_ids`
+- [x] Autosave tiap 30 detik dan saat aplikasi dijeda; rumor yang sedang menjalar disimpan sebagai proyeksi ([ADR-0003](../../../architecture/adr-0003-model-waktu.md))
+- [x] Pengaturan (bahasa) di `user://settings.cfg`
 
 **Event** (lihat [EVENT.md](../event/EVENT.md))
 
-- [ ] `event_system.gd` + `events.json`
-- [ ] Banner event di atas peta
-- [ ] E01 Hari Pasar
-- [ ] E02 Ronda Malam
-- [ ] E03 Pembongkar Fakta
+- [x] `event_controller.gd` + `events.json`
+- [x] Banner event di atas peta
+- [x] E01 Hari Pasar
+- [x] E02 Ronda Malam
+- [x] E03 Pembongkar Fakta
 
 **Suara dasar** (lihat [suara.md](../aset/suara.md))
 
@@ -97,11 +97,11 @@ Semua pakai kotak abu-abu dan teks polos. **Jangan sentuh art.**
 
 **Animasi dasar** (lihat [animasi.md](../aset/animasi.md))
 
-- [ ] Mesin tik mengetik headline per huruf
-- [ ] Kartu terbang ke slot
-- [ ] Titik warga berdenyut saat tertular
-- [ ] Angka uang melayang
-- [ ] Banner event masuk/keluar
+- [x] Mesin tik mengetik headline per huruf
+- [x] Kartu terbang ke slot
+- [x] Titik warga berdenyut saat tertular
+- [x] Angka uang melayang
+- [x] Banner event masuk/keluar
 
 **Uji**
 

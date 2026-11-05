@@ -1,0 +1,6 @@
+[
+  {"id": "merpati", "jenis": "saluran", "nama": {"id": "Merpati", "en": "Pigeon"},
+   "biaya_kirim": 0, "cakupan": "satu", "warga_awal": [1, 3], "pengali_heat": 1.0, "pengikut_min": 0},
+  {"id": "koran", "jenis": "saluran", "nama": {"id": "Koran", "en": "Newspaper"},
+   "biaya_kirim": 30, "cakupan": "semua", "warga_awal": [2, 2], "pengali_heat": 1.3, "pengikut_min": 100}
+]

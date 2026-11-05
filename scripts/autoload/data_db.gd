@@ -4,16 +4,46 @@ extends Node
 const PATH_WORDS := "res://data/words.json"
 const PATH_TEMPLATES := "res://data/templates.json"
 const PATH_DISTRICTS := "res://data/districts.json"
+const PATH_UPGRADES := "res://data/upgrades.json"
+const PATH_MISSIONS := "res://data/missions.json"
+const PATH_EVENTS := "res://data/events.json"
 
 var words: Dictionary = {}
 var templates: Dictionary = {}
 var districts: Array[Dictionary] = []
+var upgrades: Dictionary = {}
+var missions: Array[Dictionary] = []
+var events: Array[Dictionary] = []
 
 
 func _ready() -> void:
 	words = _index(_muat(PATH_WORDS))
 	templates = _index(_muat(PATH_TEMPLATES))
 	districts.assign(_muat(PATH_DISTRICTS))
+	upgrades = _index(_muat(PATH_UPGRADES))
+	missions.assign(_muat(PATH_MISSIONS))
+	events.assign(_muat(PATH_EVENTS))
+
+
+func get_upgrade(id: String) -> Dictionary:
+	return upgrades.get(id, {})
+
+
+## Saluran sesuai urutan di upgrades.json.
+func saluran() -> Array[Dictionary]:
+	var hasil: Array[Dictionary] = []
+	for id in upgrades:
+		if str(upgrades[id].get("jenis", "")) == "saluran":
+			hasil.append(upgrades[id])
+	return hasil
+
+
+func kata_per_slot(slot: String) -> Array[String]:
+	var hasil: Array[String] = []
+	for id in words:
+		if str(words[id].get("slot", "")) == slot:
+			hasil.append(id)
+	return hasil
 
 
 func get_word(id: String) -> Dictionary:

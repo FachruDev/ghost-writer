@@ -11,6 +11,11 @@ var posisi := PackedVector2Array()
 var distrik_warga := PackedInt32Array()
 var status := PackedInt32Array()
 var warga_per_distrik: Array[PackedInt32Array] = []
+## Waktu simulasi (detik) saat status tiap warga terakhir berubah; untuk animasi denyut.
+var terakhir_berubah := PackedFloat32Array()
+var jam := 0.0
+## E12 mematikan pemulihan kebal.
+var kebal_bisa_pulih := true
 
 var _tetangga: Array[PackedInt32Array] = []
 var _kerentanan := PackedFloat32Array()
@@ -19,6 +24,7 @@ var _rng: RandomNumberGenerator
 # Keadaan rumor yang sedang menjalar
 var _aktif := false
 var _dengar := PackedByteArray()
+var _percaya_rumor := PackedByteArray()
 var _sisa_menular := PackedFloat32Array()
 var _viral := PackedFloat32Array()
 var _peluang_percaya := 0.0
@@ -26,8 +32,10 @@ var _waktu := 0.0
 var _waktu_diam := 0.0
 
 
-func _init(distrik_list: Array, rng: RandomNumberGenerator) -> void:
+func _init(distrik_list: Array = [], rng: RandomNumberGenerator = null) -> void:
 	_rng = rng
+	if distrik_list.is_empty():
+		return
 	for i in distrik_list.size():
 		var d: Dictionary = distrik_list[i]
 		_kerentanan.append(float(d.get("kerentanan", 1.0)))
@@ -42,7 +50,10 @@ func _init(distrik_list: Array, rng: RandomNumberGenerator) -> void:
 			status.append(Status.BELUM)
 		warga_per_distrik.append(daftar)
 	_dengar.resize(posisi.size())
+	_percaya_rumor.resize(posisi.size())
 	_sisa_menular.resize(posisi.size())
+	terakhir_berubah.resize(posisi.size())
+	terakhir_berubah.fill(-100.0)
 	_bangun_tetangga()
 
 
@@ -67,33 +78,38 @@ func jumlah_status(distrik: int, s: Status) -> int:
 	return n
 
 
-## Memulai rumor di distrik target. Mengembalikan jumlah warga awal yang percaya.
-func mulai(target: int, viral_per_distrik: PackedFloat32Array, peluang_percaya: float) -> int:
+## benih: {indeks_distrik: jumlah warga awal}. Mengembalikan jumlah warga awal yang percaya.
+func mulai(benih: Dictionary, viral_per_distrik: PackedFloat32Array, peluang_percaya: float) -> int:
 	_aktif = true
 	_dengar.fill(0)
+	_percaya_rumor.fill(0)
 	_sisa_menular.fill(0.0)
 	_viral = viral_per_distrik
 	_peluang_percaya = peluang_percaya
 	_waktu = 0.0
 	_waktu_diam = 0.0
-	var kandidat: Array[int] = []
-	for i in warga_per_distrik[target]:
-		if status[i] != Status.KEBAL:
-			kandidat.append(i)
-	var jumlah := mini(_rng.randi_range(Balance.WARGA_AWAL_MIN, Balance.WARGA_AWAL_MAKS), kandidat.size())
-	for n in jumlah:
-		var i: int = kandidat.pop_at(_rng.randi_range(0, kandidat.size() - 1))
-		_percaya(i)
-	if jumlah == 0:
+	var total := 0
+	for d in benih:
+		var kandidat: Array[int] = []
+		for i in warga_per_distrik[d]:
+			if status[i] != Status.KEBAL:
+				kandidat.append(i)
+		for n in mini(int(benih[d]), kandidat.size()):
+			_percaya(kandidat.pop_at(_rng.randi_range(0, kandidat.size() - 1)))
+			total += 1
+	if total == 0:
 		_aktif = false
-	return jumlah
+	return total
 
 
-## Satu tick simulasi. Mengembalikan {"baru_dengar", "baru_percaya", "selesai"}.
+## Satu tick simulasi. Mengembalikan {"baru_dengar", "baru_percaya", "percaya_per_distrik", "selesai"}.
 func langkah(dt: float) -> Dictionary:
-	_pulihkan_ragu(dt)
+	jam += dt
+	_pulihkan(dt)
+	var per_distrik := PackedInt32Array()
+	per_distrik.resize(warga_per_distrik.size())
 	if not _aktif:
-		return {"baru_dengar": 0, "baru_percaya": 0, "selesai": false}
+		return {"baru_dengar": 0, "baru_percaya": 0, "percaya_per_distrik": per_distrik, "selesai": false}
 	_waktu += dt
 	var baru_dengar := 0
 	var baru_percaya := 0
@@ -116,9 +132,10 @@ func langkah(dt: float) -> Dictionary:
 			if _rng.randf() < p:
 				_percaya(j)
 				baru_percaya += 1
+				per_distrik[d] += 1
 			else:
 				_dengar[j] = 1
-				status[j] = Status.RAGU
+				_ubah(j, Status.RAGU)
 				_sisa_menular[j] = Balance.DURASI_MENULAR_RAGU_DETIK
 	_waktu_diam = 0.0 if baru_dengar > 0 else _waktu_diam + dt
 	var selesai := _waktu >= Balance.RUMOR_MAKS_DETIK \
@@ -127,13 +144,84 @@ func langkah(dt: float) -> Dictionary:
 	if selesai:
 		_aktif = false
 		_sisa_menular.fill(0.0)
-	return {"baru_dengar": baru_dengar, "baru_percaya": baru_percaya, "selesai": selesai}
+	return {"baru_dengar": baru_dengar, "baru_percaya": baru_percaya, "percaya_per_distrik": per_distrik, "selesai": selesai}
+
+
+## Rumor dibongkar: sebagian warga yang percaya rumor terakhir jadi kebal. Mengembalikan jumlahnya.
+func kebalkan_rumor(persen: float) -> int:
+	var n := 0
+	for i in posisi.size():
+		if _percaya_rumor[i] == 1 and status[i] == Status.PERCAYA and _rng.randf() < persen:
+			_ubah(i, Status.KEBAL)
+			n += 1
+	return n
+
+
+## Pembongkar fakta: semua warga dalam radius (koordinat kota) jadi kebal.
+func kebalkan_sekitar(pusat: Vector2, radius: float) -> int:
+	var n := 0
+	for i in posisi.size():
+		if status[i] != Status.KEBAL and posisi[i].distance_to(pusat) <= radius:
+			_ubah(i, Status.KEBAL)
+			n += 1
+	return n
+
+
+## Membangkitkan status warga dari jumlah tersimpan (ADR-0002: posisi tidak disimpan).
+func terapkan_jumlah(distrik: int, percaya: int, ragu: int, kebal: int) -> void:
+	var urut: Array = Array(warga_per_distrik[distrik])
+	urut.shuffle()
+	for k in urut.size():
+		var s := Status.BELUM
+		if k < percaya:
+			s = Status.PERCAYA
+		elif k < percaya + ragu:
+			s = Status.RAGU
+		elif k < percaya + ragu + kebal:
+			s = Status.KEBAL
+		status[urut[k]] = s
+
+
+## Salinan lengkap termasuk state RNG, untuk proyeksi saat menyimpan (ADR-0003).
+func duplikat() -> SpreadSim:
+	var rng := RandomNumberGenerator.new()
+	rng.seed = _rng.seed
+	rng.state = _rng.state
+	var s := SpreadSim.new([], rng)
+	for nama in ["posisi", "distrik_warga", "status", "terakhir_berubah", "jam", "kebal_bisa_pulih",
+			"_tetangga", "_kerentanan", "_aktif", "_dengar", "_percaya_rumor", "_sisa_menular",
+			"_viral", "_peluang_percaya", "_waktu", "_waktu_diam"]:
+		var v: Variant = get(nama)
+		s.set(nama, v.duplicate() if v is Array or v is PackedByteArray or v is PackedInt32Array \
+			or v is PackedFloat32Array or v is PackedVector2Array else v)
+	s.warga_per_distrik = warga_per_distrik
+	return s
+
+
+## Jalankan sampai rumor selesai. Mengembalikan total warga baru yang percaya.
+func jalankan_sampai_selesai(batas_tick: int) -> int:
+	var total := 0
+	var n := 0
+	while _aktif and n < batas_tick:
+		total += int(langkah(Balance.SIM_TICK)["baru_percaya"])
+		n += 1
+	return total
+
+
+func rng() -> RandomNumberGenerator:
+	return _rng
 
 
 func _percaya(i: int) -> void:
 	_dengar[i] = 1
-	status[i] = Status.PERCAYA
+	_percaya_rumor[i] = 1
+	_ubah(i, Status.PERCAYA)
 	_sisa_menular[i] = Balance.DURASI_MENULAR_DETIK
+
+
+func _ubah(i: int, s: Status) -> void:
+	status[i] = s
+	terakhir_berubah[i] = jam
 
 
 func _masih_ada_penular() -> bool:
@@ -143,10 +231,13 @@ func _masih_ada_penular() -> bool:
 	return false
 
 
-func _pulihkan_ragu(dt: float) -> void:
-	var p := Balance.RAGU_PULIH_PER_DETIK * dt
+func _pulihkan(dt: float) -> void:
+	var p_ragu := Balance.RAGU_PULIH_PER_DETIK * dt
+	var p_kebal := Balance.KEBAL_PULIH_PER_DETIK * dt if kebal_bisa_pulih else 0.0
 	for i in status.size():
-		if status[i] == Status.RAGU and _rng.randf() < p:
+		if status[i] == Status.RAGU and _sisa_menular[i] <= 0.0 and _rng.randf() < p_ragu:
+			status[i] = Status.BELUM
+		elif status[i] == Status.KEBAL and _rng.randf() < p_kebal:
 			status[i] = Status.BELUM
 
 

@@ -1,0 +1,6 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/desk/channel_picker.gd" id="1"]
+
+[node name="ChannelPicker" type="HBoxContainer"]
+script = ExtResource("1")

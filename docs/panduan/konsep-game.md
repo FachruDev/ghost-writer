@@ -121,6 +121,16 @@ Heat dan kredibilitas berada di 0–100; kredibilitas mulai di 50. Ambang event:
 
 Contoh: headline heboh 8 dengan `dipercaya_akhir` 0,4 menambah heat ±9 dan punya peluang bongkar ±0,26 saat heat 20. Headline heboh 3 dengan `dipercaya_akhir` 0,9 hanya menambah ±2 dengan peluang bongkar ±0,04. Rumor heboh menyebar cepat tapi mahal; rumor kredibel lambat tapi aman.
 
+### Saluran, pengikut, misi, mutasi (MVP)
+
+| Sistem | Aturan |
+| --- | --- |
+| Merpati | Gratis. Satu distrik pilihan, 1–3 warga awal |
+| Koran | 30 uang per kiriman. Semua distrik sekaligus, 2 warga awal per distrik, heat ×1,3. Terbuka di 100 pengikut |
+| Pengikut | +1 per 5 warga percaya dari rumor yang **tidak** dibongkar; +3 per mutasi. Tidak dibelanjakan: mencapai ambang membuka hal baru (100 → Koran, 300 → E04 di 0.3.0) |
+| Misi | Lima misi berurutan, sekaligus tutorial ringan: kirim rumor pertama (+20 uang), yakinkan 20 warga sekaligus (+30), beli 2 kata (+30), kirim rumor *takut* ke Gang Sempit (+40), capai 100 pengikut (+50, Koran terbuka). Isi di `data/missions.json` |
+| Mutasi | Setiap warga yang tertular punya peluang 2% memicu mutasi: satu kata diganti kata lain dari slot yang sama (dari semua kata). Versi mutasi tampil di feed dan memberi +3 pengikut; skor rumor tidak berubah |
+
 Peluang "per detik simulasi" dihitung per tick sebagai `peluang × SIM_TICK` ([ADR-0003](../architecture/adr-0003-model-waktu.md)).
 
 Angka-angka ini hanya titik awal. Taruh semuanya sebagai konstanta di satu file (`balance.gd`) supaya mudah diubah saat playtest.

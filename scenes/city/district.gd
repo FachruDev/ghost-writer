@@ -47,8 +47,13 @@ func _draw() -> void:
 	var ukuran_kota := size / area.size
 	for i in _sim.warga_per_distrik[indeks]:
 		var p := _sim.posisi[i] * ukuran_kota - position
+		var warna_warga: Color = Palet.STATUS[_sim.status[i]]
 		var r := RADIUS_MENULAR if _sim.sedang_menular(i) else RADIUS_WARGA
-		draw_circle(p, r, Palet.STATUS[_sim.status[i]])
+		draw_circle(p, r, warna_warga)
+		var umur := _sim.jam - _sim.terakhir_berubah[i]
+		if umur < Balance.DURASI_DENYUT_DETIK:
+			var t := umur / Balance.DURASI_DENYUT_DETIK
+			draw_arc(p, r + 4.0 + t * 12.0, 0.0, TAU, 20, Color(warna_warga, 1.0 - t), 2.0)
 
 
 func _gui_input(event: InputEvent) -> void:

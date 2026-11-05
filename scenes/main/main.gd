@@ -1,5 +1,6 @@
 extends Control
 ## Layout portrait: HUD, peta kota, mesin tik, tangan kartu (struktur-project.md).
+## Juga menghubungkan pengendali rumor, misi, event, dan save.
 
 const HUD := preload("res://scenes/ui/hud.tscn")
 const CITY := preload("res://scenes/city/city.tscn")
@@ -8,7 +9,7 @@ const HAND := preload("res://scenes/hand/hand.tscn")
 const SHOP := preload("res://scenes/ui/shop.tscn")
 
 const UKURAN_FONT := 24
-const RASIO := {"hud": 0.08, "city": 0.45, "desk": 0.24, "hand": 0.23}
+const RASIO := {"hud": 0.1, "city": 0.43, "desk": 0.27, "hand": 0.2}
 
 
 func _ready() -> void:
@@ -19,9 +20,18 @@ func _ready() -> void:
 	latar.color = Palet.LATAR
 	latar.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(latar)
-	var controller := RumorController.new()
-	controller.name = "RumorController"
-	add_child(controller)
+	var rumor := RumorController.new()
+	rumor.name = "RumorController"
+	add_child(rumor)
+	var event := EventController.new()
+	event.name = "EventController"
+	event.sim = rumor.sim
+	rumor.pengali_event = event.pengali_viral
+	add_child(event)
+	var misi := MissionController.new()
+	misi.name = "MissionController"
+	add_child(misi)
+	SaveSystem.sumber_snapshot = rumor.snapshot_untuk_save
 	var tepi := MarginContainer.new()
 	tepi.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	for sisi in ["margin_left", "margin_right", "margin_top", "margin_bottom"]:
@@ -32,7 +42,7 @@ func _ready() -> void:
 	tepi.add_child(tata)
 	_tambah(tata, HUD.instantiate(), RASIO["hud"])
 	var kota := _tambah(tata, CITY.instantiate(), RASIO["city"])
-	kota.atur_sim(controller.sim)
+	kota.atur_sim(rumor.sim)
 	_tambah(tata, DESK.instantiate(), RASIO["desk"])
 	_tambah(tata, HAND.instantiate(), RASIO["hand"])
 	add_child(SHOP.instantiate())

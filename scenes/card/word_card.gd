@@ -19,7 +19,13 @@ func _ready() -> void:
 	_nama = _label(kotak, 20)
 	_nama.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	_info = _label(kotak, 16)
-	pressed.connect(func() -> void: Events.kartu_dipilih.emit(kata_id))
+	pressed.connect(func() -> void:
+		pivot_offset = size / 2.0
+		var t := create_tween()
+		t.tween_property(self, "scale", Vector2(0.95, 0.95), 0.05)
+		t.tween_property(self, "scale", Vector2.ONE, 0.05)
+		Events.kartu_terbang.emit(kata_id, global_position + size / 2.0)
+		Events.kartu_dipilih.emit(kata_id))
 	_segarkan()
 
 

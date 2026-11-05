@@ -10,15 +10,22 @@ res://
     words.json        # semua kartu kata (teks per bahasa)
     templates.json    # pola headline per bahasa
     districts.json    # distrik dan profil emosi
-    upgrades.json     # saluran, staf, era
+    upgrades.json     # saluran (Merpati, Koran); nanti staf, era
+    missions.json     # misi berurutan
     events.json       # event (lihat EVENT.md)
   localization/
     ui.csv            # teks UI: keys,id,en
   scenes/
     main/main.tscn          # layout portrait: HUD, kota, meja, tangan
+    main/rumor_controller.gd    # alur satu rumor: kirim, menjalar, mutasi, konsekuensi
+    main/event_controller.gd    # event kota (EVENT.md)
+    main/mission_controller.gd  # misi berurutan
     city/city.tscn          # peta + titik warga
     city/district.tscn
+    city/feed.tscn          # feed headline yang beredar
+    city/event_banner.tscn  # banner event
     desk/desk.tscn          # mesin tik + slot template
+    desk/channel_picker.tscn    # pilihan saluran
     hand/hand.tscn          # deretan kartu
     card/word_card.tscn
     ui/hud.tscn
@@ -34,6 +41,9 @@ res://
     systems/rumor_scorer.gd  # hitung viral & dipercaya
     systems/spread_sim.gd    # simulasi penyebaran per tick
     systems/economy.gd       # pendapatan, harga, upgrade
+    systems/konsekuensi.gd   # heat, pembongkaran, kredibilitas, pengikut
+    systems/mutasi.gd        # ganti satu kata saat menyebar
+    ui/palet.gd              # warna prototipe
     systems/headline_builder.gd  # susun headline dari template_id + kata_ids
   tests/                     # tes gdUnit4
   assets/

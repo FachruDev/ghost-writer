@@ -61,5 +61,26 @@
   {"id": "anak_bu_lurah", "slot": "sumber", "emosi": "iri", "heboh": 2, "kred": 1, "harga": 60,
    "text": {"id": "anak Bu Lurah", "en": "the Village Head's kid"}},
   {"id": "orang_dalam", "slot": "sumber", "emosi": "marah", "heboh": 2, "kred": 3, "harga": 120,
-   "text": {"id": "orang dalam", "en": "an insider"}}
+   "text": {"id": "orang dalam", "en": "an insider"}},
+
+  {"id": "ketua_ronda", "slot": "subjek", "emosi": "takut", "heboh": 1, "kred": 2, "harga": 60,
+   "text": {"id": "ketua ronda", "en": "the night-watch captain"}},
+  {"id": "mantan_pacar", "slot": "subjek", "emosi": "iri", "heboh": 2, "kred": 1, "harga": 80,
+   "text": {"id": "mantan pacar Bu Lurah", "en": "the Village Head's ex"}},
+  {"id": "grup_rahasia", "slot": "aksi", "emosi": "iri", "heboh": 2, "kred": 2, "harga": 70,
+   "text": {"id": "bikin grup WA rahasia", "en": "running a secret group chat"}},
+  {"id": "pelihara_buaya", "slot": "aksi", "emosi": "takut", "heboh": 3, "kred": 1, "harga": 90,
+   "text": {"id": "memelihara buaya", "en": "keeping a crocodile"}},
+  {"id": "gorong_gorong", "slot": "tempat", "emosi": "takut", "heboh": 2, "kred": 1, "harga": 70,
+   "text": {"id": "gorong-gorong", "en": "the storm drain"}},
+  {"id": "pesta_nikahan", "slot": "tempat", "emosi": "iri", "heboh": 1, "kred": 2, "harga": 50,
+   "text": {"id": "pesta nikahan", "en": "a wedding party"}},
+  {"id": "balai_warga", "slot": "tempat", "emosi": "netral", "heboh": 0, "kred": 3, "harga": 40,
+   "text": {"id": "balai warga", "en": "the community hall"}},
+  {"id": "akun_gosip", "slot": "sumber", "emosi": "lucu", "heboh": 2, "kred": 0, "harga": 40,
+   "text": {"id": "akun gosip", "en": "a gossip account"}},
+  {"id": "rt_sebelah", "slot": "sumber", "emosi": "marah", "heboh": 1, "kred": 2, "harga": 60,
+   "text": {"id": "Pak RT sebelah", "en": "the next block's chief"}},
+  {"id": "dokter_puskesmas", "slot": "sumber", "emosi": "netral", "heboh": 0, "kred": 3, "harga": 100,
+   "text": {"id": "dokter puskesmas", "en": "the clinic doctor"}}
 ]

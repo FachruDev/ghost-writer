@@ -4,7 +4,7 @@ Event membuat setiap sesi terasa berbeda: kota tidak diam menunggu rumor pemain,
 
 ## Cara kerja
 
-Semua event adalah data di `res://data/events.json`, dijalankan oleh `scripts/systems/event_system.gd`. Menambah event baru cukup menambah satu entri JSON, kecuali event dengan efek khusus.
+Semua event adalah data di `res://data/events.json`, dijalankan oleh `scenes/main/event_controller.gd`. Menambah event baru cukup menambah satu entri JSON, kecuali event dengan efek khusus.
 
 | Jenis | Cara muncul | Contoh |
 | --- | --- | --- |
@@ -63,9 +63,9 @@ Contoh event dilema (`pilihan` diisi):
 
 | ID | Nama | Jenis | Era | Pemicu | Efek singkat | Masuk di versi | Status |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| E01 | Hari Pasar | Modifier | 1 | Acak | Kerentanan Pasar Lama ×1,5 selama 60 dtk | 0.2.0 (MVP) | Belum |
-| E02 | Ronda Malam | Modifier | 1 | Acak | Rumor emosi *takut* ×1,5 di Gang Sempit, emosi *lucu* ×0,7 | 0.2.0 (MVP) | Belum |
-| E03 | Pembongkar Fakta | Ancaman | 1 | Heat ≥ 70 | Warga di sekitar pembongkar jadi kebal; kredibilitas −10 | 0.2.0 (MVP) | Belum |
+| E01 | Hari Pasar | Modifier | 1 | Acak | Kerentanan Pasar Lama ×1,5 selama 60 dtk | 0.2.0 (MVP) | Selesai |
+| E02 | Ronda Malam | Modifier | 1 | Acak | Rumor emosi *takut* ×1,5 di Gang Sempit, emosi *lucu* ×0,7 | 0.2.0 (MVP) | Selesai |
+| E03 | Pembongkar Fakta | Ancaman | 1 | Heat ≥ 70 | Warga di sekitar pembongkar jadi kebal; kredibilitas −10 | 0.2.0 (MVP) | Selesai |
 | E04 | Pemilihan Ketua RT | Peluang | 1 | Milestone 300 pengikut | Rumor tentang kandidat fiktif bernilai ×2, heat naik ×1,5 | 0.3.0 | Belum |
 | E05 | Wartawan Penasaran | Dilema | 2 | Acak, heat ≥ 40 | Bayar (uang −, heat −) atau abaikan (heat +, pengikut +) | 0.3.0 | Belum |
 | E06 | Festival Kampung | Modifier | 2 | Acak | Semua distrik kerentanan ×1,2, uang per warga ×1,5 | 0.3.0 | Belum |

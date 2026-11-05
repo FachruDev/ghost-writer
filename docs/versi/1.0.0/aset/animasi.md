@@ -4,13 +4,13 @@ Sebagian besar animasi cukup memakai **Tween** (gerak, skala, warna, transparans
 
 | ID | Kapan | Cara di Godot | Durasi | Versi | Status |
 | --- | --- | --- | --- | --- | --- |
-| anim_typewriter | Headline diketik setelah KIRIM | `Label.visible_ratio` / `visible_characters` + SFX per huruf | 1–2 dtk | 0.2.0 | Belum |
-| anim_card_to_slot | Kartu dipilih | Tween posisi dari tangan ke slot + sedikit rotasi | 0,2 dtk | 0.2.0 | Belum |
-| anim_card_press | Kartu disentuh | Tween skala 1,0 → 0,95 → 1,0 | 0,1 dtk | 0.2.0 | Belum |
-| anim_citizen_pulse | Warga tertular | Lingkaran membesar & memudar di titik warga | 0,3 dtk | 0.2.0 | Belum |
-| anim_money_float | Uang masuk | Label "+Rp" naik dan memudar | 0,6 dtk | 0.2.0 | Belum |
-| anim_event_banner | Event mulai/selesai | Banner turun dari atas, naik saat selesai | 0,3 dtk | 0.2.0 | Belum |
-| anim_debunk_stamp | Pembongkar fakta beraksi | Stempel HOAKS skala 2 → 1 + getar layar kecil | 0,25 dtk | 0.2.0 | Belum |
+| anim_typewriter | Headline diketik setelah KIRIM | `Label.visible_ratio` / `visible_characters` + SFX per huruf | 1–2 dtk | 0.2.0 | Selesai |
+| anim_card_to_slot | Kartu dipilih | Tween posisi dari tangan ke slot + sedikit rotasi | 0,2 dtk | 0.2.0 | Selesai |
+| anim_card_press | Kartu disentuh | Tween skala 1,0 → 0,95 → 1,0 | 0,1 dtk | 0.2.0 | Selesai |
+| anim_citizen_pulse | Warga tertular | Lingkaran membesar & memudar di titik warga | 0,3 dtk | 0.2.0 | Selesai |
+| anim_money_float | Uang masuk | Label "+Rp" naik dan memudar | 0,6 dtk | 0.2.0 | Selesai |
+| anim_event_banner | Event mulai/selesai | Banner turun dari atas, naik saat selesai | 0,3 dtk | 0.2.0 | Selesai |
+| anim_debunk_stamp | Pembongkar fakta beraksi | Stempel HOAKS skala 2 → 1 + getar layar kecil | 0,25 dtk | 0.2.0 | Selesai |
 | anim_send_paper | Rumor dikirim | Kertas/merpati terbang dari meja ke peta | 0,5 dtk | 0.3.0 | Belum |
 | anim_headline_mutate | Rumor bermutasi | Kata di feed berkedip lalu berganti | 0,4 dtk | 0.3.0 | Belum |
 | anim_shop_open | Toko dibuka | Panel meluncur dari bawah | 0,25 dtk | 0.3.0 | Belum |

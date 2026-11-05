@@ -22,6 +22,7 @@ DataDB="*res://scripts/autoload/data_db.gd"
 Bahasa="*res://scripts/autoload/bahasa.gd"
 GameClock="*res://scripts/autoload/game_clock.gd"
 GameState="*res://scripts/autoload/game_state.gd"
+SaveSystem="*res://scripts/autoload/save_system.gd"
 
 [display]
 

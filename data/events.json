@@ -1,0 +1,41 @@
+[
+  {
+    "id": "e_hari_pasar",
+    "nama": {"id": "Hari Pasar", "en": "Market Day"},
+    "jenis": "modifier",
+    "era_min": 1,
+    "pemicu": {"tipe": "acak", "peluang": 0.15},
+    "durasi": 60,
+    "teks": {"id": "Pasar Lama sedang ramai. Gosip menyebar lebih cepat di sana!",
+             "en": "The Old Market is packed. Gossip spreads faster there!"},
+    "efek": [{"tipe": "kerentanan_distrik", "distrik": "pasar_lama", "kali": 1.5}],
+    "pilihan": []
+  },
+  {
+    "id": "e_ronda_malam",
+    "nama": {"id": "Ronda Malam", "en": "Night Watch"},
+    "jenis": "modifier",
+    "era_min": 1,
+    "pemicu": {"tipe": "acak", "peluang": 0.15},
+    "durasi": 60,
+    "teks": {"id": "Warga Gang Sempit sedang ronda. Cerita seram laku, lelucon garing.",
+             "en": "Narrow Alley is on night watch. Scary stories land, jokes fall flat."},
+    "efek": [
+      {"tipe": "emosi_distrik", "distrik": "gang_sempit", "emosi": "takut", "kali": 1.5},
+      {"tipe": "emosi_distrik", "distrik": "gang_sempit", "emosi": "lucu", "kali": 0.7}
+    ],
+    "pilihan": []
+  },
+  {
+    "id": "e_pembongkar_fakta",
+    "nama": {"id": "Pembongkar Fakta", "en": "Fact Checker"},
+    "jenis": "ancaman",
+    "era_min": 1,
+    "pemicu": {"tipe": "kondisi", "heat_min": 70},
+    "durasi": 6,
+    "teks": {"id": "Seorang pembongkar fakta turun ke jalan. Warga di sekitarnya jadi kebal!",
+             "en": "A fact checker hits the streets. Citizens nearby become immune!"},
+    "efek": [{"tipe": "pembongkar", "radius": 0.14}, {"tipe": "kredibilitas", "nilai": -10}],
+    "pilihan": []
+  }
+]

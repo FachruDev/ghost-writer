@@ -32,6 +32,36 @@ const RAGU_PULIH_PER_DETIK := 1.0 / 60.0
 ## 0.0 = hanya warga yang percaya yang menularkan.
 const DURASI_MENULAR_RAGU_DETIK := 1.0
 
+const KEBAL_PULIH_PER_DETIK := 1.0 / 180.0
+const DURASI_DENYUT_DETIK := 0.6
+
+# Konsekuensi (konsep-game.md, bagian Konsekuensi)
+const HEAT_FAKTOR_KIRIM := 1.5
+const HEAT_TURUN_PER_DETIK := 0.1
+const HEAT_DIBONGKAR := 10.0
+const BONGKAR_DASAR := 0.3
+const BONGKAR_DARI_HEAT := 0.7
+const KRED_TURUN_DIBONGKAR := 5.0
+const PERSEN_KEBAL_DIBONGKAR := 0.5
+const KRED_NAIK := 1.0
+const KRED_NAIK_MIN_DIPERCAYA := 0.7
+
+# Pengikut & mutasi
+const WARGA_PER_PENGIKUT := 5
+const PELUANG_MUTASI := 0.02
+const PENGIKUT_PER_MUTASI := 3
+
+# Event (EVENT.md)
+const EVENT_CEK_DETIK := 10.0
+const EVENT_JEDA_DETIK := 90.0
+const ANCAMAN_JEDA_DETIK := 60.0
+
 # Ekonomi
 const UANG_AWAL := 0
 const UANG_PER_WARGA := 5
+
+# Save (ADR-0002)
+const AUTOSAVE_DETIK := 30.0
+const BATAS_RIWAYAT := 200
+const BATAS_FEED := 4
+const BATAS_TICK_PROYEKSI := 300
