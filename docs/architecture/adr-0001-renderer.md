@@ -1,7 +1,7 @@
 # ADR-0001: Renderer Compatibility (GLES3)
 
 ## Status
-Proposed
+Accepted
 
 ## Date
 2026-11-05

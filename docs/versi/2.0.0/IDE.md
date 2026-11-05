@@ -5,7 +5,6 @@
 | Ide | Asal | Catatan | Nilai (setelah v1) |
 | --- | --- | --- | --- |
 | Iklan dan/atau pembelian dalam aplikasi | Di luar scope v1 | Pilih model yang tidak merusak nuansa satir; rewarded ad lebih aman dari iklan paksa | |
-| Bahasa Inggris | Di luar scope v1 | Teks sudah di file data, tinggal terjemahan + cek panjang teks di kartu | |
 | Versi PC/Steam | Di luar scope v1 | Bisa tetap portrait sebagai jendela vertikal | |
 | Cloud save | Di luar scope v1 | Butuh layanan backend atau Play Games | |
 | Leaderboard online | Di luar scope v1 | Butuh backend; nilai apa yang diadu perlu dipikirkan | |

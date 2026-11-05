@@ -8,14 +8,14 @@ Ghostwriter adalah game satir portrait untuk Android: pemain meracik rumor dari 
 
 | Hal | Keputusan |
 | --- | --- |
-| Engine | Godot 4.7 (versi project ini), GDScript, renderer Mobile |
+| Engine | Godot 4.7.2, GDScript, renderer Compatibility ([ADR-0001](../architecture/adr-0001-renderer.md)) |
 | Orientasi | Portrait, resolusi dasar 720×1280, stretch mode `canvas_items`, aspect `expand` |
 | Platform | Android dulu; PC menyusul jika v1 berhasil |
 | Gaya visual | 2D flat dan minimal: ikon, kartu, titik warga. Art bukan prioritas sampai Fase 4 |
 | Input | Tap kartu kata untuk mengisi slot template (drag opsional) |
-| Bahasa | Indonesia dulu; semua teks di file data supaya mudah diterjemahkan |
+| Bahasa | Indonesia dan Inggris; teks UI di CSV, teks konten di JSON per bahasa ([ADR-0004](../architecture/adr-0004-lokalisasi.md)) |
 | Data konten | File JSON di `res://data/` |
-| Save | SQLite di `user://ghostwriter.db` lewat plugin [godot-sqlite](https://github.com/2shady4u/godot-sqlite); konten game tetap JSON. Detail di [struktur-project.md](struktur-project.md#database-save-sqlite) |
+| Save | JSON di `user://save.json` dengan tulis atomik ([ADR-0002](../architecture/adr-0002-backend-save.md)); konten game tetap JSON. Detail di [struktur-project.md](struktur-project.md#save-json) |
 | Pengaturan | `ConfigFile` di `user://settings.cfg`, terpisah dari save supaya tidak ikut terhapus saat reset progres |
 | Judul | Ghostwriter |
 
@@ -70,4 +70,4 @@ peluang_tular (per tetangga, per tick) = viral × kerentanan_distrik × 0.02
 peluang_percaya (saat tertular)        = dipercaya
 ```
 
-Angka-angka ini hanya titik awal. Taruh semuanya sebagai konstanta di satu file (`Balance.gd`) supaya mudah diubah saat playtest.
+Angka-angka ini hanya titik awal. Taruh semuanya sebagai konstanta di satu file (`balance.gd`) supaya mudah diubah saat playtest.

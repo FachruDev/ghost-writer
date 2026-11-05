@@ -1,7 +1,7 @@
 # ADR-0003: Model Waktu Simulasi (GameClock Fixed Timestep)
 
 ## Status
-Proposed
+Accepted
 
 ## Date
 2026-11-05
@@ -95,7 +95,7 @@ penghasilan   = Economy.laju_pasif_per_detik() × detik_offline × OFFLINE_PENGA
 ### Key Interfaces
 
 ```gdscript
-# scripts/autoload/GameClock.gd
+# scripts/autoload/game_clock.gd
 signal tick(dt: float)                     # dt selalu SIM_TICK
 var kecepatan: float = 1.0                 # pengali; hanya untuk debug/tes
 func jeda(alasan: StringName) -> void      # mis. &"dilema", &"menu", &"tutorial"
@@ -104,16 +104,16 @@ func sedang_jeda() -> bool
 func jalankan_tick(n: int) -> void         # tes headless, tanpa _process
 var rng: RandomNumberGenerator             # satu sumber acak untuk simulasi
 
-# scripts/systems/SpreadSim.gd (RefCounted, tanpa node)
+# scripts/systems/spread_sim.gd (RefCounted, tanpa node)
 func langkah(dt: float) -> void
 func duplikat() -> SpreadSim
 func jalankan_sampai_selesai(batas_tick: int) -> Dictionary   # hasil akhir rumor
 func ada_rumor_aktif() -> bool
 
-# scripts/systems/Economy.gd
+# scripts/systems/economy.gd
 func laju_pasif_per_detik() -> float
 
-# scripts/systems/Balance.gd
+# scripts/systems/balance.gd
 const SIM_TICK := 0.2
 const MAKS_TICK_PER_FRAME := 5
 const BATAS_TICK_PROYEKSI := 300           # 60 detik simulasi
@@ -123,7 +123,7 @@ const OFFLINE_PENGALI := 0.5
 
 ### Implementation Guidelines
 - Logika permainan yang bergantung waktu **must** maju hanya lewat `GameClock.tick`; **must never** memakai `Timer`, `_process(delta)`, atau `get_tree().paused` untuk logika.
-- Semua durasi di data dan `Balance.gd` (durasi event, jeda 90 detik, interval staf) **must** dalam detik simulasi.
+- Semua durasi di data dan `balance.gd` (durasi event, jeda 90 detik, interval staf) **must** dalam detik simulasi.
 - Semua keacakan simulasi **must** memakai `GameClock.rng` (atau RNG yang diturunkan darinya); **must never** memakai `randf()`/`randi()` global.
 - `jeda()` dan `lanjut()` **must** memakai alasan bernama. Jam baru berjalan lagi setelah semua alasan dilepas.
 - `SpreadSim` **must** tetap berupa objek data tanpa node, supaya bisa diduplikasi dan dijalankan headless.

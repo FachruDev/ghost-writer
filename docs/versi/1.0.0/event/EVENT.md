@@ -4,7 +4,7 @@ Event membuat setiap sesi terasa berbeda: kota tidak diam menunggu rumor pemain,
 
 ## Cara kerja
 
-Semua event adalah data di `res://data/events.json`, dijalankan oleh `scripts/systems/EventSystem.gd`. Menambah event baru cukup menambah satu entri JSON, kecuali event dengan efek khusus.
+Semua event adalah data di `res://data/events.json`, dijalankan oleh `scripts/systems/event_system.gd`. Menambah event baru cukup menambah satu entri JSON, kecuali event dengan efek khusus.
 
 | Jenis | Cara muncul | Contoh |
 | --- | --- | --- |
@@ -16,21 +16,24 @@ Semua event adalah data di `res://data/events.json`, dijalankan oleh `scripts/sy
 Aturan umum:
 
 - Maksimal **1 event aktif** di satu waktu (kecuali ancaman yang dipicu kondisi).
-- Jeda minimal antar event acak: 90 detik (atur di `Balance.gd`).
+- Jeda minimal antar event acak: 90 detik (atur di `balance.gd`).
 - Setiap event tampil sebagai **banner** di atas peta + ikon jenis event + sisa durasi.
 - Event dilema **menjeda waktu** sampai pemain memilih.
 
 ## Format data
 
+Teks yang tampil ke pemain (`nama`, `teks`, `pilihan[].label`) ditulis per bahasa sesuai [ADR-0004](../../../architecture/adr-0004-lokalisasi.md). Field `en` boleh kosong sampai 0.9.0. Durasi dan jeda dalam detik simulasi ([ADR-0003](../../../architecture/adr-0003-model-waktu.md)).
+
 ```json
 {
   "id": "e_hari_pasar",
-  "nama": "Hari Pasar",
+  "nama": {"id": "Hari Pasar", "en": "Market Day"},
   "jenis": "modifier",
   "era_min": 1,
   "pemicu": {"tipe": "acak", "peluang": 0.15},
   "durasi": 60,
-  "teks": "Pasar Lama sedang ramai. Gosip menyebar lebih cepat di sana!",
+  "teks": {"id": "Pasar Lama sedang ramai. Gosip menyebar lebih cepat di sana!",
+           "en": "The Old Market is packed. Gossip spreads faster there!"},
   "efek": [{"tipe": "kerentanan_distrik", "distrik": "pasar_lama", "kali": 1.5}],
   "pilihan": []
 }
@@ -41,16 +44,17 @@ Contoh event dilema (`pilihan` diisi):
 ```json
 {
   "id": "e_wartawan",
-  "nama": "Wartawan Penasaran",
+  "nama": {"id": "Wartawan Penasaran", "en": "Curious Reporter"},
   "jenis": "dilema",
   "era_min": 2,
   "pemicu": {"tipe": "acak", "peluang": 0.08, "syarat": {"heat_min": 40}},
   "durasi": 0,
-  "teks": "Seorang wartawan mencium jejakmu. Dia mau diam... asal ada imbalan.",
+  "teks": {"id": "Seorang wartawan mencium jejakmu. Dia mau diam... asal ada imbalan.",
+           "en": "A reporter has picked up your trail. They'll stay quiet... for a price."},
   "efek": [],
   "pilihan": [
-    {"label": "Bayar dia", "efek": [{"tipe": "uang", "nilai": -200}, {"tipe": "heat", "nilai": -30}]},
-    {"label": "Abaikan", "efek": [{"tipe": "heat", "nilai": 20}, {"tipe": "pengikut", "nilai": 50}]}
+    {"label": {"id": "Bayar dia", "en": "Pay up"}, "efek": [{"tipe": "uang", "nilai": -200}, {"tipe": "heat", "nilai": -30}]},
+    {"label": {"id": "Abaikan", "en": "Ignore"}, "efek": [{"tipe": "heat", "nilai": 20}, {"tipe": "pengikut", "nilai": 50}]}
   ]
 }
 ```

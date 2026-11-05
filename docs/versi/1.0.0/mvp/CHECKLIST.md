@@ -4,14 +4,15 @@ Satu-satunya daftar centang untuk semua versi, dari setup sampai rilis. Rincian 
 
 ## Setup (sebelum 0.1.0)
 
-- [ ] Install Godot 4.7.1 (sama dengan versi yang didukung plugin godot-sqlite v4.9)
-- [ ] Pasang plugin **godot-sqlite** (AssetLib atau rilis GitHub) ke `res://addons/godot-sqlite/`, lalu restart editor
-- [ ] Buat project baru, renderer **Mobile** atau **Compatibility** (Compatibility lebih aman untuk HP kelas bawah)
-- [ ] Project Settings → Display → Window: viewport 720×1280, orientation `portrait`, stretch mode `canvas_items`, aspect `expand`
-- [ ] Buat struktur folder seperti di bagian 3
+- [x] Install Godot 4.7.2
+- [x] Project dengan renderer **Compatibility** ([ADR-0001](../../../architecture/adr-0001-renderer.md))
+- [x] Project Settings → Display → Window: viewport 720×1280, orientation `portrait`, stretch mode `canvas_items`, aspect `expand`
+- [x] Localization: fallback locale `id` ([ADR-0004](../../../architecture/adr-0004-lokalisasi.md))
+- [ ] Buat struktur folder seperti di [struktur-project.md](../../../panduan/struktur-project.md)
 - [ ] Inisialisasi git + repo GitHub (commit kecil tiap hari)
-- [ ] Siapkan Android export: Android SDK, JDK 17, export template, keystore debug
-- [ ] Uji coba: buka `user://ghostwriter.db`, buat satu tabel, simpan satu baris, lalu cek di HP Android. Pastikan plugin jalan di Android sejak awal
+- [ ] Siapkan Android export: Android SDK, JDK 17, export template, keystore debug, Android Build Template (Gradle, untuk AAB)
+- [ ] Pasang gdUnit4 (`/test-setup`) dan pastikan jalan di Godot 4.7.2
+- [ ] Uji coba: tulis dan baca `user://save.json` di HP Android
 - [ ] Ekspor scene kosong ke HP sendiri — pastikan jalan sekarang, bukan di minggu ke-11
 
 ## 0.1.0 — Prototipe
@@ -20,17 +21,19 @@ Semua pakai kotak abu-abu dan teks polos. **Jangan sentuh art.**
 
 **Hari 1–2: meracik headline**
 
-- [ ] `DataDB` memuat `words.json` dan `templates.json`
-- [ ] `WordCard.tscn`: tombol berisi teks kata + ikon emosi sederhana
-- [ ] `Hand.tscn`: menampilkan kartu yang dimiliki pemain
-- [ ] `Desk.tscn`: menampilkan template dengan slot; tap kartu → mengisi slot sesuai kategorinya
+- [ ] `DataDB` memuat `words.json` dan `templates.json` (teks per bahasa, [ADR-0004](../../../architecture/adr-0004-lokalisasi.md))
+- [ ] `Bahasa` autoload + `headline_builder.gd`; teks UI lewat `localization/ui.csv`
+- [ ] `word_card.tscn`: tombol berisi teks kata + ikon emosi sederhana
+- [ ] `hand.tscn`: menampilkan kartu yang dimiliki pemain
+- [ ] `desk.tscn`: menampilkan template dengan slot; tap kartu → mengisi slot sesuai kategorinya
 - [ ] Tombol **KIRIM** aktif jika semua slot terisi
-- [ ] `RumorScorer.gd`: hitung viral & dipercaya, tampilkan angkanya di layar (debug)
+- [ ] `rumor_scorer.gd`: hitung viral & dipercaya, tampilkan angkanya di layar (debug)
 
 **Hari 3–4: kota & penyebaran**
 
-- [ ] `City.tscn`: 3 distrik berupa kotak berwarna, warga berupa titik (`ColorRect` kecil atau digambar di `_draw()`)
-- [ ] `SpreadSim.gd`: tiap tick (misalnya 0,2 detik) warga yang percaya mencoba menulari tetangga terdekat
+- [ ] `city.tscn`: 3 distrik berupa kotak berwarna, warga berupa titik (`ColorRect` kecil atau digambar di `_draw()`)
+- [ ] `GameClock` autoload: tick tetap 0,2 detik, jeda bernama, RNG berseed ([ADR-0003](../../../architecture/adr-0003-model-waktu.md))
+- [ ] `spread_sim.gd`: tiap `GameClock.tick` warga yang percaya mencoba menulari tetangga terdekat
 - [ ] Warna titik sesuai status: abu (belum dengar), merah (percaya), kuning (ragu)
 - [ ] Rumor dimulai dari 1–3 warga acak di distrik tujuan
 - [ ] Penyebaran berhenti otomatis setelah N detik atau saat tidak ada yang baru tertular
@@ -38,14 +41,14 @@ Semua pakai kotak abu-abu dan teks polos. **Jangan sentuh art.**
 **Hari 5: uang & upgrade pertama**
 
 - [ ] Tiap warga yang percaya memberi uang
-- [ ] `Shop.tscn` sederhana: beli 3–5 kata baru dan 1 template baru
+- [ ] `shop.tscn` sederhana: beli 3–5 kata baru dan 1 template baru
 - [ ] HUD menampilkan uang
 
 **Hari 6–7: mainkan dan putuskan**
 
 - [ ] Main sendiri minimal 3 sesi × 10 menit
 - [ ] Catat: kapan mulai bosan? Kombinasi mana yang terasa lucu? Apakah melihat rumor menjalar itu memuaskan?
-- [ ] Ubah angka di `Balance.gd`, coba lagi
+- [ ] Ubah angka di `balance.gd`, coba lagi
 - [ ] Putuskan lanjut / ubah / buang sesuai [gerbang keputusan](mvp-v1.md#gerbang-keputusan-prototipe)
 
 ## 0.2.0 — MVP
@@ -66,9 +69,16 @@ Semua pakai kotak abu-abu dan teks polos. **Jangan sentuh art.**
 - [ ] Pengikut sebagai mata uang kedua
 - [ ] Misi sederhana (minimal 5 misi berurutan)
 
+**Save dasar** (lihat [ADR-0002](../../../architecture/adr-0002-backend-save.md))
+
+- [ ] `SaveSystem`: `user://save.json` dengan tulis atomik (`.tmp` → `.bak`), `versi_skema`, migrasi
+- [ ] `GameState.ke_dict()` / `dari_dict()`; riwayat menyimpan `template_id` + `kata_ids`
+- [ ] Autosave tiap 30 detik dan saat aplikasi dijeda; rumor yang sedang menjalar disimpan sebagai proyeksi ([ADR-0003](../../../architecture/adr-0003-model-waktu.md))
+- [ ] Pengaturan (bahasa) di `user://settings.cfg`
+
 **Event** (lihat [EVENT.md](../event/EVENT.md))
 
-- [ ] `EventSystem.gd` + `events.json`
+- [ ] `event_system.gd` + `events.json`
 - [ ] Banner event di atas peta
 - [ ] E01 Hari Pasar
 - [ ] E02 Ronda Malam
@@ -155,12 +165,13 @@ Semua pakai kotak abu-abu dan teks polos. **Jangan sentuh art.**
 
 **Save**
 
-- [ ] `SaveSystem` dengan SQLite sesuai [skema](../../../panduan/struktur-project.md#database-save-sqlite): simpan dalam satu transaksi
-- [ ] Autosave tiap 30 detik dan saat aplikasi dijeda (`NOTIFICATION_APPLICATION_PAUSED`)
-- [ ] Migrasi skema lewat `PRAGMA user_version` supaya update berikutnya tidak merusak save lama
-- [ ] Pengaturan disimpan terpisah di `user://settings.cfg`
-- [ ] Uji: tutup paksa aplikasi saat autosave, buka lagi, progres tetap utuh
-- [ ] Tombol reset progres di pengaturan
+Save dasar sudah dibuat di 0.2.0 ([ADR-0002](../../../architecture/adr-0002-backend-save.md)). Di sini tinggal pengujian dan polish:
+
+- [ ] Uji: tutup paksa aplikasi saat autosave 10 kali, buka lagi, progres tetap utuh
+- [ ] Uji: `save.json` dirusak manual → game memuat dari `save.bak` tanpa crash
+- [ ] Uji: save skema lama termuat setelah migrasi (tes headless)
+- [ ] Proyeksi rumor saat menyimpan < 50 ms di HP kelas bawah ([ADR-0003](../../../architecture/adr-0003-model-waktu.md))
+- [ ] Tombol reset progres di pengaturan (`settings.cfg` tidak ikut terhapus)
 
 **Onboarding**
 
@@ -179,7 +190,9 @@ Semua pakai kotak abu-abu dan teks polos. **Jangan sentuh art.**
 
 - [ ] Uji di minimal 2 HP berbeda (satu kelas bawah)
 - [ ] Batasi jumlah titik warga yang digambar; pakai `_draw()` satu node per distrik, bukan satu node per warga, jika mulai lag
-- [ ] Pengaturan: suara, musik, getar, bahasa (Indonesia saja dulu)
+- [ ] Pengaturan: suara, musik, getar, bahasa (Indonesia, Inggris)
+- [ ] Semua teks EN lengkap: tes headless tidak menemukan field `en` kosong ([ADR-0004](../../../architecture/adr-0004-lokalisasi.md))
+- [ ] Kata EN terpanjang muat di kartu; uji UI dengan pseudolokalisasi
 - [ ] Safe area untuk notch: beri margin atas di HUD
 
 ## 1.0.0 — Rilis

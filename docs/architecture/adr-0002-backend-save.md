@@ -1,7 +1,7 @@
 # ADR-0002: Backend Save JSON dengan Tulis Atomik
 
 ## Status
-Proposed
+Accepted
 
 ## Date
 2026-11-05
@@ -76,7 +76,7 @@ Progres disimpan dalam **satu file JSON** di `user://save.json`. Pengaturan teta
 }
 ```
 
-Isi `riwayat_rumor` mengikuti kolom tabel `riwayat_rumor` di `struktur-project.md`, dibatasi **200 entri terakhir**. `riwayat_event` juga dibatasi 200. Angka sepanjang permainan dicatat di `statistik` supaya tetap ada walaupun riwayat dipotong.
+Isi `riwayat_rumor` mengikuti kolom tabel `riwayat_rumor` di `struktur-project.md` **tanpa kolom `headline`**: entri menyimpan `template_id` dan `kata_ids` (termasuk hasil mutasi), dan headline disusun saat ditampilkan (ADR-0004). Riwayat dibatasi **200 entri terakhir**. `riwayat_event` juga dibatasi 200. Angka sepanjang permainan dicatat di `statistik` supaya tetap ada walaupun riwayat dipotong.
 
 ### Alur simpan dan muat
 
@@ -97,21 +97,21 @@ muat():
 ### Key Interfaces
 
 ```gdscript
-# scripts/autoload/SaveSystem.gd
+# scripts/autoload/save_system.gd
 func simpan() -> Error
 func muat() -> bool                # false = tidak ada save valid, mulai game baru
 func reset_progres() -> void       # hapus save.json/.bak/.tmp; settings.cfg tidak disentuh
 
-# scripts/autoload/GameState.gd
+# scripts/autoload/game_state.gd
 func ke_dict() -> Dictionary
 func dari_dict(data: Dictionary) -> void
 
-# scripts/systems/Balance.gd
+# scripts/systems/balance.gd
 const AUTOSAVE_DETIK := 30.0
 const BATAS_RIWAYAT := 200
 ```
 
-Migrasi berupa daftar fungsi berurutan di `SaveSystem.gd`. `MIGRASI[i]` mengubah dictionary dari versi `i + 1` ke versi `i + 2`.
+Migrasi berupa daftar fungsi berurutan di `save_system.gd`. `MIGRASI[i]` mengubah dictionary dari versi `i + 1` ke versi `i + 2`.
 
 ### Implementation Guidelines
 - Penulisan **must** selalu lewat `save.tmp` lalu rename; **must never** menulis langsung ke `save.json`.
@@ -184,6 +184,7 @@ Belum ada kode. Saat ADR diterima:
 ## Related
 - [ADR-0001: Renderer Compatibility](adr-0001-renderer.md) — tidak terkait langsung
 - [ADR-0003: Model waktu simulasi](adr-0003-model-waktu.md) — memakai format save ini
+- [ADR-0004: Lokalisasi](adr-0004-lokalisasi.md) — riwayat menyimpan ID, bukan teks headline
 - [struktur-project.md](../panduan/struktur-project.md) — bagian Database save (digantikan oleh ADR ini)
 - [CHECKLIST.md](../versi/1.0.0/mvp/CHECKLIST.md) — Setup, 0.2.0, 0.9.0
 - [mvp-v1.md](../versi/1.0.0/mvp/mvp-v1.md) — risiko tester closed testing

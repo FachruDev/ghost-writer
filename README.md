@@ -16,10 +16,11 @@ Game satir **portrait untuk Android** tentang kekuatan kabar burung. Kamu mulai 
 
 | | |
 | --- | --- |
-| Engine | Godot 4.7, GDScript, renderer Mobile |
+| Engine | Godot 4.7.2, GDScript, renderer Compatibility |
 | Platform | Android (portrait 720×1280) |
 | Konten | JSON di `res://data/` |
-| Penyimpanan | SQLite (`user://ghostwriter.db`) via [godot-sqlite](https://github.com/2shady4u/godot-sqlite) |
+| Penyimpanan | JSON (`user://save.json`) dengan tulis atomik |
+| Bahasa | Indonesia dan Inggris |
 
 ## Status
 
@@ -30,6 +31,7 @@ Tahap perencanaan, menuju **0.1.0 (prototipe)**. Target rilis pertama di Google 
 Semua rencana dan panduan ada di [`docs/`](docs/README.md):
 
 - [Konsep game](docs/panduan/konsep-game.md)
+- [Keputusan arsitektur (ADR)](docs/architecture/)
 - [Struktur project & database](docs/panduan/struktur-project.md)
 - [Roadmap v1.0.0](docs/versi/1.0.0/mvp/mvp-v1.md) dan [checklist](docs/versi/1.0.0/mvp/CHECKLIST.md)
 - [Riwayat perubahan](CHANGELOG.md)
