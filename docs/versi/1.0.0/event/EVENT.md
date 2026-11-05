@@ -1,0 +1,79 @@
+# Event — Ghostwriter v1.0.0
+
+Event membuat setiap sesi terasa berbeda: kota tidak diam menunggu rumor pemain, tetapi punya kejadiannya sendiri. Versi 1.0.0 menargetkan **12 event**, dengan **3 event sudah masuk di MVP (0.2.0)**.
+
+## Cara kerja
+
+Semua event adalah data di `res://data/events.json`, dijalankan oleh `scripts/systems/EventSystem.gd`. Menambah event baru cukup menambah satu entri JSON, kecuali event dengan efek khusus.
+
+| Jenis | Cara muncul | Contoh |
+| --- | --- | --- |
+| Modifier | Acak, peluang dicek tiap N detik | Hari Pasar: distrik tertentu lebih mudah tertular |
+| Ancaman | Dipicu kondisi (heat, kredibilitas) | Pembongkar Fakta muncul saat heat tinggi |
+| Dilema | Acak, pemain memilih A atau B | Wartawan menawarkan diam asal dibayar |
+| Peluang | Acak atau milestone | Dokumen bocor: kartu SUMBER langka sementara |
+
+Aturan umum:
+
+- Maksimal **1 event aktif** di satu waktu (kecuali ancaman yang dipicu kondisi).
+- Jeda minimal antar event acak: 90 detik (atur di `Balance.gd`).
+- Setiap event tampil sebagai **banner** di atas peta + ikon jenis event + sisa durasi.
+- Event dilema **menjeda waktu** sampai pemain memilih.
+
+## Format data
+
+```json
+{
+  "id": "e_hari_pasar",
+  "nama": "Hari Pasar",
+  "jenis": "modifier",
+  "era_min": 1,
+  "pemicu": {"tipe": "acak", "peluang": 0.15},
+  "durasi": 60,
+  "teks": "Pasar Lama sedang ramai. Gosip menyebar lebih cepat di sana!",
+  "efek": [{"tipe": "kerentanan_distrik", "distrik": "pasar_lama", "kali": 1.5}],
+  "pilihan": []
+}
+```
+
+Contoh event dilema (`pilihan` diisi):
+
+```json
+{
+  "id": "e_wartawan",
+  "nama": "Wartawan Penasaran",
+  "jenis": "dilema",
+  "era_min": 2,
+  "pemicu": {"tipe": "acak", "peluang": 0.08, "syarat": {"heat_min": 40}},
+  "durasi": 0,
+  "teks": "Seorang wartawan mencium jejakmu. Dia mau diam... asal ada imbalan.",
+  "efek": [],
+  "pilihan": [
+    {"label": "Bayar dia", "efek": [{"tipe": "uang", "nilai": -200}, {"tipe": "heat", "nilai": -30}]},
+    {"label": "Abaikan", "efek": [{"tipe": "heat", "nilai": 20}, {"tipe": "pengikut", "nilai": 50}]}
+  ]
+}
+```
+
+## Daftar event v1.0.0
+
+| ID | Nama | Jenis | Era | Pemicu | Efek singkat | Masuk di versi | Status |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| E01 | Hari Pasar | Modifier | 1 | Acak | Kerentanan Pasar Lama ×1,5 selama 60 dtk | 0.2.0 (MVP) | Belum |
+| E02 | Ronda Malam | Modifier | 1 | Acak | Rumor emosi *takut* ×1,5 di Gang Sempit, emosi *lucu* ×0,7 | 0.2.0 (MVP) | Belum |
+| E03 | Pembongkar Fakta | Ancaman | 1 | Heat ≥ 70 | Warga di sekitar pembongkar jadi kebal; kredibilitas −10 | 0.2.0 (MVP) | Belum |
+| E04 | Pemilihan Ketua RT | Peluang | 1 | Milestone 300 pengikut | Rumor tentang kandidat fiktif bernilai ×2, heat naik ×1,5 | 0.3.0 | Belum |
+| E05 | Wartawan Penasaran | Dilema | 2 | Acak, heat ≥ 40 | Bayar (uang −, heat −) atau abaikan (heat +, pengikut +) | 0.3.0 | Belum |
+| E06 | Festival Kampung | Modifier | 2 | Acak | Semua distrik kerentanan ×1,2, uang per warga ×1,5 | 0.3.0 | Belum |
+| E07 | Dokumen Bocor | Peluang | 2 | Acak | Kartu SUMBER "dokumen bocor" (kred 3) gratis untuk 3 rumor | 0.4.0 | Belum |
+| E08 | Viral Challenge | Modifier | 3 | Acak | Template lucu ×2 viral, tapi kredibilitas semua rumor −1 | 0.4.0 | Belum |
+| E09 | Razia Hoaks | Ancaman | 3 | Kredibilitas < 30 | Saluran medsos dikunci 90 dtk, pengikut −5% | 0.4.0 | Belum |
+| E10 | Rumor Tandingan | Ancaman | 3 | Acak | Media saingan menyebar rumor yang membuat warga "ragu" | 0.5.0 | Belum |
+| E11 | Server Down | Dilema | 4 | Acak | Bayar perbaikan cepat atau kehilangan staf otomatis 120 dtk | 0.5.0 | Belum |
+| E12 | Kota Tak Percaya Lagi | Ancaman (final) | 4 | Kampanye akhir dimulai | Kebal menyebar sendiri; pemain harus mencapai target sebelum kota "mati rasa" | 0.6.0 | Belum |
+
+## Catatan desain
+
+- Semua nama tokoh, partai, dan kandidat di event **fiktif**.
+- Event ancaman adalah sumber ketegangan utama; jangan dibuat terlalu jarang.
+- Saat balancing, catat seberapa sering tiap event muncul per sesi 15 menit (target: 2–4 event).
