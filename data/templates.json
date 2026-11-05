@@ -1,0 +1,57 @@
+[
+  {
+    "id": "t_dasar",
+    "slot": ["subjek", "aksi", "tempat", "sumber"],
+    "pengali_heboh": 1.0,
+    "harga": 0,
+    "unlock": 0,
+    "pola": {
+      "id": "{subjek} ketahuan {aksi} di {tempat}, kata {sumber}!",
+      "en": "{sumber} says {subjek} was caught {aksi} at {tempat}!"
+    }
+  },
+  {
+    "id": "t_bisik",
+    "slot": ["subjek", "aksi", "sumber"],
+    "pengali_heboh": 0.7,
+    "harga": 120,
+    "unlock": 0,
+    "pola": {
+      "id": "Psst... katanya {subjek} sering {aksi}. Sumber: {sumber}.",
+      "en": "Psst... word is {subjek} keeps {aksi}. Source: {sumber}."
+    }
+  },
+  {
+    "id": "t_heboh",
+    "slot": ["subjek", "aksi", "tempat"],
+    "pengali_heboh": 1.4,
+    "harga": 150,
+    "unlock": 0,
+    "pola": {
+      "id": "HEBOH! {subjek} kepergok {aksi} di {tempat}!",
+      "en": "SHOCKING! {subjek} spotted {aksi} at {tempat}!"
+    }
+  },
+  {
+    "id": "t_resmi",
+    "slot": ["subjek", "aksi", "tempat", "sumber"],
+    "pengali_heboh": 0.8,
+    "harga": 200,
+    "unlock": 0,
+    "pola": {
+      "id": "Menurut {sumber}, {subjek} terlihat {aksi} di {tempat}.",
+      "en": "According to {sumber}, {subjek} was seen {aksi} at {tempat}."
+    }
+  },
+  {
+    "id": "t_viral",
+    "slot": ["subjek", "aksi", "tempat"],
+    "pengali_heboh": 1.8,
+    "harga": 300,
+    "unlock": 0,
+    "pola": {
+      "id": "VIRAL! {subjek} {aksi} di {tempat}, warganet geger!",
+      "en": "VIRAL! {subjek} {aksi} at {tempat} and the internet lost it!"
+    }
+  }
+]

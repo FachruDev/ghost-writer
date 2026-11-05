@@ -1,0 +1,26 @@
+keys,id,en
+UI_KIRIM,KIRIM,SEND
+UI_TOKO,Toko,Shop
+UI_TUTUP,Tutup,Close
+UI_BELI,Beli,Buy
+UI_BAHASA,EN,ID
+UI_UANG,Uang: %s,Money: %s
+UI_TARGET,Target: %s,Target: %s
+UI_PILIH_DISTRIK,Ketuk distrik di peta,Tap a district on the map
+UI_MENYEBAR,Rumor menyebar...,Rumor spreading...
+UI_HASIL,+%s dari %d warga,+%s from %d citizens
+UI_TEMPLATE,Template %d/%d,Template %d/%d
+UI_DEBUG_SKOR,Viral %.1f · Dipercaya %d%%,Viral %.1f · Believed %d%%
+UI_HEBOH_KRED,Heboh %d · Kred %d,Buzz %d · Cred %d
+UI_SLOT_SUBJEK,SUBJEK,WHO
+UI_SLOT_AKSI,AKSI,DOING
+UI_SLOT_TEMPAT,TEMPAT,WHERE
+UI_SLOT_SUMBER,SUMBER,SOURCE
+UI_EMO_LUCU,lucu,funny
+UI_EMO_TAKUT,takut,scary
+UI_EMO_MARAH,marah,angry
+UI_EMO_IRI,iri,envy
+UI_EMO_NETRAL,netral,neutral
+UI_TOKO_KATA,Kata baru,New words
+UI_TOKO_TEMPLATE,Template baru,New templates
+UI_TOKO_KOSONG,Semua sudah dibeli,Everything is bought

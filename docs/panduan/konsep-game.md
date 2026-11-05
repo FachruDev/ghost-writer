@@ -51,7 +51,7 @@ Beli kata / template / saluran / upgrade baru
 | Penyebaran | Tiap tick, warga yang percaya menular ke tetangga dengan peluang dari skor viral dan kerentanan distrik | Prototipe |
 | Mutasi | Saat menyebar, ada peluang kecil satu kata diganti kata sejenis. Headline yang berubah tampil di feed | MVP |
 | Ekonomi | Uang dari warga yang percaya; pengikut sebagai mata uang progresi | Prototipe (uang), MVP (pengikut) |
-| Kredibilitas & heat | Rumor yang dibongkar menurunkan kredibilitas. Heat tinggi memunculkan pembongkar fakta yang membuat warga kebal | MVP |
+| Kredibilitas & heat | Heat naik dari rumor yang heboh dan sulit dipercaya, lalu turun pelan. Rumor bisa dibongkar: kredibilitas turun, sebagian warga jadi kebal. Kredibilitas mengalikan seberapa dipercaya rumor berikutnya. Rumus di bawah | MVP |
 | Saluran | Merpati → koran → radio → medsos → server. Menentukan jangkauan awal dan distrik tujuan | MVP (2 saluran), Fase 3 (sisanya) |
 | Staf otomatis | Menulis rumor kecil sendiri supaya pemain fokus ke kampanye besar | Fase 3 |
 | Era | Kamar → kantor → gedung media → menara server. Mengubah latar meja dan membuka konten | Fase 3 |
@@ -61,13 +61,66 @@ Beli kata / template / saluran / upgrade baru
 ```
 heboh_total   = (jumlah heboh semua kartu) × pengali_heboh_template
 kred_rata     = rata-rata kred semua kartu
-cocok_emosi   = 1.5 jika emosi dominan kartu = emosi favorit distrik, 1.0 jika netral, 0.6 jika bertentangan
+cocok_emosi   = 1.5 jika emosi dominan = emosi favorit distrik
+                1.0 jika headline netral
+                0.9 jika berbeda
+                0.6 jika berlawanan
 
 viral         = heboh_total × cocok_emosi
 dipercaya     = clamp(kred_rata / 3.0 - max(0, heboh_total - 6) × 0.05, 0.1, 1.0)
+dipercaya_akhir = clamp(dipercaya × (0.5 + kredibilitas / 100), 0.1, 1.0)
 
 peluang_tular (per tetangga, per tick) = viral × kerentanan_distrik × 0.02
-peluang_percaya (saat tertular)        = dipercaya
+peluang_percaya (saat tertular)        = dipercaya_akhir        (× 0.5 jika warga sedang ragu)
 ```
+
+**Emosi dominan.** Hitung emosi semua kartu kecuali netral; emosi terbanyak menang. Kalau seri, ambil emosi kartu dengan heboh tertinggi; kalau masih seri, kartu yang slotnya paling awal (subjek → aksi → tempat → sumber). Kalau semua kartu netral, headline netral.
+
+**Pasangan emosi berlawanan** (usulan awal, ubah saat playtest): lucu ↔ takut, marah ↔ iri.
+
+### Status warga
+
+| Status | Arti | Berubah menjadi |
+| --- | --- | --- |
+| Belum dengar | Bisa tertular | Percaya (peluang `dipercaya_akhir`) atau ragu |
+| Percaya | Menularkan rumor selama 1,2 detik, memberi uang | Kebal kalau rumornya dibongkar (50%) |
+| Ragu | Tertular tapi tidak percaya; ikut bercerita selama 1 detik ("eh, katanya sih..."); bisa tertular rumor baru dengan peluang percaya separuh | Belum dengar, peluang 1/60 per detik simulasi (±1 menit) |
+| Kebal | Tidak bisa tertular | Belum dengar, peluang 1/180 per detik simulasi (±3 menit); berhenti total saat E12 |
+
+**Usulan prototipe: warga ragu ikut menyebar.** Kalau hanya warga yang percaya yang menularkan, `dipercaya` menentukan dua hal sekaligus (berapa yang yakin *dan* seberapa jauh rumor menjalar), sehingga rumor kredibel dengan heboh rendah selalu menang. Dengan warga ragu ikut bercerita sebentar, jangkauan ditentukan viral dan jumlah yang yakin ditentukan dipercaya. Simulasi Monte Carlo (300 rumor di Pasar Lama, kredibilitas 50) dengan angka di `balance.gd` saat ini:
+
+| Headline | Viral | Dipercaya | Warga percaya (rata-rata) | Lama |
+| --- | --- | --- | --- | --- |
+| Awal: Pak RT · menari tengah malam · pasar · tetangga | 4,5 | 50% | 24 | 7 detik |
+| Kredibel: Bu Lurah · beli mobil · warung kopi · tukang sayur | 1,8 | 75% | 18 | 6 detik |
+| Ekstrem: kucing oren · curhat ke ayam · lapangan voli · burung beo | 13,5 | 10% | 11 | 8 detik |
+
+Dimatikan dengan `DURASI_MENULAR_RAGU_DETIK = 0.0`. Diputuskan di gerbang prototipe.
+
+### Konsekuensi (MVP)
+
+```
+Saat rumor dikirim:
+  heat += heboh_total × (1.5 − dipercaya_akhir)
+Setiap detik simulasi:
+  heat −= 0.1                                   (±6 per menit)
+
+Saat rumor selesai menyebar:
+  peluang_bongkar = (1 − dipercaya_akhir) × (0.3 + heat / 100 × 0.7)
+
+  Kalau dibongkar:
+    kredibilitas −= 5 + heboh_total
+    50% warga yang percaya rumor itu → kebal
+    heat += 10
+    stempel HOAKS di feed; uang yang sudah didapat tetap
+  Kalau tidak dibongkar dan dipercaya_akhir ≥ 0.7:
+    kredibilitas += 1
+```
+
+Heat dan kredibilitas berada di 0–100; kredibilitas mulai di 50. Ambang event: E05 Wartawan di heat ≥ 40, E03 Pembongkar Fakta di heat ≥ 70, E09 Razia Hoaks di kredibilitas < 30 (lihat [EVENT.md](../versi/1.0.0/event/EVENT.md)).
+
+Contoh: headline heboh 8 dengan `dipercaya_akhir` 0,4 menambah heat ±9 dan punya peluang bongkar ±0,26 saat heat 20. Headline heboh 3 dengan `dipercaya_akhir` 0,9 hanya menambah ±2 dengan peluang bongkar ±0,04. Rumor heboh menyebar cepat tapi mahal; rumor kredibel lambat tapi aman.
+
+Peluang "per detik simulasi" dihitung per tick sebagai `peluang × SIM_TICK` ([ADR-0003](../architecture/adr-0003-model-waktu.md)).
 
 Angka-angka ini hanya titik awal. Taruh semuanya sebagai konstanta di satu file (`balance.gd`) supaya mudah diubah saat playtest.

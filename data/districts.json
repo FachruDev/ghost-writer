@@ -1,0 +1,8 @@
+[
+  {"id": "pasar_lama", "nama": {"id": "Pasar Lama", "en": "Old Market"},
+   "emosi_favorit": "lucu", "kerentanan": 1.2, "warga": 40, "area": [0.0, 0.0, 0.5, 0.55]},
+  {"id": "kompleks_hijau", "nama": {"id": "Kompleks Hijau", "en": "Green Estate"},
+   "emosi_favorit": "iri", "kerentanan": 0.9, "warga": 30, "area": [0.5, 0.0, 0.5, 0.55]},
+  {"id": "gang_sempit", "nama": {"id": "Gang Sempit", "en": "Narrow Alley"},
+   "emosi_favorit": "takut", "kerentanan": 1.0, "warga": 35, "area": [0.0, 0.55, 1.0, 0.45]}
+]

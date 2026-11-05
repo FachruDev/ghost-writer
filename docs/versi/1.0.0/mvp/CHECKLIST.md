@@ -8,10 +8,10 @@ Satu-satunya daftar centang untuk semua versi, dari setup sampai rilis. Rincian 
 - [x] Project dengan renderer **Compatibility** ([ADR-0001](../../../architecture/adr-0001-renderer.md))
 - [x] Project Settings → Display → Window: viewport 720×1280, orientation `portrait`, stretch mode `canvas_items`, aspect `expand`
 - [x] Localization: fallback locale `id` ([ADR-0004](../../../architecture/adr-0004-lokalisasi.md))
-- [ ] Buat struktur folder seperti di [struktur-project.md](../../../panduan/struktur-project.md)
-- [ ] Inisialisasi git + repo GitHub (commit kecil tiap hari)
-- [ ] Siapkan Android export: Android SDK, JDK 17, export template, keystore debug, Android Build Template (Gradle, untuk AAB)
-- [ ] Pasang gdUnit4 (`/test-setup`) dan pastikan jalan di Godot 4.7.2
+- [x] Buat struktur folder seperti di [struktur-project.md](../../../panduan/struktur-project.md)
+- [x] Inisialisasi git (commit kecil tiap hari)
+- [ ] Siapkan Android export: Android SDK, JDK 17+, export template, keystore debug, Android Build Template (Gradle, untuk AAB). Tambahkan filter `data/*.json` ke "Filters to export non-resource files" supaya konten JSON ikut terekspor
+- [ ] Pasang gdUnit4 (manual dari rilis GitHub) dan pastikan jalan di Godot 4.7.2
 - [ ] Uji coba: tulis dan baca `user://save.json` di HP Android
 - [ ] Ekspor scene kosong ke HP sendiri — pastikan jalan sekarang, bukan di minggu ke-11
 
@@ -21,28 +21,28 @@ Semua pakai kotak abu-abu dan teks polos. **Jangan sentuh art.**
 
 **Hari 1–2: meracik headline**
 
-- [ ] `DataDB` memuat `words.json` dan `templates.json` (teks per bahasa, [ADR-0004](../../../architecture/adr-0004-lokalisasi.md))
-- [ ] `Bahasa` autoload + `headline_builder.gd`; teks UI lewat `localization/ui.csv`
-- [ ] `word_card.tscn`: tombol berisi teks kata + ikon emosi sederhana
-- [ ] `hand.tscn`: menampilkan kartu yang dimiliki pemain
-- [ ] `desk.tscn`: menampilkan template dengan slot; tap kartu → mengisi slot sesuai kategorinya
-- [ ] Tombol **KIRIM** aktif jika semua slot terisi
-- [ ] `rumor_scorer.gd`: hitung viral & dipercaya, tampilkan angkanya di layar (debug)
+- [x] `DataDB` memuat `words.json` dan `templates.json` (teks per bahasa, [ADR-0004](../../../architecture/adr-0004-lokalisasi.md))
+- [x] `Bahasa` autoload + `headline_builder.gd`; teks UI lewat `localization/ui.csv`
+- [x] `word_card.tscn`: tombol berisi teks kata + ikon emosi sederhana
+- [x] `hand.tscn`: menampilkan kartu yang dimiliki pemain
+- [x] `desk.tscn`: menampilkan template dengan slot; tap kartu → mengisi slot sesuai kategorinya
+- [x] Tombol **KIRIM** aktif jika semua slot terisi
+- [x] `rumor_scorer.gd`: hitung viral & dipercaya, tampilkan angkanya di layar (debug)
 
 **Hari 3–4: kota & penyebaran**
 
-- [ ] `city.tscn`: 3 distrik berupa kotak berwarna, warga berupa titik (`ColorRect` kecil atau digambar di `_draw()`)
-- [ ] `GameClock` autoload: tick tetap 0,2 detik, jeda bernama, RNG berseed ([ADR-0003](../../../architecture/adr-0003-model-waktu.md))
-- [ ] `spread_sim.gd`: tiap `GameClock.tick` warga yang percaya mencoba menulari tetangga terdekat
-- [ ] Warna titik sesuai status: abu (belum dengar), merah (percaya), kuning (ragu)
-- [ ] Rumor dimulai dari 1–3 warga acak di distrik tujuan
-- [ ] Penyebaran berhenti otomatis setelah N detik atau saat tidak ada yang baru tertular
+- [x] `city.tscn`: 3 distrik berupa kotak berwarna, warga berupa titik (`ColorRect` kecil atau digambar di `_draw()`)
+- [x] `GameClock` autoload: tick tetap 0,2 detik, jeda bernama, RNG berseed ([ADR-0003](../../../architecture/adr-0003-model-waktu.md))
+- [x] `spread_sim.gd`: tiap `GameClock.tick` warga yang percaya (dan sebentar yang ragu) mencoba menulari tetangga terdekat
+- [x] Warna titik sesuai status: abu (belum dengar), merah (percaya), kuning (ragu)
+- [x] Rumor dimulai dari 1–3 warga acak di distrik tujuan
+- [x] Penyebaran berhenti otomatis setelah N detik atau saat tidak ada yang baru tertular
 
 **Hari 5: uang & upgrade pertama**
 
-- [ ] Tiap warga yang percaya memberi uang
-- [ ] `shop.tscn` sederhana: beli 3–5 kata baru dan 1 template baru
-- [ ] HUD menampilkan uang
+- [x] Tiap warga yang percaya memberi uang
+- [x] `shop.tscn` sederhana: beli 3–5 kata baru dan 1 template baru
+- [x] HUD menampilkan uang
 
 **Hari 6–7: mainkan dan putuskan**
 
