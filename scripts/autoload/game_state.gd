@@ -10,6 +10,8 @@ var era: int = 1
 var waktu_main_detik: float = 0.0
 var kartu_dimiliki: Array[String] = []
 var template_dimiliki: Array[String] = []
+## upgrade_id -> level (kantor, staf, ...). Saluran tidak dibeli; terbuka lewat pengikut/era.
+var upgrade_dimiliki: Dictionary = {}
 var misi_idx: int = 0
 ## distrik_id -> {"percaya", "ragu", "kebal"}; diisi saat memuat, dipakai untuk membangkitkan warga.
 var distrik_status: Dictionary = {}
@@ -36,11 +38,13 @@ func mulai_baru() -> void:
 	kartu_dimiliki.clear()
 	template_dimiliki.clear()
 	for id in DataDB.words:
-		if int(DataDB.words[id].get("harga", 0)) == 0:
+		var kata: Dictionary = DataDB.words[id]
+		if int(kata.get("harga", 0)) == 0 and kata.get("toko", true) and int(kata.get("era_min", 1)) <= 1:
 			kartu_dimiliki.append(id)
 	for id in DataDB.templates:
 		if int(DataDB.templates[id].get("harga", 0)) == 0:
 			template_dimiliki.append(id)
+	upgrade_dimiliki = {}
 	misi_idx = 0
 	distrik_status = {}
 	riwayat_rumor = []
@@ -75,7 +79,42 @@ func ubah_kredibilitas(delta: float) -> void:
 
 func saluran_terbuka(id: String) -> bool:
 	var s := DataDB.get_upgrade(id)
-	return not s.is_empty() and pengikut >= int(s.get("pengikut_min", 0))
+	return not s.is_empty() and pengikut >= int(s.get("pengikut_min", 0)) and era_terbuka(s)
+
+
+## Konten dan upgrade dengan era_min di atas era sekarang belum tersedia.
+func era_terbuka(item: Dictionary) -> bool:
+	return era >= int(item.get("era_min", 1))
+
+
+func punya_upgrade(id: String) -> bool:
+	return upgrade_dimiliki.has(id)
+
+
+## Bisa dibeli sekarang: era dan pengikut cukup, belum dimiliki (uang dicek terpisah).
+func upgrade_tersedia(id: String) -> bool:
+	var u := DataDB.get_upgrade(id)
+	return not u.is_empty() and not punya_upgrade(id) and era_terbuka(u) \
+		and pengikut >= int(u.get("pengikut_min", 0)) and str(u.get("jenis", "")) != "saluran"
+
+
+func beli_upgrade(id: String) -> bool:
+	var u := DataDB.get_upgrade(id)
+	if not upgrade_tersedia(id) or not _bayar(u):
+		return false
+	upgrade_dimiliki[id] = 1
+	if str(u.get("jenis", "")) == "era":
+		era = maxi(era, int(u.get("era", era)))
+		Events.era_berubah.emit(era)
+	Events.kepemilikan_berubah.emit()
+	return true
+
+
+## Kata hadiah event (mis. calon RT di E04) masuk ke tangan tanpa dibeli.
+func beri_kata(id: String) -> void:
+	if DataDB.words.has(id) and not punya_kata(id):
+		kartu_dimiliki.append(id)
+		Events.kepemilikan_berubah.emit()
 
 
 func punya_kata(id: String) -> bool:
@@ -123,6 +162,7 @@ func ke_dict() -> Dictionary:
 		},
 		"kartu_dimiliki": kartu_dimiliki.duplicate(),
 		"template_dimiliki": template_dimiliki.duplicate(),
+		"upgrade_dimiliki": upgrade_dimiliki.duplicate(),
 		"distrik_status": distrik_status.duplicate(true),
 		"riwayat_rumor": riwayat_rumor.duplicate(true),
 		"riwayat_event": riwayat_event.duplicate(true),
@@ -149,6 +189,11 @@ func dari_dict(data: Dictionary) -> void:
 	for id in data.get("template_dimiliki", []):
 		if DataDB.templates.has(str(id)):
 			template_dimiliki.append(str(id))
+	upgrade_dimiliki = {}
+	var upgrade: Dictionary = data.get("upgrade_dimiliki", {})
+	for id in upgrade:
+		if DataDB.upgrades.has(str(id)):
+			upgrade_dimiliki[str(id)] = int(upgrade[id])
 	distrik_status = data.get("distrik_status", {})
 	riwayat_rumor = data.get("riwayat_rumor", [])
 	riwayat_event = data.get("riwayat_event", [])
@@ -162,7 +207,7 @@ func dari_dict(data: Dictionary) -> void:
 func _statistik_kosong() -> Dictionary:
 	return {
 		"total_rumor": 0, "total_uang": 0, "total_dibongkar": 0, "kata_dibeli": 0,
-		"rekor_warga": 0, "emosi_distrik": [], "rumor_terbaik": null,
+		"rekor_warga": 0, "emosi_distrik": [], "rumor_terbaik": null, "event_sekali": [],
 	}
 
 
@@ -173,6 +218,7 @@ func _bayar(item: Dictionary) -> bool:
 	if uang < harga:
 		return false
 	tambah_uang(-harga)
+	Events.dibeli.emit()
 	return true
 
 
@@ -182,3 +228,4 @@ func _umumkan_semua() -> void:
 	Events.pengikut_berubah.emit(pengikut)
 	Events.reputasi_berubah.emit()
 	Events.misi_berubah.emit()
+	Events.era_berubah.emit(era)

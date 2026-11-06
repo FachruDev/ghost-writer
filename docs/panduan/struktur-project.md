@@ -10,7 +10,7 @@ res://
     words.json        # semua kartu kata (teks per bahasa)
     templates.json    # pola headline per bahasa
     districts.json    # distrik dan profil emosi
-    upgrades.json     # saluran (Merpati, Koran); nanti staf, era
+    upgrades.json     # saluran (Merpati, Koran, Radio), Sewa Kantor (era), staf
     missions.json     # misi berurutan
     events.json       # event (lihat EVENT.md)
   localization/
@@ -20,6 +20,7 @@ res://
     main/rumor_controller.gd    # alur satu rumor: kirim, menjalar, mutasi, konsekuensi
     main/event_controller.gd    # event kota (EVENT.md)
     main/mission_controller.gd  # misi berurutan
+    main/staff_controller.gd    # staf otomatis era 2
     city/city.tscn          # peta + titik warga
     city/district.tscn
     city/feed.tscn          # feed headline yang beredar
@@ -43,9 +44,12 @@ res://
     systems/economy.gd       # pendapatan, harga, upgrade
     systems/konsekuensi.gd   # heat, pembongkaran, kredibilitas, pengikut
     systems/mutasi.gd        # ganti satu kata saat menyebar
+    systems/staf.gd          # rumus rumor abstrak staf (juga untuk offline)
     ui/palet.gd              # warna prototipe
     systems/headline_builder.gd  # susun headline dari template_id + kata_ids
   tests/                     # tes gdUnit4
+  tools/sesi_bot.gd          # bot balancing: simulasi sesi headless
+  addons/gdUnit4/            # framework tes (tidak ikut diekspor)
   assets/
     fonts/  sfx/  ui/
 ```

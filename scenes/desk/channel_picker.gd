@@ -7,6 +7,7 @@ var dipilih := "merpati"
 func _ready() -> void:
 	add_theme_constant_override("separation", 8)
 	Events.pengikut_berubah.connect(func(_p: int) -> void: _isi_ulang())
+	Events.era_berubah.connect(func(_e: int) -> void: _isi_ulang())
 	Events.money_changed.connect(func(_u: int) -> void: _isi_ulang())
 	Bahasa.bahasa_berubah.connect(func(_k: String) -> void: _isi_ulang())
 	_isi_ulang()
@@ -37,6 +38,8 @@ func _pilih(id: String) -> void:
 
 func _label(s: Dictionary, terbuka: bool) -> String:
 	var nama := Bahasa.teks(s.get("nama", ""))
+	if not terbuka and not GameState.era_terbuka(s):
+		return tr("UI_TERKUNCI_ERA") % [nama, int(s.get("era_min", 1))]
 	if not terbuka:
 		return tr("UI_TERKUNCI") % [nama, int(s.get("pengikut_min", 0))]
 	var biaya := int(s.get("biaya_kirim", 0))

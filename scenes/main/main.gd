@@ -27,7 +27,15 @@ func _ready() -> void:
 	event.name = "EventController"
 	event.sim = rumor.sim
 	rumor.pengali_event = event.pengali_viral
+	rumor.pengali_rumor = event.pengali_rumor
 	add_child(event)
+	var staf := StaffController.new()
+	staf.name = "StaffController"
+	staf.pengali_rumor = event.pengali_rumor
+	add_child(staf)
+	Events.era_berubah.connect(func(era: int) -> void:
+		if era > 1 and is_node_ready():
+			Events.feed_baru.emit({"jenis": "era", "era": era}))
 	var misi := MissionController.new()
 	misi.name = "MissionController"
 	add_child(misi)

@@ -63,6 +63,14 @@ func _teks(e: Dictionary) -> String:
 			return tr("UI_HOAKS") % (tr("UI_DIBONGKAR") % roundi(float(e.get("kredibilitas", 0))))
 		"misi":
 			return tr("UI_MISI_SELESAI") % Bahasa.teks(e.get("teks", ""))
+		"staf":
+			if e.get("dibongkar", false):
+				return tr("UI_STAF_HOAKS") % roundi(float(e.get("kredibilitas", 0)))
+			return tr("UI_STAF") % HeadlineBuilder.susun(e["template_id"], e["kata_ids"])
+		"dilema":
+			return tr("UI_DILEMA_DIPILIH") % Bahasa.teks(e.get("teks", ""))
+		"era":
+			return tr("UI_ERA_NAIK") % int(e.get("era", 2))
 		"event":
 			var info := str(e.get("info", ""))
 			return "⚑ " + Bahasa.teks(e.get("teks", "")) + ("" if info.is_empty() else " · " + info)
@@ -75,8 +83,12 @@ func _warna(e: Dictionary) -> Color:
 			return Palet.emosi("lucu")
 		"hoaks":
 			return Palet.emosi("marah")
-		"misi":
+		"misi", "era":
 			return Palet.emosi("iri")
+		"staf":
+			return Palet.emosi("marah") if e.get("dibongkar", false) else Palet.TEKS_REDUP
+		"dilema":
+			return Palet.AKSEN
 		"event":
 			return Palet.STATUS[SpreadSim.Status.KEBAL]
 	return Color.WHITE

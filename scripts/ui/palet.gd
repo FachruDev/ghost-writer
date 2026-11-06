@@ -25,6 +25,9 @@ const STATUS := [
 
 const AKSEN := Color(0.90, 0.36, 0.30)
 
+## Warna meja per era sampai art tersedia: 1 kamar, 2 kantor.
+const MEJA_ERA := {1: Color(0.17, 0.17, 0.20), 2: Color(0.24, 0.19, 0.14)}
+
 
 static func emosi(nama: String) -> Color:
 	return EMOSI.get(nama, EMOSI["netral"])

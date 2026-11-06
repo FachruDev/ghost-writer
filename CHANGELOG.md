@@ -13,10 +13,16 @@ Rencana per versi ada di [`docs/versi/1.0.0/README.md`](docs/versi/1.0.0/README.
 
 ## [Belum dirilis]
 
-Menuju 0.2.0 (MVP). Masih kurang: uji di HP sendiri dan uji dengan 3–5 teman.
+Berisi sisa 0.2.0 (MVP; masih kurang uji di HP dan uji dengan 3–5 teman) dan isi 0.3.0 yang sudah dikerjakan paralel.
 
 ### Ditambah
 
+- Era 2 (kantor, 0.3.0): tombol Sewa Kantor di toko (200 pengikut, 400 uang), warna meja kantor sementara, musik era 2
+- Saluran Radio: siaran 10 detik, tiap 2 detik satu warga di setiap distrik langsung percaya (60 uang, heat ×1,2)
+- Staf otomatis: rumor abstrak tiap 40 detik dari kartu milik pemain, hasil di feed
+- Event dilema dengan tombol pilihan yang menjeda waktu; E04 Pemilihan Ketua RT (kartu calon fiktif, uang ×2), E05 Wartawan Penasaran, E06 Festival Kampung
+- 40 kata era 2, 2 kartu calon RT, template EKSKLUSIF; 5 SFX dan musik era 2 (placeholder CC0)
+- gdUnit4 v6.2.3 dan 34 tes otomatis di `tests/`; bot balancing `tools/sesi_bot.gd`
 - Konsekuensi: heat per rumor yang turun pelan, peluang rumor dibongkar, kredibilitas sebagai pengali "dipercaya", warga kebal (biru) yang pulih perlahan, stempel HOAKS
 - Saluran Merpati (gratis, satu distrik) dan Koran (30 uang, semua distrik, terbuka di 100 pengikut)
 - Pengikut sebagai mata uang ambang (+1 per 5 warga dari rumor yang tidak dibongkar, +3 per mutasi)

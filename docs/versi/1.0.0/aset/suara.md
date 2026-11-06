@@ -13,11 +13,11 @@ SFX pendek disimpan di `res://assets/sfx/` sebagai `.wav` (latensi rendah). Semu
 | sfx_debunk_stamp | Pembongkar fakta mengecap HOAKS | Stempel keras | 0.2.0 | Kenney RPG sounds chop, CC0, sementara | Selesai |
 | sfx_event_alert | Banner event muncul | Beda nada untuk modifier vs ancaman | 0.2.0 | OpenGameArt SoundPack01 Rise01 / Alarm (wobbleboxx), CC0, sementara | Selesai |
 | sfx_ui_click | Tombol UI umum | | 0.2.0 | Kenney UI SFX click3, CC0, sementara | Selesai |
-| sfx_carriage_return | Ganti template / reset meja | | 0.3.0 | | Belum |
-| sfx_follower_up | Pengikut naik milestone | | 0.3.0 | | Belum |
-| sfx_buy | Beli di toko | | 0.3.0 | | Belum |
-| sfx_error | Aksi tidak bisa (uang kurang, slot kosong) | | 0.3.0 | | Belum |
-| sfx_dilemma_choice | Memilih opsi event dilema | | 0.3.0 | | Belum |
+| sfx_carriage_return | Ganti template / reset meja | | 0.3.0 | Kenney RPG sounds metalLatch, CC0, sementara | Selesai |
+| sfx_follower_up | Pengikut naik milestone | | 0.3.0 | OpenGameArt SoundPack01 Rise03 (wobbleboxx), CC0, sementara | Selesai |
+| sfx_buy | Beli di toko | | 0.3.0 | Kenney RPG sounds handleCoins2, CC0, sementara | Selesai |
+| sfx_error | Aksi tidak bisa (uang kurang, slot kosong) | | 0.3.0 | Kenney RPG sounds metalClick, CC0, sementara | Selesai |
+| sfx_dilemma_choice | Memilih opsi event dilema | | 0.3.0 | Kenney UI SFX switch3, CC0, sementara | Selesai |
 | sfx_phone_ring | Event wartawan (era kantor) | | 0.3.0 | | Belum |
 | sfx_modem / sfx_notif | Saluran medsos (era gedung) | | 0.4.0 | | Belum |
 | sfx_server_hum | Ambience era server | Loop pelan | 0.5.0 | | Belum |

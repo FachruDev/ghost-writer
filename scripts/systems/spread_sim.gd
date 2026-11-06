@@ -30,6 +30,7 @@ var _viral := PackedFloat32Array()
 var _peluang_percaya := 0.0
 var _waktu := 0.0
 var _waktu_diam := 0.0
+var _min_waktu := 0.0
 
 
 func _init(distrik_list: Array = [], rng: RandomNumberGenerator = null) -> void:
@@ -88,17 +89,36 @@ func mulai(benih: Dictionary, viral_per_distrik: PackedFloat32Array, peluang_per
 	_peluang_percaya = peluang_percaya
 	_waktu = 0.0
 	_waktu_diam = 0.0
+	_min_waktu = 0.0
+	var total := _tanam(benih)
+	if total == 0:
+		_aktif = false
+	return total
+
+
+## Radio: tambah warga yang langsung percaya ke rumor yang sedang berjalan. Mengembalikan jumlahnya.
+func suntik(benih: Dictionary) -> int:
+	if not _aktif:
+		return 0
+	_waktu_diam = 0.0
+	return _tanam(benih)
+
+
+## Rumor tidak boleh selesai sebelum `detik` lagi (selama siaran radio).
+func tahan(detik: float) -> void:
+	_min_waktu = maxf(_min_waktu, _waktu + detik)
+
+
+func _tanam(benih: Dictionary) -> int:
 	var total := 0
 	for d in benih:
 		var kandidat: Array[int] = []
 		for i in warga_per_distrik[d]:
-			if status[i] != Status.KEBAL:
+			if status[i] != Status.KEBAL and _dengar[i] == 0:
 				kandidat.append(i)
 		for n in mini(int(benih[d]), kandidat.size()):
 			_percaya(kandidat.pop_at(_rng.randi_range(0, kandidat.size() - 1)))
 			total += 1
-	if total == 0:
-		_aktif = false
 	return total
 
 
@@ -139,8 +159,7 @@ func langkah(dt: float) -> Dictionary:
 				_sisa_menular[j] = Balance.DURASI_MENULAR_RAGU_DETIK
 	_waktu_diam = 0.0 if baru_dengar > 0 else _waktu_diam + dt
 	var selesai := _waktu >= Balance.RUMOR_MAKS_DETIK \
-		or _waktu_diam >= Balance.RUMOR_DIAM_DETIK \
-		or not _masih_ada_penular()
+		or (_waktu >= _min_waktu and (_waktu_diam >= Balance.RUMOR_DIAM_DETIK or not _masih_ada_penular()))
 	if selesai:
 		_aktif = false
 		_sisa_menular.fill(0.0)
@@ -190,7 +209,7 @@ func duplikat() -> SpreadSim:
 	var s := SpreadSim.new([], rng)
 	for nama in ["posisi", "distrik_warga", "status", "terakhir_berubah", "jam", "kebal_bisa_pulih",
 			"_tetangga", "_kerentanan", "_aktif", "_dengar", "_percaya_rumor", "_sisa_menular",
-			"_viral", "_peluang_percaya", "_waktu", "_waktu_diam"]:
+			"_viral", "_peluang_percaya", "_waktu", "_waktu_diam", "_min_waktu"]:
 		var v: Variant = get(nama)
 		s.set(nama, v.duplicate() if v is Array or v is PackedByteArray or v is PackedInt32Array \
 			or v is PackedFloat32Array or v is PackedVector2Array else v)

@@ -3,14 +3,26 @@ extends GdUnitTestSuite
 
 
 func test_jumlah_konten() -> void:
-	assert_int(DataDB.words.size()).is_equal(40)
+	assert_int(DataDB.words.size()).is_equal(82)
+	var era2 := 0
+	for id in DataDB.words:
+		if int(DataDB.words[id].get("era_min", 1)) == 2:
+			era2 += 1
+	assert_int(era2).is_equal(40)
 	for slot in RumorScorer.URUTAN_SLOT:
-		assert_int(DataDB.kata_per_slot(slot).size()).is_equal(10)
-	assert_int(DataDB.templates.size()).is_equal(5)
+		assert_int(DataDB.kata_per_slot(slot).size()).is_greater_equal(20)
+	assert_int(DataDB.templates.size()).is_equal(6)
 	assert_int(DataDB.districts.size()).is_equal(3)
-	assert_int(DataDB.saluran().size()).is_equal(2)
+	assert_int(DataDB.saluran().size()).is_equal(3)
 	assert_int(DataDB.missions.size()).is_equal(5)
-	assert_int(DataDB.events.size()).is_equal(3)
+	assert_int(DataDB.events.size()).is_equal(6)
+
+
+func test_kartu_hadiah_event_tidak_dijual_dan_tidak_dimiliki_di_awal() -> void:
+	SaveSystem.reset_progres()
+	for id in ["calon_darto", "calon_wati"]:
+		assert_bool(DataDB.get_word(id).get("toko", true)).is_false()
+		assert_bool(GameState.punya_kata(id)).is_false()
 
 
 func test_semua_teks_punya_bahasa_indonesia() -> void:

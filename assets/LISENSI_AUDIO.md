@@ -10,3 +10,7 @@ Semua audio di `assets/sfx/` dan `assets/music/` saat ini adalah **placeholder C
 | sfx_ui_click.wav | https://opengameart.org/content/51-ui-sound-effects-buttons-switches-and-clicks (click3) | Kenney (kenney.nl) | CC0 |
 | sfx_type_bell.wav, sfx_event_alert.wav, sfx_event_alert_threat.wav | https://opengameart.org/content/level-up-power-up-coin-get-13-sounds (Coin01, Rise01, Alarm; dipotong + 16-bit) | wobbleboxx | CC0 |
 | mus_era1_kamar.ogg | https://opengameart.org/content/chill-lofi-inspired (ChillLofi.ogg) | omfgdude | CC0 |
+| sfx_carriage_return.ogg, sfx_buy.ogg, sfx_error.ogg | https://opengameart.org/content/50-rpg-sound-effects (metalLatch, handleCoins2, metalClick) | Kenney (kenney.nl) | CC0 |
+| sfx_dilemma_choice.wav | https://opengameart.org/content/51-ui-sound-effects-buttons-switches-and-clicks (switch3) | Kenney (kenney.nl) | CC0 |
+| sfx_follower_up.wav | https://opengameart.org/content/level-up-power-up-coin-get-13-sounds (Rise03; dipotong + 16-bit) | wobbleboxx | CC0 |
+| mus_era2_kantor.mp3 | https://opengameart.org/content/lofi-compilation (Cue.mp3) | TAD | CC0 |

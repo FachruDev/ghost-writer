@@ -44,3 +44,13 @@ signal event_tampil(info: Dictionary)
 signal event_selesai(event_id: String)
 @warning_ignore("unused_signal")
 signal toko_diminta(buka: bool)
+@warning_ignore("unused_signal")
+signal era_berubah(era: int)
+@warning_ignore("unused_signal")
+signal template_diganti
+@warning_ignore("unused_signal")
+signal dibeli
+@warning_ignore("unused_signal")
+signal aksi_gagal
+@warning_ignore("unused_signal")
+signal dilema_dipilih(indeks: int)

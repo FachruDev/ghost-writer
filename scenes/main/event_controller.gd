@@ -18,16 +18,21 @@ var _sejak_cek := 0.0
 
 func _ready() -> void:
 	GameClock.tick.connect(_on_tick)
+	Events.dilema_dipilih.connect(_on_dilema_dipilih)
 
 
-## Pengali viral dari event aktif untuk satu distrik dan emosi headline.
+func sedang_dilema() -> bool:
+	return str(_aktif.get("jenis", "")) == "dilema"
+
+
+## Pengali viral dari event aktif untuk satu distrik dan emosi headline. Distrik "*" = semua.
 func pengali_viral(distrik: int, emosi: String) -> float:
 	var kali := 1.0
 	if _aktif.is_empty():
 		return kali
 	var distrik_id := str(DataDB.districts[distrik]["id"])
 	for efek in _aktif.get("efek", []):
-		if str(efek.get("distrik", "")) != distrik_id:
+		if not (str(efek.get("distrik", "")) in [distrik_id, "*"]):
 			continue
 		match str(efek.get("tipe", "")):
 			"kerentanan_distrik":
@@ -36,6 +41,22 @@ func pengali_viral(distrik: int, emosi: String) -> float:
 				if str(efek.get("emosi", "")) == emosi:
 					kali *= float(efek.get("kali", 1.0))
 	return kali
+
+
+## Pengali uang dan heat untuk satu rumor dari event aktif (E04 calon RT, E06 festival).
+func pengali_rumor(kata_ids: Dictionary) -> Dictionary:
+	var hasil := {"uang": 1.0, "heat": 1.0}
+	for efek in _aktif.get("efek", []):
+		match str(efek.get("tipe", "")):
+			"uang_per_warga":
+				hasil["uang"] *= float(efek.get("kali", 1.0))
+			"pengali_tag":
+				for slot in kata_ids:
+					if str(DataDB.get_word(kata_ids[slot]).get("tag", "")) == str(efek.get("tag", "")):
+						hasil["uang"] *= float(efek.get("uang", 1.0))
+						hasil["heat"] *= float(efek.get("heat", 1.0))
+						break
+	return hasil
 
 
 func _on_tick(dt: float) -> void:
@@ -47,7 +68,7 @@ func _on_tick(dt: float) -> void:
 		if _sisa_ancaman <= 0.0:
 			_ancaman = {}
 			_selesai_atau_kembali()
-	if not _aktif.is_empty():
+	if not _aktif.is_empty() and not sedang_dilema():
 		_sisa -= dt
 		if _sisa <= 0.0:
 			_aktif = {}
@@ -57,6 +78,7 @@ func _on_tick(dt: float) -> void:
 	elif not _aktif.is_empty():
 		Events.event_sisa.emit(maxf(_sisa, 0.0))
 	_cek_ancaman()
+	_cek_ambang()
 	if _sejak_cek >= Balance.EVENT_CEK_DETIK:
 		_sejak_cek = 0.0
 		_cek_acak()
@@ -81,10 +103,29 @@ func _cek_acak() -> void:
 		return
 	for e in DataDB.events:
 		var pemicu: Dictionary = e.get("pemicu", {})
-		if str(pemicu.get("tipe", "")) == "acak" and _era_cocok(e) \
+		if str(pemicu.get("tipe", "")) == "acak" and _era_cocok(e) and _syarat_terpenuhi(pemicu) \
 				and GameClock.rng.randf() < float(pemicu.get("peluang", 0.0)):
 			_mulai(e)
 			return
+
+
+## Event berpemicu ambang pengikut (E04) terjadi sekali per permainan, saat jalur event acak kosong.
+func _cek_ambang() -> void:
+	if not _aktif.is_empty():
+		return
+	var sekali: Array = GameState.statistik["event_sekali"]
+	for e in DataDB.events:
+		var pemicu: Dictionary = e.get("pemicu", {})
+		if str(pemicu.get("tipe", "")) == "pengikut" and not (str(e["id"]) in sekali) and _era_cocok(e) \
+				and GameState.pengikut >= int(pemicu.get("nilai", 0)):
+			sekali.append(str(e["id"]))
+			_mulai(e)
+			return
+
+
+func _syarat_terpenuhi(pemicu: Dictionary) -> bool:
+	var syarat: Dictionary = pemicu.get("syarat", {})
+	return GameState.heat >= float(syarat.get("heat_min", 0.0))
 
 
 ## Memulai event acak (modifier/peluang).
@@ -92,7 +133,25 @@ func _mulai(e: Dictionary) -> void:
 	_aktif = e
 	_sisa = float(e.get("durasi", 0))
 	_sejak_event = 0.0
+	if sedang_dilema():
+		GameClock.jeda(&"dilema")
 	_umumkan(e, _sisa)
+
+
+## Pemain memilih opsi dilema: terapkan efeknya, catat di feed, lalu jalankan waktu lagi.
+func _on_dilema_dipilih(indeks: int) -> void:
+	if not sedang_dilema():
+		return
+	var pilihan: Array = _aktif.get("pilihan", [])
+	if indeks < 0 or indeks >= pilihan.size():
+		return
+	var info := {}
+	for efek in pilihan[indeks].get("efek", []):
+		_efek_langsung(efek, info)
+	Events.feed_baru.emit({"jenis": "dilema", "teks": pilihan[indeks].get("label", "")})
+	_aktif = {}
+	GameClock.lanjut(&"dilema")
+	_selesai_atau_kembali()
 
 
 func _umumkan(e: Dictionary, durasi: float) -> void:
@@ -105,7 +164,11 @@ func _umumkan(e: Dictionary, durasi: float) -> void:
 
 
 func _info(e: Dictionary, durasi: float) -> Dictionary:
-	return {"id": e["id"], "nama": e.get("nama", ""), "teks": e.get("teks", ""), "jenis": e.get("jenis", ""), "durasi": durasi}
+	var label: Array = []
+	for p in e.get("pilihan", []):
+		label.append(p.get("label", ""))
+	return {"id": e["id"], "nama": e.get("nama", ""), "teks": e.get("teks", ""), "jenis": e.get("jenis", ""),
+		"durasi": durasi, "pilihan": label}
 
 
 ## Saat satu jalur selesai: tampilkan lagi event yang masih berjalan, atau tutup banner.
@@ -122,6 +185,15 @@ func _efek_langsung(efek: Dictionary, info: Dictionary) -> void:
 	match str(efek.get("tipe", "")):
 		"kredibilitas":
 			GameState.ubah_kredibilitas(float(efek.get("nilai", 0)))
+		"uang":
+			GameState.tambah_uang(int(efek.get("nilai", 0)))
+		"heat":
+			GameState.ubah_heat(float(efek.get("nilai", 0)))
+		"pengikut":
+			GameState.tambah_pengikut(int(efek.get("nilai", 0)))
+		"beri_kata":
+			for id in efek.get("kata", []):
+				GameState.beri_kata(str(id))
 		"pembongkar":
 			if sim == null:
 				return

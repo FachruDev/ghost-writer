@@ -1,41 +1,210 @@
 [
   {
     "id": "e_hari_pasar",
-    "nama": {"id": "Hari Pasar", "en": "Market Day"},
+    "nama": {
+      "id": "Hari Pasar",
+      "en": "Market Day"
+    },
     "jenis": "modifier",
     "era_min": 1,
-    "pemicu": {"tipe": "acak", "peluang": 0.15},
+    "pemicu": {
+      "tipe": "acak",
+      "peluang": 0.15
+    },
     "durasi": 60,
-    "teks": {"id": "Pasar Lama sedang ramai. Gosip menyebar lebih cepat di sana!",
-             "en": "The Old Market is packed. Gossip spreads faster there!"},
-    "efek": [{"tipe": "kerentanan_distrik", "distrik": "pasar_lama", "kali": 1.5}],
+    "teks": {
+      "id": "Pasar Lama sedang ramai. Gosip menyebar lebih cepat di sana!",
+      "en": "The Old Market is packed. Gossip spreads faster there!"
+    },
+    "efek": [
+      {
+        "tipe": "kerentanan_distrik",
+        "distrik": "pasar_lama",
+        "kali": 1.5
+      }
+    ],
     "pilihan": []
   },
   {
     "id": "e_ronda_malam",
-    "nama": {"id": "Ronda Malam", "en": "Night Watch"},
+    "nama": {
+      "id": "Ronda Malam",
+      "en": "Night Watch"
+    },
     "jenis": "modifier",
     "era_min": 1,
-    "pemicu": {"tipe": "acak", "peluang": 0.15},
+    "pemicu": {
+      "tipe": "acak",
+      "peluang": 0.15
+    },
     "durasi": 60,
-    "teks": {"id": "Warga Gang Sempit sedang ronda. Cerita seram laku, lelucon garing.",
-             "en": "Narrow Alley is on night watch. Scary stories land, jokes fall flat."},
+    "teks": {
+      "id": "Warga Gang Sempit sedang ronda. Cerita seram laku, lelucon garing.",
+      "en": "Narrow Alley is on night watch. Scary stories land, jokes fall flat."
+    },
     "efek": [
-      {"tipe": "emosi_distrik", "distrik": "gang_sempit", "emosi": "takut", "kali": 1.5},
-      {"tipe": "emosi_distrik", "distrik": "gang_sempit", "emosi": "lucu", "kali": 0.7}
+      {
+        "tipe": "emosi_distrik",
+        "distrik": "gang_sempit",
+        "emosi": "takut",
+        "kali": 1.5
+      },
+      {
+        "tipe": "emosi_distrik",
+        "distrik": "gang_sempit",
+        "emosi": "lucu",
+        "kali": 0.7
+      }
     ],
     "pilihan": []
   },
   {
     "id": "e_pembongkar_fakta",
-    "nama": {"id": "Pembongkar Fakta", "en": "Fact Checker"},
+    "nama": {
+      "id": "Pembongkar Fakta",
+      "en": "Fact Checker"
+    },
     "jenis": "ancaman",
     "era_min": 1,
-    "pemicu": {"tipe": "kondisi", "heat_min": 70},
+    "pemicu": {
+      "tipe": "kondisi",
+      "heat_min": 70
+    },
     "durasi": 6,
-    "teks": {"id": "Seorang pembongkar fakta turun ke jalan. Warga di sekitarnya jadi kebal!",
-             "en": "A fact checker hits the streets. Citizens nearby become immune!"},
-    "efek": [{"tipe": "pembongkar", "radius": 0.14}, {"tipe": "kredibilitas", "nilai": -10}],
+    "teks": {
+      "id": "Seorang pembongkar fakta turun ke jalan. Warga di sekitarnya jadi kebal!",
+      "en": "A fact checker hits the streets. Citizens nearby become immune!"
+    },
+    "efek": [
+      {
+        "tipe": "pembongkar",
+        "radius": 0.14
+      },
+      {
+        "tipe": "kredibilitas",
+        "nilai": -10
+      }
+    ],
+    "pilihan": []
+  },
+  {
+    "id": "e_pemilihan_rt",
+    "nama": {
+      "id": "Pemilihan Ketua RT",
+      "en": "Neighborhood Chief Election"
+    },
+    "jenis": "peluang",
+    "era_min": 1,
+    "pemicu": {
+      "tipe": "pengikut",
+      "nilai": 300
+    },
+    "durasi": 90,
+    "teks": {
+      "id": "Musim pemilihan! Dua calon fiktif masuk ke tanganmu. Rumor tentang mereka bernilai dua kali lipat, tapi lebih panas.",
+      "en": "Election season! Two fictional candidates join your hand. Rumors about them pay double, but run hotter."
+    },
+    "efek": [
+      {
+        "tipe": "beri_kata",
+        "kata": [
+          "calon_darto",
+          "calon_wati"
+        ]
+      },
+      {
+        "tipe": "pengali_tag",
+        "tag": "kandidat",
+        "uang": 2.0,
+        "heat": 1.5
+      }
+    ],
+    "pilihan": []
+  },
+  {
+    "id": "e_wartawan",
+    "nama": {
+      "id": "Wartawan Penasaran",
+      "en": "Curious Reporter"
+    },
+    "jenis": "dilema",
+    "era_min": 2,
+    "pemicu": {
+      "tipe": "acak",
+      "peluang": 0.08,
+      "syarat": {
+        "heat_min": 40
+      }
+    },
+    "durasi": 0,
+    "teks": {
+      "id": "Seorang wartawan mencium jejakmu. Dia mau diam... asal ada imbalan.",
+      "en": "A reporter has picked up your trail. They will stay quiet... for a price."
+    },
+    "efek": [],
+    "pilihan": [
+      {
+        "label": {
+          "id": "Bayar dia (200)",
+          "en": "Pay up (200)"
+        },
+        "efek": [
+          {
+            "tipe": "uang",
+            "nilai": -200
+          },
+          {
+            "tipe": "heat",
+            "nilai": -30
+          }
+        ]
+      },
+      {
+        "label": {
+          "id": "Abaikan",
+          "en": "Ignore"
+        },
+        "efek": [
+          {
+            "tipe": "heat",
+            "nilai": 20
+          },
+          {
+            "tipe": "pengikut",
+            "nilai": 50
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "e_festival",
+    "nama": {
+      "id": "Festival Kampung",
+      "en": "Village Festival"
+    },
+    "jenis": "modifier",
+    "era_min": 2,
+    "pemicu": {
+      "tipe": "acak",
+      "peluang": 0.12
+    },
+    "durasi": 60,
+    "teks": {
+      "id": "Seluruh kampung berpesta. Gosip menyebar di mana-mana dan warga royal.",
+      "en": "The whole village is partying. Gossip is everywhere and people are generous."
+    },
+    "efek": [
+      {
+        "tipe": "kerentanan_distrik",
+        "distrik": "*",
+        "kali": 1.2
+      },
+      {
+        "tipe": "uang_per_warga",
+        "kali": 1.5
+      }
+    ],
     "pilihan": []
   }
 ]

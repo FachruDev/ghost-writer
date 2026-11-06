@@ -66,9 +66,9 @@ Contoh event dilema (`pilihan` diisi):
 | E01 | Hari Pasar | Modifier | 1 | Acak | Kerentanan Pasar Lama ×1,5 selama 60 dtk | 0.2.0 (MVP) | Selesai |
 | E02 | Ronda Malam | Modifier | 1 | Acak | Rumor emosi *takut* ×1,5 di Gang Sempit, emosi *lucu* ×0,7 | 0.2.0 (MVP) | Selesai |
 | E03 | Pembongkar Fakta | Ancaman | 1 | Heat ≥ 70 | Warga di sekitar pembongkar jadi kebal; kredibilitas −10 | 0.2.0 (MVP) | Selesai |
-| E04 | Pemilihan Ketua RT | Peluang | 1 | Milestone 300 pengikut | Rumor tentang kandidat fiktif bernilai ×2, heat naik ×1,5 | 0.3.0 | Belum |
-| E05 | Wartawan Penasaran | Dilema | 2 | Acak, heat ≥ 40 | Bayar (uang −, heat −) atau abaikan (heat +, pengikut +) | 0.3.0 | Belum |
-| E06 | Festival Kampung | Modifier | 2 | Acak | Semua distrik kerentanan ×1,2, uang per warga ×1,5 | 0.3.0 | Belum |
+| E04 | Pemilihan Ketua RT | Peluang | 1 | Milestone 300 pengikut (sekali) | Kartu calon fiktif Pak Darto dan Bu Wati masuk ke tangan; selama 90 dtk rumor tentang mereka bernilai ×2, heat ×1,5 | 0.3.0 | Selesai |
+| E05 | Wartawan Penasaran | Dilema | 2 | Acak, heat ≥ 40 | Bayar (uang −, heat −) atau abaikan (heat +, pengikut +) | 0.3.0 | Selesai |
+| E06 | Festival Kampung | Modifier | 2 | Acak | Semua distrik kerentanan ×1,2, uang per warga ×1,5 | 0.3.0 | Selesai |
 | E07 | Dokumen Bocor | Peluang | 2 | Acak | Kartu SUMBER "dokumen bocor" (kred 3) gratis untuk 3 rumor | 0.4.0 | Belum |
 | E08 | Viral Challenge | Modifier | 3 | Acak | Template lucu ×2 viral, tapi kredibilitas semua rumor −1 | 0.4.0 | Belum |
 | E09 | Razia Hoaks | Ancaman | 3 | Kredibilitas < 30 | Saluran medsos dikunci 90 dtk, pengikut −5% | 0.4.0 | Belum |

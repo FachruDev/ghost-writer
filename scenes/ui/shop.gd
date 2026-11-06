@@ -61,6 +61,16 @@ func _isi_ulang() -> void:
 		anak.queue_free()
 	var kata := _belum_dimiliki(DataDB.words, GameState.kartu_dimiliki)
 	var template := _belum_dimiliki(DataDB.templates, GameState.template_dimiliki)
+	var upgrade: Array[String] = []
+	for id in DataDB.upgrades:
+		if GameState.upgrade_tersedia(id):
+			upgrade.append(id)
+	if not upgrade.is_empty():
+		_judul_bagian("UI_TOKO_UPGRADE")
+		for id in upgrade:
+			var u := DataDB.get_upgrade(id)
+			_baris(Bahasa.teks(u.get("nama", "")), Bahasa.teks(u.get("info", "")), int(u.get("harga", 0)),
+				GameState.beli_upgrade.bind(id))
 	_judul_bagian("UI_TOKO_KATA")
 	for id in kata:
 		var data := DataDB.get_word(id)
@@ -82,7 +92,8 @@ func _isi_ulang() -> void:
 func _belum_dimiliki(sumber: Dictionary, dimiliki: Array[String]) -> Array[String]:
 	var hasil: Array[String] = []
 	for id in sumber:
-		if not (id in dimiliki):
+		var item: Dictionary = sumber[id]
+		if not (id in dimiliki) and GameState.era_terbuka(item) and item.get("toko", true):
 			hasil.append(id)
 	hasil.sort_custom(func(a: String, b: String) -> bool:
 		return int(sumber[a].get("harga", 0)) < int(sumber[b].get("harga", 0)))

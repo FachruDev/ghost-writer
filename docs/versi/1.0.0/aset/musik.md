@@ -5,7 +5,7 @@ Musik disimpan di `res://assets/music/` sebagai `.ogg` dengan **loop aktif** di 
 | ID | Dipakai di | Suasana | Durasi loop | Versi | Sumber / lisensi | Status |
 | --- | --- | --- | --- | --- | --- | --- |
 | mus_era1_kamar | Era 1 (kamar) | Lo-fi jazz tenang, piano + ketukan pelan | 1–2 menit | 0.2.0 | OpenGameArt chill-lofi-inspired (omfgdude), CC0, sementara | Selesai |
-| mus_era2_kantor | Era 2 (kantor kecil) | Jazz lebih sibuk, sedikit tegang | 1–2 menit | 0.3.0 | | Belum |
+| mus_era2_kantor | Era 2 (kantor kecil) | Jazz lebih sibuk, sedikit tegang | 1–2 menit | 0.3.0 | OpenGameArt lofi-compilation Cue (TAD), CC0, sementara | Selesai |
 | mus_era3_gedung | Era 3 (gedung media) | Elektronik ringan, ritme cepat | 1–2 menit | 0.4.0 | | Belum |
 | mus_era4_server | Era 4 (menara server) | Synth dingin, megah, sedikit gelap | 1–2 menit | 0.5.0 | | Belum |
 | mus_threat | Saat ancaman besar aktif | Lapisan tegang di atas musik era | 30–60 detik | 0.4.0 | | Belum |

@@ -37,3 +37,10 @@ UI_MISI_HABIS,Semua misi selesai,All missions complete
 UI_TERKUNCI,%s (%d pengikut),%s (%d followers)
 UI_SISA_DETIK,%d dtk,%ds
 UI_PEMBONGKAR,%d warga jadi kebal,%d citizens became immune
+UI_TERKUNCI_ERA,%s (Era %d),%s (Era %d)
+UI_TOKO_UPGRADE,Kantor & staf,Office & staff
+UI_ERA,Era %d,Era %d
+UI_STAF,Staf: %s,Staff: %s
+UI_STAF_HOAKS,Rumor staf dibongkar! Kredibilitas -%d,Staff rumor debunked! Credibility -%d
+UI_ERA_NAIK,Pindah ke kantor! Era %d dimulai,Moved to an office! Era %d begins
+UI_DILEMA_DIPILIH,Kamu memilih: %s,You chose: %s

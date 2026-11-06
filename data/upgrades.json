@@ -1,6 +1,7 @@
 [
-  {"id": "merpati", "jenis": "saluran", "nama": {"id": "Merpati", "en": "Pigeon"},
-   "biaya_kirim": 0, "cakupan": "satu", "warga_awal": [1, 3], "pengali_heat": 1.0, "pengikut_min": 0},
-  {"id": "koran", "jenis": "saluran", "nama": {"id": "Koran", "en": "Newspaper"},
-   "biaya_kirim": 30, "cakupan": "semua", "warga_awal": [2, 2], "pengali_heat": 1.3, "pengikut_min": 100}
+  {"id": "merpati", "jenis": "saluran", "nama": {"id": "Merpati", "en": "Pigeon"}, "biaya_kirim": 0, "cakupan": "satu", "warga_awal": [1, 3], "pengali_heat": 1.0, "pengikut_min": 0},
+  {"id": "koran", "jenis": "saluran", "nama": {"id": "Koran", "en": "Newspaper"}, "biaya_kirim": 30, "cakupan": "semua", "warga_awal": [2, 2], "pengali_heat": 1.3, "pengikut_min": 100},
+  {"id": "radio", "jenis": "saluran", "nama": {"id": "Radio", "en": "Radio"}, "biaya_kirim": 60, "cakupan": "siaran", "warga_awal": [1, 1], "siaran_detik": 10, "siaran_jeda": 2, "pengali_heat": 1.2, "pengikut_min": 0, "era_min": 2},
+  {"id": "kantor", "jenis": "era", "era": 2, "nama": {"id": "Sewa Kantor", "en": "Rent an Office"}, "info": {"id": "Naik ke Era 2: radio, staf, kata dan template baru", "en": "Move to Era 2: radio, staff, new words and templates"}, "harga": 400, "pengikut_min": 200, "era_min": 1},
+  {"id": "staf_1", "jenis": "staf", "nama": {"id": "Rekrut Staf", "en": "Hire Staff"}, "info": {"id": "Tiap 40 detik staf mengirim rumor kecil sendiri", "en": "Every 40 seconds the staff sends a small rumor"}, "harga": 250, "pengikut_min": 0, "era_min": 2, "jeda_detik": 40, "warga_dasar": 8, "pengali_heat": 0.7}
 ]

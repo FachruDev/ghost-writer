@@ -5,11 +5,16 @@ extends Node
 var sim: SpreadSim
 ## (distrik_idx: int, emosi: String) -> float. Diisi main dari EventController.
 var pengali_event: Callable
+## (kata_ids: Dictionary) -> {"uang": float, "heat": float}. Diisi main dari EventController.
+var pengali_rumor: Callable
 
 var _rumor: Dictionary = {}
 var _warga_percaya := 0
 var _uang_didapat := 0
+var _pengali_uang := 1.0
 var _kata_per_slot: Dictionary = {}
+## Radio: {"sisa": jumlah suntikan tersisa, "jeda": detik antar suntikan, "hitung": detik ke suntikan berikut}
+var _siaran: Dictionary = {}
 
 
 func _ready() -> void:
@@ -43,8 +48,12 @@ func _on_kirim(data: Dictionary) -> void:
 	if pengali_event.is_valid():
 		for i in viral.size():
 			viral[i] *= float(pengali_event.call(i, skor["emosi"]))
+	var pengali := {"uang": 1.0, "heat": 1.0}
+	if pengali_rumor.is_valid():
+		pengali = pengali_rumor.call(kata_ids)
+	_pengali_uang = float(pengali["uang"])
 	GameState.tambah_uang(-biaya_kirim(saluran_id))
-	GameState.ubah_heat(Konsekuensi.heat_kirim(skor, float(saluran.get("pengali_heat", 1.0))))
+	GameState.ubah_heat(Konsekuensi.heat_kirim(skor, float(saluran.get("pengali_heat", 1.0))) * float(pengali["heat"]))
 	_rumor = data.duplicate(true)
 	_rumor["skor"] = skor
 	_rumor["headline"] = HeadlineBuilder.susun(template_id, kata_ids)
@@ -53,6 +62,12 @@ func _on_kirim(data: Dictionary) -> void:
 	_uang_didapat = 0
 	_catat_kiriman(skor["emosi"], benih.keys())
 	var awal := sim.mulai(benih, viral, skor["dipercaya_akhir"])
+	_siaran = {}
+	if str(saluran.get("cakupan", "")) == "siaran":
+		var jeda := float(saluran.get("siaran_jeda", 2.0))
+		var durasi := float(saluran.get("siaran_detik", 10.0))
+		_siaran = {"sisa": roundi(durasi / jeda) - 1, "jeda": jeda, "hitung": jeda}
+		sim.tahan(durasi)
 	Events.rumor_published.emit(_rumor)
 	Events.feed_baru.emit({"jenis": "rumor", "template_id": template_id, "kata_ids": kata_ids})
 	_tambah_percaya(awal, -1)
@@ -63,6 +78,7 @@ func _on_kirim(data: Dictionary) -> void:
 
 func _on_tick(dt: float) -> void:
 	var aktif_sebelum := sim.ada_rumor_aktif()
+	_siarkan(dt)
 	var hasil := sim.langkah(dt)
 	var per_distrik: PackedInt32Array = hasil["percaya_per_distrik"]
 	for d in per_distrik.size():
@@ -88,7 +104,7 @@ func snapshot_untuk_save() -> Dictionary:
 		if akhir["dibongkar"]:
 			salinan.kebalkan_rumor(Balance.PERSEN_KEBAL_DIBONGKAR)
 		delta = akhir
-		delta["uang"] = Economy.uang_dari_warga(tambahan)
+		delta["uang"] = roundi(Economy.uang_dari_warga(tambahan) * _pengali_uang)
 		delta["riwayat"] = _entri_riwayat(_warga_percaya + tambahan, _uang_didapat + delta["uang"], akhir["dibongkar"])
 	return {"distrik_status": _hitung_status(salinan), "delta": delta}
 
@@ -96,7 +112,7 @@ func snapshot_untuk_save() -> Dictionary:
 func _benih(saluran: Dictionary, distrik_id: String) -> Dictionary:
 	var rentang: Array = saluran.get("warga_awal", [1, 1])
 	var hasil := {}
-	if str(saluran.get("cakupan", "satu")) == "semua":
+	if str(saluran.get("cakupan", "satu")) in ["semua", "siaran"]:
 		for i in DataDB.districts.size():
 			hasil[i] = GameClock.rng.randi_range(int(rentang[0]), int(rentang[1]))
 	else:
@@ -106,10 +122,25 @@ func _benih(saluran: Dictionary, distrik_id: String) -> Dictionary:
 	return hasil
 
 
+## Radio: tiap `jeda` detik satu warga di setiap distrik langsung mendengar dan percaya.
+func _siarkan(dt: float) -> void:
+	if _siaran.is_empty() or not sim.ada_rumor_aktif():
+		return
+	_siaran["hitung"] -= dt
+	if _siaran["hitung"] > 0.0:
+		return
+	_siaran["hitung"] = _siaran["jeda"]
+	_siaran["sisa"] -= 1
+	for d in DataDB.districts.size():
+		_tambah_percaya(sim.suntik({d: 1}), d)
+	if _siaran["sisa"] <= 0:
+		_siaran = {}
+
+
 func _tambah_percaya(jumlah: int, distrik: int) -> void:
 	if jumlah <= 0:
 		return
-	var uang := Economy.uang_dari_warga(jumlah)
+	var uang := roundi(Economy.uang_dari_warga(jumlah) * _pengali_uang)
 	_warga_percaya += jumlah
 	_uang_didapat += uang
 	GameState.tambah_uang(uang)

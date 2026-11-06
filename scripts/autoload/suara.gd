@@ -14,8 +14,18 @@ const SFX := {
 	"alert": [preload("res://assets/sfx/sfx_event_alert.wav")],
 	"alert_threat": [preload("res://assets/sfx/sfx_event_alert_threat.wav")],
 	"click": [preload("res://assets/sfx/sfx_ui_click.wav")],
+	"carriage": [preload("res://assets/sfx/sfx_carriage_return.ogg")],
+	"follower_up": [preload("res://assets/sfx/sfx_follower_up.wav")],
+	"buy": [preload("res://assets/sfx/sfx_buy.ogg")],
+	"error": [preload("res://assets/sfx/sfx_error.ogg")],
+	"dilemma": [preload("res://assets/sfx/sfx_dilemma_choice.wav")],
 }
-const MUSIK_ERA1 := preload("res://assets/music/mus_era1_kamar.ogg")
+## Musik per era; loop diatur di file .import masing-masing.
+const MUSIK_ERA := {
+	1: preload("res://assets/music/mus_era1_kamar.ogg"),
+	2: preload("res://assets/music/mus_era2_kantor.mp3"),
+}
+const KELIPATAN_PENGIKUT := 50
 
 const JUMLAH_PEMUTAR := 8
 const KOIN_MAKS_PER_DETIK := 4
@@ -28,6 +38,8 @@ var _berikut := 0
 var _musik: AudioStreamPlayer
 var _koin_detik_ini := 0
 var _waktu_koin := 0.0
+var _ambang_pengikut := 0
+var _era_musik := 0
 
 
 func _ready() -> void:
@@ -40,9 +52,9 @@ func _ready() -> void:
 		_pemutar.append(p)
 	_musik = AudioStreamPlayer.new()
 	_musik.bus = "Music"
-	_musik.stream = MUSIK_ERA1  # loop diatur di mus_era1_kamar.ogg.import
 	add_child(_musik)
-	_musik.play()
+	putar_musik_era(GameState.era)
+	_ambang_pengikut = floori(float(GameState.pengikut) / KELIPATAN_PENGIKUT)
 	_hubungkan()
 	get_tree().node_added.connect(_on_node_added)
 
@@ -51,6 +63,15 @@ func _exit_tree() -> void:
 	_musik.stop()
 	for p in _pemutar:
 		p.stop()
+
+
+func putar_musik_era(era: int) -> void:
+	var lagu: AudioStream = MUSIK_ERA.get(era, MUSIK_ERA[1])
+	if era == _era_musik and _musik.playing:
+		return
+	_era_musik = era
+	_musik.stream = lagu
+	_musik.play()
 
 
 func putar(nama: String, variasi_pitch: float = 0.0) -> void:
@@ -81,6 +102,16 @@ func _process(delta: float) -> void:
 
 
 func _hubungkan() -> void:
+	Events.template_diganti.connect(putar.bind("carriage"))
+	Events.dibeli.connect(putar.bind("buy"))
+	Events.aksi_gagal.connect(putar.bind("error"))
+	Events.dilema_dipilih.connect(func(_i: int) -> void: putar("dilemma"))
+	Events.era_berubah.connect(putar_musik_era)
+	Events.pengikut_berubah.connect(func(p: int) -> void:
+		var ambang := floori(float(p) / KELIPATAN_PENGIKUT)
+		if ambang > _ambang_pengikut:
+			putar("follower_up")
+		_ambang_pengikut = ambang)
 	Events.kartu_terbang.connect(func(_id: String, _dari: Vector2) -> void:
 		putar("card_pick", 0.05)
 		get_tree().create_timer(0.25).timeout.connect(putar.bind("card_place", 0.05)))

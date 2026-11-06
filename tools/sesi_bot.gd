@@ -9,7 +9,7 @@ extends SceneTree
 ## Catatan: jangan rujuk class yang memakai autoload saat compile (mis. MissionController);
 ## runner -s mengompilasi script ini sebelum autoload terdaftar.
 
-const DURASI_SESI := 15.0 * 60.0
+const DURASI_SESI := 25.0 * 60.0
 const JEDA_PIKIR := 10.0  # detik antara rumor selesai dan rumor berikutnya
 const SEEDS := [1, 2, 3, 4, 5, 6, 7, 8]
 
@@ -41,14 +41,22 @@ func _sesi(seed: int) -> Dictionary:
 	var main := (load("res://scenes/main/main.tscn") as PackedScene).instantiate()
 	R.add_child(main)
 	var rumor: Node = main.get_node("RumorController")
-	var catatan := {"seed": seed, "misi": [], "event": [], "rumor": 0, "dibongkar": 0, "heat_maks": 0.0, "kred_min": 100.0, "beli": 0, "heat_sum": 0.0, "heat_panas": 0.0, "n": 0}
+	var catatan := {"seed": seed, "misi": [], "event": [], "rumor": 0, "dibongkar": 0, "heat_maks": 0.0, "kred_min": 100.0, "beli": 0, "heat_sum": 0.0, "heat_panas": 0.0, "n": 0, "era2": -1.0, "staf": -1.0, "dilema": 0}
 	var f_misi := func(): catatan["misi"].append([st.misi_idx, roundi(_t)])
 	var f_event := func(i): catatan["event"].append([str(i["id"]), roundi(_t)])
 	var f_selesai := func(h): if h.get("dibongkar", false): catatan["dibongkar"] += 1
 	ev.misi_berubah.connect(f_misi); ev.event_mulai.connect(f_event); ev.rumor_selesai.connect(f_selesai)
 	_t = 0.0
 	var tunggu := 0.0
+	var ec: Node = main.get_node("EventController")
 	while _t < DURASI_SESI:
+		if ec.sedang_dilema():
+			catatan["dilema"] += 1
+			ev.dilema_dipilih.emit(0 if st.uang >= 400 else 1)
+		if st.era >= 2 and catatan["era2"] < 0.0:
+			catatan["era2"] = _t
+		if st.punya_upgrade("staf_1") and catatan["staf"] < 0.0:
+			catatan["staf"] = _t
 		if not rumor.sim.ada_rumor_aktif():
 			tunggu += Balance.SIM_TICK
 			if tunggu >= JEDA_PIKIR:
@@ -76,13 +84,19 @@ var _t := 0.0
 ## Beli kata termurah kalau uang cukup dengan cadangan 30 untuk Koran; template kalau jauh lebih kaya.
 func _belanja(st, db) -> int:
 	var dibeli := 0
+	for u in ["kantor", "staf_1"]:
+		if st.upgrade_tersedia(u) and st.uang >= int(db.get_upgrade(u)["harga"]):
+			if st.beli_upgrade(u):
+				dibeli += 1
+	if st.upgrade_tersedia("kantor"):
+		return dibeli  # menabung untuk kantor
 	for t in db.templates:
-		if not st.punya_template(t) and st.uang >= int(db.templates[t]["harga"]) + 150:
+		if not st.punya_template(t) and st.era_terbuka(db.templates[t]) and st.uang >= int(db.templates[t]["harga"]) + 150:
 			if st.beli_template(t):
 				dibeli += 1
 	var calon: Array = []
 	for id in db.words:
-		if not st.punya_kata(id):
+		if not st.punya_kata(id) and st.era_terbuka(db.words[id]) and db.words[id].get("toko", true):
 			calon.append(id)
 	calon.sort_custom(func(x, y): return int(db.words[x]["harga"]) < int(db.words[y]["harga"]))
 	for id in calon:
@@ -125,9 +139,10 @@ func _kirim(st, db, ev) -> bool:
 				terbaik = {"template_id": tid, "kata_ids": pilih, "distrik_id": d["id"]}
 	if terbaik.is_empty():
 		return false
-	var koran: bool = st.saluran_terbuka("koran") and st.uang >= 60 and not paksa_takut
-	terbaik["saluran_id"] = "koran" if koran else "merpati"
-	if koran:
+	var radio: bool = st.saluran_terbuka("radio") and st.uang >= 160 and not paksa_takut
+	var koran: bool = not radio and st.saluran_terbuka("koran") and st.uang >= 60 and not paksa_takut
+	terbaik["saluran_id"] = "radio" if radio else ("koran" if koran else "merpati")
+	if koran or radio:
 		terbaik["distrik_id"] = ""
 	ev.kirim_diminta.emit(terbaik)
 	return true
@@ -150,6 +165,9 @@ func _cetak(daftar: Array) -> void:
 			t += float(f.call(l))
 		return t / k
 	var m5 := daftar.filter(func(l): return l["misi_akhir"] >= 5).map(func(l): return l["misi"].filter(func(x): return x[0] == 5)[0][1] / 60.0)
+	var era2 := daftar.filter(func(l): return l["era2"] >= 0.0).map(func(l): return snappedf(l["era2"] / 60.0, 0.1))
+	var staf := daftar.filter(func(l): return l["staf"] >= 0.0).map(func(l): return snappedf(l["staf"] / 60.0, 0.1))
+	print("ERA2: sewa kantor %d/%d @menit %s | staf %d/%d @menit %s | dilema=%.1f per sesi" % [era2.size(), k, str(era2), staf.size(), k, str(staf), rata.call(func(l): return l["dilema"])])
 	print("RINGKAS: misi5_selesai=%d/%d @menit %s | rumor=%.0f | bongkar=%.0f%% | heat_rata=%.0f | menit_heat>=70=%.1f | kred_min=%.0f | acak=%.1f | ancaman=%.1f | kartu=%.1f/40 | uang=%.0f" % [
 		m5.size(), k, str(m5.map(func(x): return snappedf(x, 0.1))), rata.call(func(l): return l["rumor"]),
 		100.0 * rata.call(func(l): return float(l["dibongkar"]) / maxf(1, l["rumor"])), rata.call(func(l): return l["heat_sum"] / maxf(1, l["n"])),

@@ -22,6 +22,7 @@ var _label_skor: Label
 
 func _ready() -> void:
 	_bangun_ui()
+	_warnai_era(GameState.era)
 	Events.kepemilikan_berubah.connect(_on_kepemilikan)
 	Events.kartu_dipilih.connect(_on_kartu)
 	Events.kartu_terbang.connect(_terbangkan_kartu)
@@ -30,6 +31,7 @@ func _ready() -> void:
 		_saluran = id
 		_segarkan())
 	Events.money_changed.connect(func(_u: int) -> void: _segarkan())
+	Events.era_berubah.connect(_warnai_era)
 	Events.rumor_published.connect(_on_rumor_published)
 	Events.rumor_selesai.connect(_on_rumor_selesai)
 	Bahasa.bahasa_berubah.connect(func(_kode: String) -> void:
@@ -47,8 +49,13 @@ func _slot_template() -> Array:
 	return DataDB.get_template(_template_id()).get("slot", [])
 
 
+## Latar meja per era (sementara warna polos; art kantor menyusul dari desain UI).
+func _warnai_era(era: int) -> void:
+	add_theme_stylebox_override("panel", Palet.kotak(Palet.MEJA_ERA.get(era, Palet.PANEL), Color.TRANSPARENT, 6))
+
+
 func _semua_distrik() -> bool:
-	return str(DataDB.get_upgrade(_saluran).get("cakupan", "satu")) == "semua"
+	return str(DataDB.get_upgrade(_saluran).get("cakupan", "satu")) in ["semua", "siaran"]
 
 
 func _siap_kirim() -> bool:
@@ -75,6 +82,8 @@ func _on_kartu(kata_id: String) -> void:
 	if slot in _slot_template():
 		_isi[slot] = kata_id
 		_segarkan()
+	else:
+		Events.aksi_gagal.emit()
 
 
 func _on_distrik(distrik_id: String) -> void:
@@ -96,6 +105,7 @@ func _ganti_template(arah: int) -> void:
 	if _template_ids.is_empty():
 		return
 	_idx = posmod(_idx + arah, _template_ids.size())
+	Events.template_diganti.emit()
 	for slot in _isi.keys():
 		if not (slot in _slot_template()):
 			_isi.erase(slot)

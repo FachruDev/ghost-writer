@@ -119,16 +119,16 @@ Semua pakai kotak abu-abu dan teks polos. **Jangan sentuh art.**
 
 ## 0.3.0 — Era kantor
 
-- [ ] Era 2: latar meja kantor, terbuka saat syarat pengikut tercapai
-- [ ] Saluran radio
-- [ ] Staf otomatis pertama
-- [ ] ±80 kata, 6 template
-- [ ] Sistem event dilema (pilihan A/B, waktu dijeda)
-- [ ] Event E04 Pemilihan Ketua RT, E05 Wartawan Penasaran, E06 Festival Kampung
-- [ ] SFX: carriage return, pengikut naik, beli, error, pilih dilema, telepon
-- [ ] Musik era 2
-- [ ] Animasi: kirim kertas, mutasi headline, buka toko, umpan balik tombol
-- [ ] Art pertama: kartu, slot, kertas, meja era 1–2, peta, distrik 1–3, panel UI, stempel HOAKS
+- [x] Era 2: tombol Sewa Kantor (200 pengikut, 400 uang); latar meja kantor sementara warna polos
+- [x] Saluran radio (siaran 10 detik)
+- [x] Staf otomatis pertama (rumor abstrak tiap 40 detik)
+- [x] ±80 kata, 6 template (82 kata termasuk 2 calon RT dari E04)
+- [x] Sistem event dilema (pilihan A/B, waktu dijeda)
+- [x] Event E04 Pemilihan Ketua RT, E05 Wartawan Penasaran, E06 Festival Kampung
+- [ ] SFX: carriage return, pengikut naik, beli, error, pilih dilema (selesai, placeholder CC0); telepon belum ada sumbernya
+- [x] Musik era 2 (placeholder CC0)
+- [ ] Animasi: kirim kertas, mutasi headline, buka toko, umpan balik tombol (menunggu desain UI)
+- [ ] Art pertama: kartu, slot, kertas, meja era 1–2, peta, distrik 1–3, panel UI, stempel HOAKS (menunggu desain UI)
 - [ ] Ikon radio dan staf
 
 ## 0.4.0 — Era gedung media
