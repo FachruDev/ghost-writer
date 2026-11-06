@@ -9,9 +9,10 @@ res://
   data/
     words.json        # semua kartu kata (teks per bahasa)
     templates.json    # pola headline per bahasa
-    districts.json    # distrik dan profil emosi
+    districts.json    # distrik, profil emosi, area per era (area_era)
     upgrades.json     # saluran (Merpati, Koran, Radio), Sewa Kantor (era), staf
     missions.json     # misi berurutan
+    tokoh.json        # tokoh fiktif target besar (era 4)
     events.json       # event (lihat EVENT.md)
   localization/
     ui.csv            # teks UI: keys,id,en
@@ -21,6 +22,8 @@ res://
     main/event_controller.gd    # event kota (EVENT.md)
     main/mission_controller.gd  # misi berurutan
     main/staff_controller.gd    # staf otomatis era 2
+    main/campaign_controller.gd # kontrak kampanye era 3
+    main/tokoh_controller.gd    # tokoh target dan pertahanannya (era 4)
     city/city.tscn          # peta + titik warga
     city/district.tscn
     city/feed.tscn          # feed headline yang beredar

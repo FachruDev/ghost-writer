@@ -14,3 +14,8 @@ Semua audio di `assets/sfx/` dan `assets/music/` saat ini adalah **placeholder C
 | sfx_dilemma_choice.wav | https://opengameart.org/content/51-ui-sound-effects-buttons-switches-and-clicks (switch3) | Kenney (kenney.nl) | CC0 |
 | sfx_follower_up.wav | https://opengameart.org/content/level-up-power-up-coin-get-13-sounds (Rise03; dipotong + 16-bit) | wobbleboxx | CC0 |
 | mus_era2_kantor.mp3 | https://opengameart.org/content/lofi-compilation (Cue.mp3) | TAD | CC0 |
+| sfx_notif.wav | https://opengameart.org/content/ui-sounds-0 (#2.wav) | HaelDB | CC0 |
+| mus_era3_gedung.mp3 | https://opengameart.org/content/cyberpunk-moonlight-sonata (Cyberpunk Moonlight Sonata v2.mp3) | Joth | CC0 |
+| sfx_era_up.ogg | https://opengameart.org/content/85-short-music-jingles (jingles_SAX10) | Kenney (kenney.nl) | CC0 |
+| mus_era4_server.mp3 | https://opengameart.org/content/calm-relax-1-synthwave-421k (lifewave.mp3) | cynicmusic | CC0 |
+| sfx_server_hum.wav | Dibuat prosedural untuk proyek ini (sinus 60/120/180 Hz + desis teredam) | Ghostwriter | milik proyek |

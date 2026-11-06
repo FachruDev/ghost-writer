@@ -1,0 +1,65 @@
+[
+  {
+    "id": "hartono",
+    "kata": "tokoh_hartono",
+    "nama": {
+      "id": "Pak Hartono",
+      "en": "Mayor Hartono"
+    },
+    "reputasi": 100,
+    "pertahanan": {
+      "tipe": "pengacara",
+      "dipercaya_min": 0.6
+    },
+    "info": {
+      "id": "Pengacara: rumor tentang dia dengan dipercaya di bawah 60% otomatis dibongkar",
+      "en": "Lawyers: rumors about him below 60% believability are debunked automatically"
+    },
+    "hadiah": {
+      "uang": 2000,
+      "pengikut": 200
+    }
+  },
+  {
+    "id": "sasmita",
+    "kata": "tokoh_sasmita",
+    "nama": {
+      "id": "Bu Sasmita",
+      "en": "Director Sasmita"
+    },
+    "reputasi": 100,
+    "pertahanan": {
+      "tipe": "humas",
+      "heat_kali": 2.0
+    },
+    "info": {
+      "id": "Humas: rumor tentang dia dua kali lebih panas",
+      "en": "PR team: rumors about her run twice as hot"
+    },
+    "hadiah": {
+      "uang": 2000,
+      "pengikut": 200
+    }
+  },
+  {
+    "id": "bramantyo",
+    "kata": "tokoh_bramantyo",
+    "nama": {
+      "id": "Juragan Bramantyo",
+      "en": "Mogul Bramantyo"
+    },
+    "reputasi": 100,
+    "pertahanan": {
+      "tipe": "media",
+      "event": "e_rumor_tandingan"
+    },
+    "info": {
+      "id": "Media sendiri: setiap rumor tentang dia memicu Rumor Tandingan",
+      "en": "Own media: every rumor about him triggers a Counter-Rumor"
+    },
+    "hadiah": {
+      "uang": 2000,
+      "pengikut": 200
+    }
+  }
+]

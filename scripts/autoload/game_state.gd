@@ -12,6 +12,12 @@ var kartu_dimiliki: Array[String] = []
 var template_dimiliki: Array[String] = []
 ## upgrade_id -> level (kantor, staf, ...). Saluran tidak dibeli; terbuka lewat pengikut/era.
 var upgrade_dimiliki: Dictionary = {}
+## kata_id -> sisa rumor (E07 dokumen bocor). Kartu hilang saat sisa habis.
+var kartu_sementara: Dictionary = {}
+## saluran_id -> sisa detik dikunci (E09). Tidak disimpan, seperti jeda event (ADR-0003).
+var saluran_terkunci: Dictionary = {}
+## tokoh_id -> reputasi tersisa (Era 4). 0 = tokoh sudah jatuh.
+var tokoh_reputasi: Dictionary = {}
 var misi_idx: int = 0
 ## distrik_id -> {"percaya", "ragu", "kebal"}; diisi saat memuat, dipakai untuk membangkitkan warga.
 var distrik_status: Dictionary = {}
@@ -45,6 +51,9 @@ func mulai_baru() -> void:
 		if int(DataDB.templates[id].get("harga", 0)) == 0:
 			template_dimiliki.append(id)
 	upgrade_dimiliki = {}
+	kartu_sementara = {}
+	saluran_terkunci = {}
+	tokoh_reputasi = {}
 	misi_idx = 0
 	distrik_status = {}
 	riwayat_rumor = []
@@ -67,19 +76,64 @@ func tambah_pengikut(jumlah: int) -> void:
 	Events.pengikut_berubah.emit(pengikut)
 
 
+## Sinyal hanya dipancarkan kalau angka bulat yang tampil di HUD berubah (heat turun tiap tick).
 func ubah_heat(delta: float) -> void:
+	var lama := roundi(heat)
 	heat = clampf(heat + delta, 0.0, 100.0)
-	Events.reputasi_berubah.emit()
+	if roundi(heat) != lama:
+		Events.reputasi_berubah.emit()
 
 
 func ubah_kredibilitas(delta: float) -> void:
+	var lama := roundi(kredibilitas)
 	kredibilitas = clampf(kredibilitas + delta, 0.0, 100.0)
-	Events.reputasi_berubah.emit()
+	if roundi(kredibilitas) != lama:
+		Events.reputasi_berubah.emit()
 
 
 func saluran_terbuka(id: String) -> bool:
 	var s := DataDB.get_upgrade(id)
-	return not s.is_empty() and pengikut >= int(s.get("pengikut_min", 0)) and era_terbuka(s)
+	return not s.is_empty() and pengikut >= int(s.get("pengikut_min", 0)) and era_terbuka(s) \
+		and not saluran_terkunci.has(id)
+
+
+func kunci_saluran(id: String, detik: float) -> void:
+	saluran_terkunci[id] = detik
+	Events.kepemilikan_berubah.emit()
+
+
+## Dipanggil tiap tick oleh EventController.
+func kurangi_kunci(dt: float) -> void:
+	for id in saluran_terkunci.keys():
+		saluran_terkunci[id] -= dt
+		if saluran_terkunci[id] <= 0.0:
+			saluran_terkunci.erase(id)
+			Events.kepemilikan_berubah.emit()
+
+
+## E07: kartu masuk ke tangan untuk `rumor` kiriman, lalu hilang.
+func beri_kartu_sementara(id: String, rumor: int) -> void:
+	if not DataDB.words.has(id):
+		return
+	kartu_sementara[id] = rumor
+	if not punya_kata(id):
+		kartu_dimiliki.append(id)
+	Events.kepemilikan_berubah.emit()
+
+
+## Kurangi jatah kartu sementara yang dipakai dalam satu rumor.
+func pakai_kartu(kata_ids: Dictionary) -> void:
+	var berubah := false
+	for slot in kata_ids:
+		var id := str(kata_ids[slot])
+		if kartu_sementara.has(id):
+			kartu_sementara[id] -= 1
+			if kartu_sementara[id] <= 0:
+				kartu_sementara.erase(id)
+				kartu_dimiliki.erase(id)
+			berubah = true
+	if berubah:
+		Events.kepemilikan_berubah.emit()
 
 
 ## Konten dan upgrade dengan era_min di atas era sekarang belum tersedia.
@@ -163,6 +217,8 @@ func ke_dict() -> Dictionary:
 		"kartu_dimiliki": kartu_dimiliki.duplicate(),
 		"template_dimiliki": template_dimiliki.duplicate(),
 		"upgrade_dimiliki": upgrade_dimiliki.duplicate(),
+		"kartu_sementara": kartu_sementara.duplicate(),
+		"tokoh_reputasi": tokoh_reputasi.duplicate(),
 		"distrik_status": distrik_status.duplicate(true),
 		"riwayat_rumor": riwayat_rumor.duplicate(true),
 		"riwayat_event": riwayat_event.duplicate(true),
@@ -194,6 +250,16 @@ func dari_dict(data: Dictionary) -> void:
 	for id in upgrade:
 		if DataDB.upgrades.has(str(id)):
 			upgrade_dimiliki[str(id)] = int(upgrade[id])
+	kartu_sementara = {}
+	var sementara: Dictionary = data.get("kartu_sementara", {})
+	for id in sementara:
+		if DataDB.words.has(str(id)):
+			kartu_sementara[str(id)] = int(sementara[id])
+	saluran_terkunci = {}
+	tokoh_reputasi = {}
+	var rep: Dictionary = data.get("tokoh_reputasi", {})
+	for id in rep:
+		tokoh_reputasi[str(id)] = int(rep[id])
 	distrik_status = data.get("distrik_status", {})
 	riwayat_rumor = data.get("riwayat_rumor", [])
 	riwayat_event = data.get("riwayat_event", [])

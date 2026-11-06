@@ -92,5 +92,102 @@
       "id": "EKSKLUSIF: Memo internal menyebut {subjek} kedapatan {aksi} di {tempat}. Sumber: {sumber}.",
       "en": "EXCLUSIVE: An internal memo says {subjek} was caught {aksi} at {tempat}. Source: {sumber}."
     }
+  },
+  {
+    "id": "t_utas",
+    "slot": [
+      "subjek",
+      "aksi"
+    ],
+    "pengali_heboh": 1.5,
+    "harga": 400,
+    "unlock": 0,
+    "era_min": 3,
+    "pola": {
+      "id": "UTAS: ternyata {subjek} diam-diam {aksi}... Simak sampai habis!",
+      "en": "THREAD: turns out {subjek} has been secretly {aksi}... read till the end!"
+    }
+  },
+  {
+    "id": "t_podcast",
+    "slot": [
+      "subjek",
+      "aksi",
+      "tempat",
+      "sumber"
+    ],
+    "pengali_heboh": 1.1,
+    "harga": 350,
+    "unlock": 0,
+    "era_min": 3,
+    "pola": {
+      "id": "Di podcast semalam, {sumber} keceplosan: {subjek} {aksi} di {tempat}.",
+      "en": "On last night's podcast, {sumber} let it slip: {subjek} was {aksi} at {tempat}."
+    }
+  },
+  {
+    "id": "t_klarifikasi",
+    "slot": [
+      "subjek",
+      "aksi",
+      "tempat",
+      "sumber"
+    ],
+    "pengali_heboh": 0.9,
+    "harga": 450,
+    "unlock": 0,
+    "era_min": 3,
+    "pola": {
+      "id": "KLARIFIKASI: {subjek} membantah {aksi} di {tempat}. Menurut {sumber}, justru sebaliknya.",
+      "en": "CLARIFICATION: {subjek} denies {aksi} at {tempat}. According to {sumber}, it is the other way around."
+    }
+  },
+  {
+    "id": "t_trending",
+    "slot": [
+      "subjek",
+      "aksi"
+    ],
+    "pengali_heboh": 1.6,
+    "harga": 600,
+    "unlock": 0,
+    "era_min": 4,
+    "pola": {
+      "id": "TRENDING #1: {subjek} {aksi}. Jutaan akun membagikan!",
+      "en": "TRENDING #1: {subjek} {aksi}. Millions of accounts are sharing it!"
+    }
+  },
+  {
+    "id": "t_investigasi",
+    "slot": [
+      "subjek",
+      "aksi",
+      "tempat",
+      "sumber"
+    ],
+    "pengali_heboh": 1.0,
+    "harga": 650,
+    "unlock": 0,
+    "era_min": 4,
+    "pola": {
+      "id": "INVESTIGASI: Data dari {sumber} menunjukkan {subjek} {aksi} di {tempat}.",
+      "en": "INVESTIGATION: Data from {sumber} shows {subjek} {aksi} at {tempat}."
+    }
+  },
+  {
+    "id": "t_video_beredar",
+    "slot": [
+      "subjek",
+      "aksi",
+      "tempat"
+    ],
+    "pengali_heboh": 1.8,
+    "harga": 700,
+    "unlock": 0,
+    "era_min": 4,
+    "pola": {
+      "id": "VIDEO BEREDAR: {subjek} terekam {aksi} di {tempat}. Asli atau AI?",
+      "en": "VIDEO GOING AROUND: {subjek} filmed {aksi} at {tempat}. Real or AI?"
+    }
   }
 ]

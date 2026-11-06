@@ -18,9 +18,12 @@ static func pengikut_dari_warga(warga_percaya: int) -> int:
 
 ## Hasil akhir rumor. rng dipakai untuk satu lemparan pembongkaran.
 ## Mengembalikan delta yang harus diterapkan: {"dibongkar", "kredibilitas", "heat", "pengikut"}.
-static func akhir_rumor(skor: Dictionary, warga_percaya: int, heat: float, rng: RandomNumberGenerator) -> Dictionary:
+## paksa_bongkar: pertahanan tokoh (Pengacara) membongkar rumor apa pun hasil lemparannya.
+static func akhir_rumor(skor: Dictionary, warga_percaya: int, heat: float, rng: RandomNumberGenerator,
+		paksa_bongkar: bool = false) -> Dictionary:
 	var dipercaya := float(skor["dipercaya_akhir"])
-	var dibongkar := rng.randf() < peluang_bongkar(dipercaya, heat)
+	var lemparan := rng.randf()  # tetap dilempar supaya urutan acak sama dengan atau tanpa paksaan
+	var dibongkar := paksa_bongkar or lemparan < peluang_bongkar(dipercaya, heat)
 	if dibongkar:
 		return {
 			"dibongkar": true,

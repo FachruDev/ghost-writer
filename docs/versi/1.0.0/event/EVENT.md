@@ -69,11 +69,11 @@ Contoh event dilema (`pilihan` diisi):
 | E04 | Pemilihan Ketua RT | Peluang | 1 | Milestone 300 pengikut (sekali) | Kartu calon fiktif Pak Darto dan Bu Wati masuk ke tangan; selama 90 dtk rumor tentang mereka bernilai ×2, heat ×1,5 | 0.3.0 | Selesai |
 | E05 | Wartawan Penasaran | Dilema | 2 | Acak, heat ≥ 40 | Bayar (uang −, heat −) atau abaikan (heat +, pengikut +) | 0.3.0 | Selesai |
 | E06 | Festival Kampung | Modifier | 2 | Acak | Semua distrik kerentanan ×1,2, uang per warga ×1,5 | 0.3.0 | Selesai |
-| E07 | Dokumen Bocor | Peluang | 2 | Acak | Kartu SUMBER "dokumen bocor" (kred 3) gratis untuk 3 rumor | 0.4.0 | Belum |
-| E08 | Viral Challenge | Modifier | 3 | Acak | Template lucu ×2 viral, tapi kredibilitas semua rumor −1 | 0.4.0 | Belum |
-| E09 | Razia Hoaks | Ancaman | 3 | Kredibilitas < 30 | Saluran medsos dikunci 90 dtk, pengikut −5% | 0.4.0 | Belum |
-| E10 | Rumor Tandingan | Ancaman | 3 | Acak | Media saingan menyebar rumor yang membuat warga "ragu" | 0.5.0 | Belum |
-| E11 | Server Down | Dilema | 4 | Acak | Bayar perbaikan cepat atau kehilangan staf otomatis 120 dtk | 0.5.0 | Belum |
+| E07 | Dokumen Bocor | Peluang | 2 | Acak | Kartu SUMBER "dokumen bocor" (kred 3) gratis untuk 3 rumor | 0.4.0 | Selesai |
+| E08 | Viral Challenge | Modifier | 3 | Acak | Headline beremosi lucu ×2 viral di semua distrik, tapi kredibilitas setiap kartu −1 | 0.4.0 | Selesai |
+| E09 | Razia Hoaks | Ancaman | 3 | Kredibilitas < 30 | Saluran medsos dikunci 90 dtk, pengikut −5% | 0.4.0 | Selesai |
+| E10 | Rumor Tandingan | Ancaman | 3 | Acak | Media saingan menyebar rumor yang membuat warga "ragu" | 0.5.0 | Selesai |
+| E11 | Server Down | Dilema | 4 | Acak | Bayar perbaikan cepat atau kehilangan staf otomatis 120 dtk | 0.5.0 | Selesai |
 | E12 | Kota Tak Percaya Lagi | Ancaman (final) | 4 | Kampanye akhir dimulai | Kebal menyebar sendiri; pemain harus mencapai target sebelum kota "mati rasa" | 0.6.0 | Belum |
 
 ## Catatan desain

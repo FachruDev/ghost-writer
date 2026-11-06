@@ -22,7 +22,18 @@ Berisi sisa 0.2.0 (MVP; masih kurang uji di HP dan uji dengan 3–5 teman) dan i
 - Staf otomatis: rumor abstrak tiap 40 detik dari kartu milik pemain, hasil di feed
 - Event dilema dengan tombol pilihan yang menjeda waktu; E04 Pemilihan Ketua RT (kartu calon fiktif, uang ×2), E05 Wartawan Penasaran, E06 Festival Kampung
 - 40 kata era 2, 2 kartu calon RT, template EKSKLUSIF; 5 SFX dan musik era 2 (placeholder CC0)
-- gdUnit4 v6.2.3 dan 34 tes otomatis di `tests/`; bot balancing `tools/sesi_bot.gd`
+- gdUnit4 v6.2.3 dan tes otomatis di `tests/`; bot balancing `tools/sesi_bot.gd`
+- Era 3 (gedung media, 0.4.0): upgrade Gedung Media (350 pengikut, 1.200 uang), peta meluas ke 6 distrik (Perumahan Elit, Kampus, Pelabuhan) dengan status warga dipertahankan
+- Saluran Medsos: tiap penular juga menulari 2 "teman online" acak se-kota, sehingga rumor melompat antar distrik
+- Kontrak kampanye: tawaran klien fiktif (yakinkan 50% warga di 2 distrik dalam 3 menit), progres di HUD
+- E07 Dokumen Bocor (kartu sementara 3 rumor), E08 Viral Challenge, E09 Razia Hoaks (medsos dikunci, pengikut −5%)
+- 40 kata era 3, 3 template (UTAS, podcast, KLARIFIKASI); notifikasi medsos dan musik era 3 (placeholder CC0)
+- Bot balancing bisa "tiarap" saat heat tinggi dan memainkan era 2–4
+- Era 4 (menara server, 0.5.0): upgrade Menara Server (ambang sementara 450 pengikut, 1.600 uang), peta 8 distrik dengan Pusat Kota dan Kawasan Industri
+- Saluran Server (jaringan bot): 15 detik, tiap detik satu warga acak se-kota langsung percaya, plus lompatan
+- Tiga tokoh fiktif target (Pak Hartono, Bu Sasmita, Juragan Bramantyo) dengan reputasi 100 dan pertahanan Pengacara, Humas, Media sendiri; progres di HUD
+- E10 Rumor Tandingan (pemercaya jadi ragu), E11 Server Down (staf dan server mati 120 detik)
+- 30 kata era 4, 3 template (TRENDING, INVESTIGASI, VIDEO BEREDAR); musik era 4, stinger naik era, dengung server
 - Konsekuensi: heat per rumor yang turun pelan, peluang rumor dibongkar, kredibilitas sebagai pengali "dipercaya", warga kebal (biru) yang pulih perlahan, stempel HOAKS
 - Saluran Merpati (gratis, satu distrik) dan Koran (30 uang, semua distrik, terbuka di 100 pengikut)
 - Pengikut sebagai mata uang ambang (+1 per 5 warga dari rumor yang tidak dibongkar, +3 per mutasi)
@@ -37,11 +48,15 @@ Berisi sisa 0.2.0 (MVP; masih kurang uji di HP dan uji dengan 3–5 teman) dan i
 
 ### Diubah
 
+- Sinyal reputasi hanya dipancarkan saat angka heat/kredibilitas yang tampil berubah (sebelumnya tiap tick, HUD diformat ulang 5 kali per detik)
+- Headline panjang di meja mengecil otomatis supaya muat
+- Pemilih saluran memendekkan label dan menyembunyikan saluran era berikutnya (sebelumnya 4 tombol mendorong layout melebihi lebar layar)
 - Kompresi tekstur ETC2/ASTC diaktifkan (wajib untuk ekspor Android)
 - Balancing dari simulasi 8 sesi × 15 menit: heat turun 0,1 → 0,3/detik, jeda Pembongkar Fakta 60 → 120 detik, jeda event acak 90 → 180 detik, pengikut per 5 → per 12 warga, uang per warga 5 → 2
 
 ### Diperbaiki
 
+- Bot balancing crash (antrean pesan penuh) saat menjalankan banyak sesi panjang dalam satu frame
 - Ancaman (Pembongkar Fakta) menimpa event acak yang sedang aktif dan mereset jedanya, sehingga event acak hampir tidak muncul
 
 ## [0.1.0] - 2026-11-05

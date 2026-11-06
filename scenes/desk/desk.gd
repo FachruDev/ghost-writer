@@ -55,7 +55,7 @@ func _warnai_era(era: int) -> void:
 
 
 func _semua_distrik() -> bool:
-	return str(DataDB.get_upgrade(_saluran).get("cakupan", "satu")) in ["semua", "siaran"]
+	return str(DataDB.get_upgrade(_saluran).get("cakupan", "satu")) in ["semua", "siaran", "jaringan"]
 
 
 func _siap_kirim() -> bool:
@@ -129,7 +129,7 @@ func _kirim() -> void:
 func _segarkan() -> void:
 	_label_template.text = tr("UI_TEMPLATE") % [_idx + 1, _template_ids.size()]
 	if not _mengetik:
-		_label_headline.text = HeadlineBuilder.susun(_template_id(), _isi)
+		_tulis_headline(HeadlineBuilder.susun(_template_id(), _isi))
 	for anak in _baris_slot.get_children():
 		anak.queue_free()
 	_tombol_slot.clear()
@@ -155,7 +155,7 @@ func _segarkan() -> void:
 ## Animasi mesin tik: headline yang dikirim muncul huruf demi huruf, lalu kembali ke pratinjau.
 func _ketik(teks: String) -> void:
 	_mengetik = true
-	_label_headline.text = teks
+	_tulis_headline(teks)
 	_label_headline.visible_ratio = 0.0
 	var t := create_tween()
 	var durasi := 0.03 * teks.length()
@@ -188,6 +188,13 @@ func _terbangkan_kartu(kata_id: String, dari: Vector2) -> void:
 	t.tween_property(hantu, "global_position", tujuan.global_position + tujuan.size / 2.0 - hantu.size / 2.0, 0.25) 		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 	t.tween_callback(hantu.queue_free)
 	t.tween_property(tujuan, "modulate:a", 1.0, 0.1)
+
+
+## Headline panjang (era 3-4) dikecilkan supaya muat di meja.
+func _tulis_headline(teks: String) -> void:
+	_label_headline.text = teks
+	var ukuran := 28 if teks.length() <= 70 else (24 if teks.length() <= 100 else 20)
+	_label_headline.add_theme_font_size_override("font_size", ukuran)
 
 
 func _teks_slot(slot: String) -> String:

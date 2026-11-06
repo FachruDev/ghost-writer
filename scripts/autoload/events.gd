@@ -46,6 +46,21 @@ signal event_selesai(event_id: String)
 signal toko_diminta(buka: bool)
 @warning_ignore("unused_signal")
 signal era_berubah(era: int)
+## Distrik aktif atau tata letaknya berubah (DataDB.districts sudah diperbarui).
+@warning_ignore("unused_signal")
+signal peta_berubah
+## Simulasi dibangun ulang untuk peta baru.
+@warning_ignore("unused_signal")
+signal sim_diganti(sim: SpreadSim)
+## Teks progres kontrak kampanye untuk HUD ("" = tidak ada kontrak).
+@warning_ignore("unused_signal")
+signal kontrak_berubah(teks: String)
+## Minta EventController memulai ancaman tertentu (mis. pertahanan tokoh Bramantyo).
+@warning_ignore("unused_signal")
+signal ancaman_diminta(event_id: String)
+## Reputasi tokoh berubah atau tokoh jatuh.
+@warning_ignore("unused_signal")
+signal tokoh_berubah
 @warning_ignore("unused_signal")
 signal template_diganti
 @warning_ignore("unused_signal")

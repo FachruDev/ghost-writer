@@ -31,6 +31,7 @@ var _peluang_percaya := 0.0
 var _waktu := 0.0
 var _waktu_diam := 0.0
 var _min_waktu := 0.0
+var _lompatan := 0
 
 
 func _init(distrik_list: Array = [], rng: RandomNumberGenerator = null) -> void:
@@ -80,8 +81,10 @@ func jumlah_status(distrik: int, s: Status) -> int:
 
 
 ## benih: {indeks_distrik: jumlah warga awal}. Mengembalikan jumlah warga awal yang percaya.
-func mulai(benih: Dictionary, viral_per_distrik: PackedFloat32Array, peluang_percaya: float) -> int:
+## lompatan: jumlah "teman online" acak se-kota yang dicoba tiap penular per tick (Medsos).
+func mulai(benih: Dictionary, viral_per_distrik: PackedFloat32Array, peluang_percaya: float, lompatan: int = 0) -> int:
 	_aktif = true
+	_lompatan = lompatan
 	_dengar.fill(0)
 	_percaya_rumor.fill(0)
 	_sisa_menular.fill(0.0)
@@ -102,6 +105,12 @@ func suntik(benih: Dictionary) -> int:
 		return 0
 	_waktu_diam = 0.0
 	return _tanam(benih)
+
+
+## Hentikan rumor yang sedang berjalan sekarang (mis. sebelum peta ditata ulang).
+func paksa_selesai() -> void:
+	_aktif = false
+	_sisa_menular.fill(0.0)
 
 
 ## Rumor tidak boleh selesai sebelum `detik` lagi (selama siaran radio).
@@ -139,7 +148,12 @@ func langkah(dt: float) -> Dictionary:
 			penular.append(i)
 	for i in penular:
 		_sisa_menular[i] = maxf(0.0, _sisa_menular[i] - dt)
-		for j in _tetangga[i]:
+		var sasaran := _tetangga[i]
+		if _lompatan > 0:
+			sasaran = sasaran.duplicate()
+			for k in _lompatan:
+				sasaran.append(_rng.randi_range(0, posisi.size() - 1))
+		for j in sasaran:
 			if _dengar[j] == 1 or status[j] == Status.KEBAL:
 				continue
 			var d := distrik_warga[j]
@@ -209,7 +223,7 @@ func duplikat() -> SpreadSim:
 	var s := SpreadSim.new([], rng)
 	for nama in ["posisi", "distrik_warga", "status", "terakhir_berubah", "jam", "kebal_bisa_pulih",
 			"_tetangga", "_kerentanan", "_aktif", "_dengar", "_percaya_rumor", "_sisa_menular",
-			"_viral", "_peluang_percaya", "_waktu", "_waktu_diam", "_min_waktu"]:
+			"_viral", "_peluang_percaya", "_waktu", "_waktu_diam", "_min_waktu", "_lompatan"]:
 		var v: Variant = get(nama)
 		s.set(nama, v.duplicate() if v is Array or v is PackedByteArray or v is PackedInt32Array \
 			or v is PackedFloat32Array or v is PackedVector2Array else v)
@@ -236,6 +250,11 @@ func _percaya(i: int) -> void:
 	_percaya_rumor[i] = 1
 	_ubah(i, Status.PERCAYA)
 	_sisa_menular[i] = Balance.DURASI_MENULAR_DETIK
+
+
+## Ubah status satu warga dari luar (event), termasuk penanda untuk animasi denyut.
+func ubah_status(i: int, s: Status) -> void:
+	_ubah(i, s)
 
 
 func _ubah(i: int, s: Status) -> void:

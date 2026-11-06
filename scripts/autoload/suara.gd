@@ -19,13 +19,19 @@ const SFX := {
 	"buy": [preload("res://assets/sfx/sfx_buy.ogg")],
 	"error": [preload("res://assets/sfx/sfx_error.ogg")],
 	"dilemma": [preload("res://assets/sfx/sfx_dilemma_choice.wav")],
+	"notif": [preload("res://assets/sfx/sfx_notif.wav")],
+	"era_up": [preload("res://assets/sfx/sfx_era_up.ogg")],
 }
 ## Musik per era; loop diatur di file .import masing-masing.
 const MUSIK_ERA := {
 	1: preload("res://assets/music/mus_era1_kamar.ogg"),
 	2: preload("res://assets/music/mus_era2_kantor.mp3"),
+	3: preload("res://assets/music/mus_era3_gedung.mp3"),
+	4: preload("res://assets/music/mus_era4_server.mp3"),
 }
 const KELIPATAN_PENGIKUT := 50
+const DENGUNG_SERVER := preload("res://assets/sfx/sfx_server_hum.wav")
+const VOLUME_DENGUNG_DB := -18.0
 
 const JUMLAH_PEMUTAR := 8
 const KOIN_MAKS_PER_DETIK := 4
@@ -40,6 +46,7 @@ var _koin_detik_ini := 0
 var _waktu_koin := 0.0
 var _ambang_pengikut := 0
 var _era_musik := 0
+var _dengung: AudioStreamPlayer
 
 
 func _ready() -> void:
@@ -53,6 +60,12 @@ func _ready() -> void:
 	_musik = AudioStreamPlayer.new()
 	_musik.bus = "Music"
 	add_child(_musik)
+	_dengung = AudioStreamPlayer.new()
+	_dengung.bus = "SFX"
+	_dengung.stream = DENGUNG_SERVER
+	_dengung.volume_db = VOLUME_DENGUNG_DB
+	_dengung.finished.connect(_dengung.play)  # ambience berulang
+	add_child(_dengung)
 	putar_musik_era(GameState.era)
 	_ambang_pengikut = floori(float(GameState.pengikut) / KELIPATAN_PENGIKUT)
 	_hubungkan()
@@ -61,6 +74,7 @@ func _ready() -> void:
 
 func _exit_tree() -> void:
 	_musik.stop()
+	_dengung.stop()
 	for p in _pemutar:
 		p.stop()
 
@@ -69,9 +83,15 @@ func putar_musik_era(era: int) -> void:
 	var lagu: AudioStream = MUSIK_ERA.get(era, MUSIK_ERA[1])
 	if era == _era_musik and _musik.playing:
 		return
+	if _era_musik > 0 and era > _era_musik:
+		putar("era_up")  # naik era saat bermain, bukan saat memuat save
 	_era_musik = era
 	_musik.stream = lagu
 	_musik.play()
+	if era >= 4 and not _dengung.playing:
+		_dengung.play()
+	elif era < 4:
+		_dengung.stop()
 
 
 func putar(nama: String, variasi_pitch: float = 0.0) -> void:
@@ -116,7 +136,8 @@ func _hubungkan() -> void:
 		putar("card_pick", 0.05)
 		get_tree().create_timer(0.25).timeout.connect(putar.bind("card_place", 0.05)))
 	Events.headline_diketik.connect(ketik)
-	Events.rumor_published.connect(func(_i: Dictionary) -> void: putar("send"))
+	Events.rumor_published.connect(func(info: Dictionary) -> void:
+		putar("notif" if info.get("saluran_id", "") == "medsos" else "send"))
 	Events.uang_dari_distrik.connect(func(_d: int, _j: int) -> void:
 		if _koin_detik_ini < KOIN_MAKS_PER_DETIK:
 			_koin_detik_ini += 1

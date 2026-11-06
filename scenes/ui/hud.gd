@@ -5,6 +5,7 @@ var _label_uang: Label
 var _label_pengikut: Label
 var _label_reputasi: Label
 var _label_misi: Label
+var _teks_kontrak := ""
 
 
 func _ready() -> void:
@@ -29,6 +30,10 @@ func _ready() -> void:
 	Events.pengikut_berubah.connect(func(_p: int) -> void: _segarkan())
 	Events.reputasi_berubah.connect(_segarkan)
 	Events.misi_berubah.connect(_segarkan)
+	Events.tokoh_berubah.connect(_segarkan)
+	Events.kontrak_berubah.connect(func(teks: String) -> void:
+		_teks_kontrak = teks
+		_segarkan())
 	Bahasa.bahasa_berubah.connect(func(_k: String) -> void: _segarkan())
 	_segarkan()
 
@@ -38,6 +43,12 @@ func _segarkan() -> void:
 	_label_pengikut.text = tr("UI_PENGIKUT") % Bahasa.angka(GameState.pengikut)
 	_label_reputasi.text = tr("UI_KRED_HEAT") % [roundi(GameState.kredibilitas), roundi(GameState.heat)]
 	_label_reputasi.add_theme_color_override("font_color", Palet.emosi("marah") if GameState.heat >= 70.0 else Palet.TEKS_REDUP)
+	if not _teks_kontrak.is_empty():
+		_label_misi.text = _teks_kontrak
+		return
+	if not GameState.tokoh_reputasi.is_empty() and not TokohController.semua_jatuh():
+		_label_misi.text = tr("UI_TOKOH") % TokohController.teks_progres()
+		return
 	var misi := MissionController.misi_aktif()
 	_label_misi.text = tr("UI_MISI_HABIS") if misi.is_empty() else tr("UI_MISI") % Bahasa.teks(misi.get("teks", ""))
 

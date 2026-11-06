@@ -133,23 +133,23 @@ Semua pakai kotak abu-abu dan teks polos. **Jangan sentuh art.**
 
 ## 0.4.0 — Era gedung media
 
-- [ ] Era 3 dan saluran medsos
-- [ ] Kampanye multi-distrik
-- [ ] Distrik 4–6, ±120 kata, 9 template
-- [ ] Event E07 Dokumen Bocor, E08 Viral Challenge, E09 Razia Hoaks
-- [ ] SFX notifikasi medsos, musik era 3, lapisan musik ancaman
-- [ ] Animasi staf bekerja
-- [ ] Art meja era 3, distrik 4–6, ikon medsos
+- [x] Era 3 (upgrade Gedung Media) dan saluran medsos (lompatan antar distrik)
+- [x] Kampanye multi-distrik (kontrak klien fiktif)
+- [x] Distrik 4–6 (peta 2×3, warga ±200), ±120 kata (123), 9 template
+- [x] Event E07 Dokumen Bocor, E08 Viral Challenge, E09 Razia Hoaks
+- [ ] SFX notifikasi medsos dan musik era 3 (selesai, placeholder CC0); lapisan musik ancaman belum (kandidat CC0 13,6 MB terlalu besar)
+- [ ] Animasi staf bekerja (menunggu desain UI)
+- [ ] Art meja era 3, distrik 4–6, ikon medsos (menunggu desain UI)
 
 ## 0.5.0 — Era server
 
-- [ ] Era 4 dan saluran server
-- [ ] Tokoh fiktif target besar dengan pertahanan masing-masing
-- [ ] Distrik 7–8, ±150 kata, 12 template
-- [ ] Event E10 Rumor Tandingan, E11 Server Down
-- [ ] Ambience server, stinger naik era, musik era 4
-- [ ] Animasi transisi era
-- [ ] Art meja era 4, distrik 7–8, ikon server
+- [x] Era 4 (upgrade Menara Server, ambang sementara 450/1.600) dan saluran server (jaringan bot)
+- [x] Tokoh fiktif target besar dengan pertahanan masing-masing (Pengacara, Humas, Media sendiri)
+- [x] Distrik 7–8 (peta 2×4, warga ±260), ±150 kata (156), 12 template
+- [x] Event E10 Rumor Tandingan, E11 Server Down
+- [x] Ambience server (dibuat prosedural), stinger naik era, musik era 4 (placeholder CC0)
+- [ ] Animasi transisi era (menunggu desain UI)
+- [ ] Art meja era 4, distrik 7–8, ikon server (menunggu desain UI)
 
 ## 0.6.0 — Ending & balancing
 

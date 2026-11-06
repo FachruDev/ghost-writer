@@ -7,6 +7,8 @@ var sim: SpreadSim
 var pengali_event: Callable
 ## (kata_ids: Dictionary) -> {"uang": float, "heat": float}. Diisi main dari EventController.
 var pengali_rumor: Callable
+## Pertahanan dan reputasi tokoh target (Era 4). Diisi main.
+var tokoh: TokohController
 
 var _rumor: Dictionary = {}
 var _warga_percaya := 0
@@ -24,6 +26,21 @@ func _ready() -> void:
 	_bangkitkan_warga()
 	GameClock.tick.connect(_on_tick)
 	Events.kirim_diminta.connect(_on_kirim)
+	Events.peta_berubah.connect(_bangun_ulang_peta)
+
+
+## Peta meluas (Era 3): rumor yang berjalan diselesaikan dulu, lalu simulasi dibangun ulang
+## dengan status warga lama dipertahankan per distrik.
+func _bangun_ulang_peta() -> void:
+	if sim.ada_rumor_aktif():
+		sim.paksa_selesai()
+		_siaran = {}
+		_selesai()
+	GameState.distrik_status = _hitung_status(sim)
+	sim = SpreadSim.new(DataDB.districts, GameClock.rng)
+	_bangkitkan_warga()
+	Events.sim_diganti.emit(sim)
+	Events.warga_berubah.emit()
 
 
 func biaya_kirim(saluran_id: String) -> int:
@@ -43,32 +60,40 @@ func _on_kirim(data: Dictionary) -> void:
 	for slot in kata_ids:
 		kata_by_slot[slot] = DataDB.get_word(kata_ids[slot])
 	var template_id := str(data.get("template_id", ""))
-	var skor := RumorScorer.nilai(DataDB.get_template(template_id), kata_by_slot, DataDB.districts, GameState.kredibilitas)
+	var pengali := {"uang": 1.0, "heat": 1.0, "kred": 0}
+	if pengali_rumor.is_valid():
+		pengali = pengali_rumor.call(kata_ids)
+	var skor := RumorScorer.nilai(DataDB.get_template(template_id), kata_by_slot, DataDB.districts,
+		GameState.kredibilitas, int(pengali.get("kred", 0)))
 	var viral: PackedFloat32Array = skor["viral_per_distrik"]
 	if pengali_event.is_valid():
 		for i in viral.size():
 			viral[i] *= float(pengali_event.call(i, skor["emosi"]))
-	var pengali := {"uang": 1.0, "heat": 1.0}
-	if pengali_rumor.is_valid():
-		pengali = pengali_rumor.call(kata_ids)
 	_pengali_uang = float(pengali["uang"])
+	GameState.pakai_kartu(kata_ids)
+	var sasaran := tokoh.tokoh_di(kata_ids) if tokoh else {}
+	if not sasaran.is_empty():
+		pengali["heat"] = float(pengali["heat"]) * tokoh.pengali_heat(sasaran)
 	GameState.tambah_uang(-biaya_kirim(saluran_id))
 	GameState.ubah_heat(Konsekuensi.heat_kirim(skor, float(saluran.get("pengali_heat", 1.0))) * float(pengali["heat"]))
 	_rumor = data.duplicate(true)
 	_rumor["skor"] = skor
 	_rumor["headline"] = HeadlineBuilder.susun(template_id, kata_ids)
 	_rumor["distrik"] = benih.keys()
+	_rumor["tokoh"] = sasaran
 	_warga_percaya = 0
 	_uang_didapat = 0
 	_catat_kiriman(skor["emosi"], benih.keys())
-	var awal := sim.mulai(benih, viral, skor["dipercaya_akhir"])
+	var awal := sim.mulai(benih, viral, skor["dipercaya_akhir"], int(saluran.get("lompatan", 0)))
 	_siaran = {}
-	if str(saluran.get("cakupan", "")) == "siaran":
+	if str(saluran.get("cakupan", "")) in ["siaran", "jaringan"]:
 		var jeda := float(saluran.get("siaran_jeda", 2.0))
 		var durasi := float(saluran.get("siaran_detik", 10.0))
-		_siaran = {"sisa": roundi(durasi / jeda) - 1, "jeda": jeda, "hitung": jeda}
+		_siaran = {"sisa": roundi(durasi / jeda) - 1, "jeda": jeda, "hitung": jeda, "mode": saluran["cakupan"]}
 		sim.tahan(durasi)
 	Events.rumor_published.emit(_rumor)
+	if not sasaran.is_empty():
+		tokoh.saat_dikirim(sasaran)
 	Events.feed_baru.emit({"jenis": "rumor", "template_id": template_id, "kata_ids": kata_ids})
 	_tambah_percaya(awal, -1)
 	Events.warga_berubah.emit()
@@ -112,9 +137,12 @@ func snapshot_untuk_save() -> Dictionary:
 func _benih(saluran: Dictionary, distrik_id: String) -> Dictionary:
 	var rentang: Array = saluran.get("warga_awal", [1, 1])
 	var hasil := {}
-	if str(saluran.get("cakupan", "satu")) in ["semua", "siaran"]:
+	var cakupan := str(saluran.get("cakupan", "satu"))
+	if cakupan in ["semua", "siaran"]:
 		for i in DataDB.districts.size():
 			hasil[i] = GameClock.rng.randi_range(int(rentang[0]), int(rentang[1]))
+	elif cakupan == "jaringan":
+		hasil[sim.distrik_warga[GameClock.rng.randi_range(0, sim.posisi.size() - 1)]] = int(rentang[0])
 	else:
 		var idx := DataDB.district_index(distrik_id)
 		if idx >= 0:
@@ -131,8 +159,13 @@ func _siarkan(dt: float) -> void:
 		return
 	_siaran["hitung"] = _siaran["jeda"]
 	_siaran["sisa"] -= 1
-	for d in DataDB.districts.size():
+	if _siaran.get("mode", "siaran") == "jaringan":
+		# Server: satu warga acak di mana pun di kota (dipilih lewat distrik warga acak).
+		var d := sim.distrik_warga[GameClock.rng.randi_range(0, sim.posisi.size() - 1)]
 		_tambah_percaya(sim.suntik({d: 1}), d)
+	else:
+		for d in DataDB.districts.size():
+			_tambah_percaya(sim.suntik({d: 1}), d)
 	if _siaran["sisa"] <= 0:
 		_siaran = {}
 
@@ -157,7 +190,9 @@ func _mutasi() -> void:
 
 
 func _selesai() -> void:
-	var akhir := Konsekuensi.akhir_rumor(_rumor["skor"], _warga_percaya, GameState.heat, GameClock.rng)
+	var sasaran: Dictionary = _rumor.get("tokoh", {})
+	var paksa := not sasaran.is_empty() and tokoh.membantah(sasaran, _rumor["skor"])
+	var akhir := Konsekuensi.akhir_rumor(_rumor["skor"], _warga_percaya, GameState.heat, GameClock.rng, paksa)
 	GameState.ubah_kredibilitas(akhir["kredibilitas"])
 	GameState.ubah_heat(akhir["heat"])
 	GameState.tambah_pengikut(akhir["pengikut"])
@@ -166,6 +201,8 @@ func _selesai() -> void:
 		GameState.statistik["total_dibongkar"] += 1
 		Events.feed_baru.emit({"jenis": "hoaks", "template_id": _rumor["template_id"],
 			"kata_ids": _rumor["kata_ids"], "kredibilitas": -akhir["kredibilitas"]})
+	if not sasaran.is_empty() and not akhir["dibongkar"]:
+		tokoh.serang(sasaran, _warga_percaya)
 	GameState.statistik["rekor_warga"] = maxi(int(GameState.statistik["rekor_warga"]), _warga_percaya)
 	GameState.catat_rumor(_entri_riwayat(_warga_percaya, _uang_didapat, akhir["dibongkar"]))
 	var hasil := _rumor.duplicate()
@@ -195,7 +232,9 @@ func _entri_riwayat(warga: int, uang: int, dibongkar: bool) -> Dictionary:
 
 func _hitung_status(s: SpreadSim) -> Dictionary:
 	var hasil := {}
-	for i in DataDB.districts.size():
+	# Simulasi lama bisa punya distrik lebih sedikit dari DataDB.districts (saat peta baru meluas);
+	# distrik baru selalu ditambah di akhir, jadi indeks distrik lama tetap sama.
+	for i in mini(s.warga_per_distrik.size(), DataDB.districts.size()):
 		hasil[DataDB.districts[i]["id"]] = {
 			"percaya": s.jumlah_status(i, SpreadSim.Status.PERCAYA),
 			"ragu": s.jumlah_status(i, SpreadSim.Status.RAGU),

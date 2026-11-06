@@ -206,5 +206,168 @@
       }
     ],
     "pilihan": []
+  },
+  {
+    "id": "e_dokumen_bocor",
+    "nama": {
+      "id": "Dokumen Bocor",
+      "en": "Leaked Document"
+    },
+    "jenis": "peluang",
+    "era_min": 2,
+    "pemicu": {
+      "tipe": "acak",
+      "peluang": 0.1
+    },
+    "durasi": 20,
+    "teks": {
+      "id": "Sebuah dokumen bocor sampai di mejamu. Pakai untuk 3 rumor sebelum basi!",
+      "en": "A leaked document lands on your desk. Use it for 3 rumors before it goes stale!"
+    },
+    "efek": [
+      {
+        "tipe": "kartu_sementara",
+        "kata": "dokumen_bocor",
+        "rumor": 3
+      }
+    ],
+    "pilihan": []
+  },
+  {
+    "id": "e_viral_challenge",
+    "nama": {
+      "id": "Viral Challenge",
+      "en": "Viral Challenge"
+    },
+    "jenis": "modifier",
+    "era_min": 3,
+    "pemicu": {
+      "tipe": "acak",
+      "peluang": 0.12
+    },
+    "durasi": 60,
+    "teks": {
+      "id": "Semua orang ikut challenge konyol. Rumor lucu meledak, tapi tak ada yang dipercaya penuh.",
+      "en": "Everyone is doing a silly challenge. Funny rumors explode, but nothing is fully believed."
+    },
+    "efek": [
+      {
+        "tipe": "emosi_distrik",
+        "distrik": "*",
+        "emosi": "lucu",
+        "kali": 2.0
+      },
+      {
+        "tipe": "kred_kartu",
+        "nilai": -1
+      }
+    ],
+    "pilihan": []
+  },
+  {
+    "id": "e_razia_hoaks",
+    "nama": {
+      "id": "Razia Hoaks",
+      "en": "Hoax Crackdown"
+    },
+    "jenis": "ancaman",
+    "era_min": 3,
+    "pemicu": {
+      "tipe": "kondisi",
+      "kred_maks": 30
+    },
+    "durasi": 8,
+    "teks": {
+      "id": "Kredibilitasmu jatuh. Platform merazia hoaks: medsos dikunci 90 detik dan pengikut kabur.",
+      "en": "Your credibility collapsed. Platforms crack down: social media locked for 90 seconds and followers flee."
+    },
+    "efek": [
+      {
+        "tipe": "kunci_saluran",
+        "saluran": "medsos",
+        "detik": 90
+      },
+      {
+        "tipe": "pengikut_persen",
+        "nilai": -5
+      }
+    ],
+    "pilihan": []
+  },
+  {
+    "id": "e_rumor_tandingan",
+    "nama": {
+      "id": "Rumor Tandingan",
+      "en": "Counter-Rumor"
+    },
+    "jenis": "ancaman",
+    "era_min": 3,
+    "pemicu": {
+      "tipe": "acak",
+      "peluang": 0.06
+    },
+    "durasi": 6,
+    "teks": {
+      "id": "Media saingan menyebar rumor tandingan. Banyak pemercayamu mulai ragu!",
+      "en": "A rival outlet spreads a counter-rumor. Many of your believers start to doubt!"
+    },
+    "efek": [
+      {
+        "tipe": "ragukan",
+        "persen": 40
+      }
+    ],
+    "pilihan": []
+  },
+  {
+    "id": "e_server_down",
+    "nama": {
+      "id": "Server Down",
+      "en": "Server Down"
+    },
+    "jenis": "dilema",
+    "era_min": 4,
+    "pemicu": {
+      "tipe": "acak",
+      "peluang": 0.06
+    },
+    "durasi": 0,
+    "teks": {
+      "id": "Server utama mati! Bayar teknisi sekarang, atau staf dan server berhenti dua menit.",
+      "en": "The main server is down! Pay a technician now, or staff and servers stop for two minutes."
+    },
+    "efek": [],
+    "pilihan": [
+      {
+        "label": {
+          "id": "Perbaiki cepat (400)",
+          "en": "Quick fix (400)"
+        },
+        "efek": [
+          {
+            "tipe": "uang",
+            "nilai": -400
+          }
+        ]
+      },
+      {
+        "label": {
+          "id": "Biarkan",
+          "en": "Let it be"
+        },
+        "efek": [
+          {
+            "tipe": "kunci_saluran",
+            "saluran": "server",
+            "detik": 120
+          },
+          {
+            "tipe": "kunci_saluran",
+            "saluran": "staf_1",
+            "detik": 120
+          }
+        ]
+      }
+    ]
   }
 ]

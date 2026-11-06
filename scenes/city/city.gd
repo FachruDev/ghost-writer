@@ -26,16 +26,32 @@ func _ready() -> void:
 
 
 func atur_sim(sim: SpreadSim) -> void:
-	for i in DataDB.districts.size():
-		var node := DISTRICT.instantiate()
-		node.atur(DataDB.districts[i], i, sim)
-		add_child(node)
-		_distrik.append(node)
+	_bangun_distrik(sim)
+	Events.sim_diganti.connect(_ganti_sim)
 	_feed = FEED.instantiate()
 	add_child(_feed)
 	_banner = EVENT_BANNER.instantiate()
 	add_child(_banner)
 	_tata()
+
+
+## Peta meluas: ganti node distrik; feed dan banner tetap di atas.
+func _ganti_sim(sim: SpreadSim) -> void:
+	for d in _distrik:
+		d.queue_free()
+	_distrik.clear()
+	_bangun_distrik(sim)
+	move_child(_feed, -1)
+	move_child(_banner, -1)
+	_tata()
+
+
+func _bangun_distrik(sim: SpreadSim) -> void:
+	for i in DataDB.districts.size():
+		var node := DISTRICT.instantiate()
+		node.atur(DataDB.districts[i], i, sim)
+		add_child(node)
+		_distrik.append(node)
 
 
 func _tata() -> void:

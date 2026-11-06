@@ -42,6 +42,8 @@ func _segarkan() -> void:
 		return
 	var emosi := str(kata.get("emosi", "netral"))
 	_nama.text = Bahasa.teks(kata.get("text", ""))
+	if GameState.kartu_sementara.has(kata_id):
+		_nama.text = tr("UI_KARTU_SEMENTARA") % [_nama.text, int(GameState.kartu_sementara[kata_id])]
 	_info.text = "%s · %s\n%s" % [
 		HeadlineBuilder.nama_slot(str(kata.get("slot", ""))),
 		tr("UI_EMO_" + emosi.to_upper()),

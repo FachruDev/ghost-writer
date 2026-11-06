@@ -7,22 +7,52 @@ const PATH_DISTRICTS := "res://data/districts.json"
 const PATH_UPGRADES := "res://data/upgrades.json"
 const PATH_MISSIONS := "res://data/missions.json"
 const PATH_EVENTS := "res://data/events.json"
+const PATH_TOKOH := "res://data/tokoh.json"
 
 var words: Dictionary = {}
 var templates: Dictionary = {}
+## Distrik aktif untuk era sekarang, dengan "area" sesuai tata letak era itu (urutan = indeks simulasi).
 var districts: Array[Dictionary] = []
+## Semua distrik di data, termasuk yang baru terbuka di era berikutnya.
+var semua_distrik: Array[Dictionary] = []
 var upgrades: Dictionary = {}
 var missions: Array[Dictionary] = []
 var events: Array[Dictionary] = []
+## Tokoh fiktif target besar (Era 4).
+var tokoh: Array[Dictionary] = []
 
 
 func _ready() -> void:
 	words = _index(_muat(PATH_WORDS))
 	templates = _index(_muat(PATH_TEMPLATES))
-	districts.assign(_muat(PATH_DISTRICTS))
+	semua_distrik.assign(_muat(PATH_DISTRICTS))
 	upgrades = _index(_muat(PATH_UPGRADES))
 	missions.assign(_muat(PATH_MISSIONS))
 	events.assign(_muat(PATH_EVENTS))
+	tokoh.assign(_muat(PATH_TOKOH))
+	atur_era(1)
+	Events.era_berubah.connect(atur_era)
+
+
+## Pilih distrik aktif dan tata letaknya untuk era. Memancarkan peta_berubah kalau ada yang berubah.
+func atur_era(era: int) -> void:
+	var baru: Array[Dictionary] = []
+	for d in semua_distrik:
+		if int(d.get("era_min", 1)) > era:
+			continue
+		var salinan := d.duplicate()
+		var per_era: Dictionary = d.get("area_era", {})
+		var terpakai := 0
+		for kunci in per_era:
+			if int(kunci) <= era and int(kunci) > terpakai:
+				terpakai = int(kunci)
+				salinan["area"] = per_era[kunci]
+		baru.append(salinan)
+	var berubah := str(baru.map(func(x: Dictionary) -> Array: return x["area"])) \
+		!= str(districts.map(func(x: Dictionary) -> Array: return x["area"]))
+	districts = baru
+	if berubah:
+		Events.peta_berubah.emit()
 
 
 func get_upgrade(id: String) -> Dictionary:

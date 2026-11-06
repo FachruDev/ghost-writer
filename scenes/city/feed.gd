@@ -69,6 +69,16 @@ func _teks(e: Dictionary) -> String:
 			return tr("UI_STAF") % HeadlineBuilder.susun(e["template_id"], e["kata_ids"])
 		"dilema":
 			return tr("UI_DILEMA_DIPILIH") % Bahasa.teks(e.get("teks", ""))
+		"pengacara":
+			return tr("UI_PENGACARA") % Bahasa.teks(e.get("nama", ""))
+		"tokoh":
+			return tr("UI_TOKOH_SERANG") % [Bahasa.teks(e.get("nama", "")), int(e.get("kurang", 0)), int(e.get("sisa", 0))]
+		"tokoh_jatuh":
+			return tr("UI_TOKOH_JATUH") % [Bahasa.teks(e.get("nama", "")), Bahasa.angka(int(e.get("uang", 0))), int(e.get("pengikut", 0))]
+		"kontrak":
+			if e.get("berhasil", false):
+				return tr("UI_KONTRAK_BERHASIL") % [Bahasa.angka(Balance.KONTRAK_UANG), Balance.KONTRAK_PENGIKUT]
+			return tr("UI_KONTRAK_GAGAL") % roundi(Balance.KONTRAK_KRED_GAGAL)
 		"era":
 			return tr("UI_ERA_NAIK") % int(e.get("era", 2))
 		"event":
@@ -85,6 +95,12 @@ func _warna(e: Dictionary) -> Color:
 			return Palet.emosi("marah")
 		"misi", "era":
 			return Palet.emosi("iri")
+		"kontrak":
+			return Palet.emosi("iri") if e.get("berhasil", false) else Palet.emosi("marah")
+		"tokoh", "tokoh_jatuh":
+			return Palet.AKSEN
+		"pengacara":
+			return Palet.emosi("marah")
 		"staf":
 			return Palet.emosi("marah") if e.get("dibongkar", false) else Palet.TEKS_REDUP
 		"dilema":

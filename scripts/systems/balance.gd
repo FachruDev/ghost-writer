@@ -56,6 +56,14 @@ const EVENT_CEK_DETIK := 10.0
 const EVENT_JEDA_DETIK := 180.0
 const ANCAMAN_JEDA_DETIK := 120.0
 
+# Kontrak kampanye (Era 3)
+const KONTRAK_JEDA_DETIK := 240.0
+const KONTRAK_DURASI_DETIK := 180.0
+const KONTRAK_PERSEN := 0.5
+const KONTRAK_UANG := 600
+const KONTRAK_PENGIKUT := 60
+const KONTRAK_KRED_GAGAL := 10.0
+
 # Ekonomi
 const UANG_AWAL := 0
 const UANG_PER_WARGA := 2

@@ -16,7 +16,8 @@ func _ready() -> void:
 
 
 func _on_tick(dt: float) -> void:
-	if not GameState.punya_upgrade(UPGRADE_ID):
+	# E11 Server Down bisa mematikan staf sementara (kunci dengan id upgrade).
+	if not GameState.punya_upgrade(UPGRADE_ID) or GameState.saluran_terkunci.has(UPGRADE_ID):
 		return
 	_hitung += dt
 	if _hitung >= float(DataDB.get_upgrade(UPGRADE_ID).get("jeda_detik", 40)):
@@ -35,18 +36,21 @@ func kirim() -> Dictionary:
 	var kata_ids := {}
 	var kata_by_slot := {}
 	for slot in DataDB.get_template(template_id).get("slot", []):
+		# Staf tidak berani memakai kartu tokoh target.
 		var milik: Array = GameState.kartu_dimiliki.filter(func(k: String) -> bool:
-			return str(DataDB.get_word(k).get("slot", "")) == slot)
+			return str(DataDB.get_word(k).get("slot", "")) == slot and DataDB.get_word(k).get("tag", "") != "tokoh")
 		if milik.is_empty():
 			return {}
 		kata_ids[slot] = milik[rng.randi_range(0, milik.size() - 1)]
 		kata_by_slot[slot] = DataDB.get_word(kata_ids[slot])
 	var distrik := rng.randi_range(0, DataDB.districts.size() - 1)
-	var skor := RumorScorer.nilai(DataDB.get_template(template_id), kata_by_slot, DataDB.districts, GameState.kredibilitas)
-	var warga := Staf.warga_percaya(skor, DataDB.districts[distrik], float(cfg.get("warga_dasar", 8)))
-	var pengali := {"uang": 1.0, "heat": 1.0}
+	var pengali := {"uang": 1.0, "heat": 1.0, "kred": 0}
 	if pengali_rumor.is_valid():
 		pengali = pengali_rumor.call(kata_ids)
+	var skor := RumorScorer.nilai(DataDB.get_template(template_id), kata_by_slot, DataDB.districts,
+		GameState.kredibilitas, int(pengali.get("kred", 0)))
+	var warga := Staf.warga_percaya(skor, DataDB.districts[distrik], float(cfg.get("warga_dasar", 8)))
+	GameState.pakai_kartu(kata_ids)
 	var uang := roundi(Economy.uang_dari_warga(warga) * float(pengali["uang"]))
 	GameState.tambah_uang(uang)
 	GameState.ubah_heat(Konsekuensi.heat_kirim(skor, float(cfg.get("pengali_heat", 0.7))) * float(pengali["heat"]))

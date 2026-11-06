@@ -140,6 +140,30 @@ Contoh: headline heboh 8 dengan `dipercaya_akhir` 0,4 menambah heat ±9 dan puny
 | Staf otomatis | Rekrut 250 uang di era 2, maksimal 1 staf di 0.3.0. Tiap 40 detik staf mengirim rumor kecil dari kartu milik pemain secara acak lewat Merpati. Rumor ini **tidak** disimulasikan di peta: warga percaya ≈ 8 × dipercaya × cocok_emosi, lalu uang, heat (×0,7), dan peluang dibongkar dihitung seperti biasa; hasilnya tampil di feed sebagai "Staf: …". Rumus yang sama dipakai untuk penghasilan offline di 0.6.0 |
 | Event dilema | Banner berisi dua pilihan; `GameClock.jeda(&"dilema")` sampai pemain memilih (ADR-0003) |
 
+### Era 3: gedung media (0.4.0)
+
+| Sistem | Aturan |
+| --- | --- |
+| Naik era | Upgrade **Gedung Media** di toko: 350 pengikut, 1.200 uang (diturunkan dari 600/1.500: dengan angka lama, simulasi bot tidak pernah mencapai Era 3 dalam 35 menit). Membuka medsos, kontrak kampanye, kata dan template era 3, serta 3 distrik baru |
+| Peta meluas | Peta tetap satu layar, 3 → 6 distrik (2 kolom × 3 baris): Perumahan Elit (iri), Kampus (lucu), Pelabuhan (takut). Warga ±105 → ±200. Status warga lama dipertahankan saat peta ditata ulang |
+| Medsos | 100 uang per kiriman, heat ×1,5, 2 warga awal di satu distrik pilihan. Selama rumor medsos aktif, tiap penular juga mencoba menulari 2 "teman online" acak di mana pun di kota, sehingga rumor melompat antar distrik |
+| Kontrak kampanye | Tawaran klien fiktif tiap ±4 menit (bisa ditolak; waktu dijeda selama tawaran tampil): yakinkan 50% warga di 2 distrik dalam 3 menit. Berhasil: +600 uang, +60 pengikut. Gagal: kredibilitas −10. Maksimal satu kontrak aktif |
+| E07 Dokumen Bocor | Kartu SUMBER "dokumen bocor" (kred 3) masuk ke tangan untuk 3 rumor, lalu hilang |
+| E08 Viral Challenge | Headline beremosi lucu viral ×2 di semua distrik, tapi kredibilitas setiap kartu −1 selama event |
+| E09 Razia Hoaks | Ancaman saat kredibilitas < 30: medsos dikunci 90 detik, pengikut −5% |
+
+### Era 4: menara server (0.5.0)
+
+| Sistem | Aturan |
+| --- | --- |
+| Naik era | Upgrade **Menara Server**: 450 pengikut, 1.600 uang (sementara; dari simulasi bot, Era 4 tercapai ±8 menit setelah Era 3). Ritme naik era keseluruhan disetel ulang di 0.6.0. Membuka saluran server, tokoh target, kata dan template era 4, serta 2 distrik baru |
+| Peta meluas | 6 → 8 distrik (2 kolom × 4 baris): Pusat Kota dan Kawasan Industri, keduanya beremosi marah (emosi yang belum punya distrik). Warga ±260 |
+| Server (jaringan bot) | 200 uang per kiriman, heat ×2, terbuka di Era 4. Selama 15 detik, tiap detik satu warga acak di mana pun di kota langsung percaya (15 total), ditambah lompatan 2 seperti Medsos |
+| Tokoh target | Tiga tokoh fiktif masuk ke tangan sebagai kartu SUBJEK khusus saat Era 4 dimulai. Masing-masing punya reputasi 100; tiap rumor tentang tokoh yang **tidak** dibongkar mengurangi reputasinya sebanyak warga yang percaya. Di 0 tokoh jatuh: +2.000 uang, +200 pengikut. Ketiganya jatuh = syarat kampanye akhir (0.6.0). Staf tidak memakai kartu tokoh |
+| Pertahanan tokoh | **Pak Hartono** (wali kota fiktif) — *Pengacara*: rumor tentang dia dengan dipercaya < 60% otomatis dibongkar. **Bu Sasmita** (direktur bank fiktif) — *Humas*: heat ×2 untuk rumor tentang dia. **Juragan Bramantyo** (raja media fiktif) — *Media sendiri*: setiap rumor tentang dia memicu E10 Rumor Tandingan |
+| E10 Rumor Tandingan | Ancaman acak (Era 3+): media saingan membuat 40% warga yang percaya di distrik dengan pemercaya terbanyak menjadi ragu |
+| E11 Server Down | Dilema acak (Era 4): bayar perbaikan cepat (400 uang), atau biarkan sehingga staf otomatis dan saluran server mati 120 detik |
+
 Peluang "per detik simulasi" dihitung per tick sebagai `peluang × SIM_TICK` ([ADR-0003](../architecture/adr-0003-model-waktu.md)).
 
 Angka-angka ini hanya titik awal. Taruh semuanya sebagai konstanta di satu file (`balance.gd`) supaya mudah diubah saat playtest.

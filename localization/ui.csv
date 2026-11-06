@@ -44,3 +44,17 @@ UI_STAF,Staf: %s,Staff: %s
 UI_STAF_HOAKS,Rumor staf dibongkar! Kredibilitas -%d,Staff rumor debunked! Credibility -%d
 UI_ERA_NAIK,Pindah ke kantor! Era %d dimulai,Moved to an office! Era %d begins
 UI_DILEMA_DIPILIH,Kamu memilih: %s,You chose: %s
+UI_KONTRAK_NAMA,Tawaran Kontrak,Contract Offer
+UI_KONTRAK_TEKS,Klien misterius membayar %s jika %d%% warga %s dan %s percaya dalam %d menit.,A mysterious client pays %s if %d%% of %s and %s believe within %d minutes.
+UI_TERIMA,Terima,Accept
+UI_TOLAK,Tolak,Decline
+UI_KONTRAK_JALAN,Kontrak: %s %d%% · %s %d%% · %s,Contract: %s %d%% · %s %d%% · %s
+UI_KONTRAK_BERHASIL,Kontrak berhasil! +%s uang · +%d pengikut,Contract done! +%s money · +%d followers
+UI_KONTRAK_GAGAL,Kontrak gagal. Kredibilitas -%d,Contract failed. Credibility -%d
+UI_DIKUNCI,%s (dikunci),%s (locked)
+UI_KARTU_SEMENTARA,%s (sisa %d),%s (%d left)
+UI_TOKOH,Tokoh: %s,Targets: %s
+UI_TOKOH_JATUH,%s jatuh! +%s uang · +%d pengikut,%s has fallen! +%s money · +%d followers
+UI_TOKOH_SERANG,%s: reputasi -%d (sisa %d),%s: reputation -%d (%d left)
+UI_PENGACARA,Pengacara %s membantah rumormu!,%s's lawyers shut your rumor down!
+UI_TOKOH_SEMUA_JATUH,Semua tokoh jatuh,All targets have fallen

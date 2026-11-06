@@ -6,13 +6,15 @@ const URUTAN_SLOT := ["subjek", "aksi", "tempat", "sumber"]
 
 
 ## kata_by_slot: {"subjek": <data kata>, ...}. distrik_list: urutan sama dengan DataDB.districts.
-static func nilai(template: Dictionary, kata_by_slot: Dictionary, distrik_list: Array, kredibilitas: float) -> Dictionary:
+## kred_tambah: penyesuaian kredibilitas tiap kartu dari event (E08: -1), dibatasi minimal 0.
+static func nilai(template: Dictionary, kata_by_slot: Dictionary, distrik_list: Array, kredibilitas: float,
+		kred_tambah: int = 0) -> Dictionary:
 	var jumlah_heboh := 0
 	var jumlah_kred := 0
 	for slot in kata_by_slot:
 		var kata: Dictionary = kata_by_slot[slot]
 		jumlah_heboh += int(kata.get("heboh", 0))
-		jumlah_kred += int(kata.get("kred", 0))
+		jumlah_kred += maxi(0, int(kata.get("kred", 0)) + kred_tambah)
 	var n := maxi(kata_by_slot.size(), 1)
 	var heboh_total := jumlah_heboh * float(template.get("pengali_heboh", 1.0))
 	var kred_rata := float(jumlah_kred) / n

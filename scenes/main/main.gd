@@ -36,6 +36,14 @@ func _ready() -> void:
 	Events.era_berubah.connect(func(era: int) -> void:
 		if era > 1 and is_node_ready():
 			Events.feed_baru.emit({"jenis": "era", "era": era}))
+	var tokoh := TokohController.new()
+	tokoh.name = "TokohController"
+	rumor.tokoh = tokoh
+	add_child(tokoh)
+	var kontrak := CampaignController.new()
+	kontrak.name = "CampaignController"
+	kontrak.sim = rumor.sim
+	add_child(kontrak)
 	var misi := MissionController.new()
 	misi.name = "MissionController"
 	add_child(misi)
