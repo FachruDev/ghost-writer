@@ -148,7 +148,9 @@ func _ketik(teks: String) -> void:
 	_label_headline.text = teks
 	_label_headline.visible_ratio = 0.0
 	var t := create_tween()
-	t.tween_property(_label_headline, "visible_ratio", 1.0, 0.03 * teks.length())
+	var durasi := 0.03 * teks.length()
+	Events.headline_diketik.emit(durasi)
+	t.tween_property(_label_headline, "visible_ratio", 1.0, durasi)
 	t.tween_interval(1.0)
 	t.tween_callback(func() -> void:
 		_mengetik = false

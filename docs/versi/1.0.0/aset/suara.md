@@ -4,15 +4,15 @@ SFX pendek disimpan di `res://assets/sfx/` sebagai `.wav` (latensi rendah). Semu
 
 | ID | Kapan diputar | Catatan | Versi | Sumber / lisensi | Status |
 | --- | --- | --- | --- | --- | --- |
-| sfx_type_key_1..3 | Tiap huruf headline diketik | 3 variasi diacak supaya tidak monoton; pitch ±5% | 0.2.0 | | Belum |
-| sfx_type_bell | Headline selesai diketik | Bel mesin tik | 0.2.0 | | Belum |
-| sfx_card_pick | Kartu diambil dari tangan | Gesekan kertas pendek | 0.2.0 | | Belum |
-| sfx_card_place | Kartu masuk ke slot | Bunyi "tak" ringan | 0.2.0 | | Belum |
-| sfx_send | Tombol KIRIM | Kertas dilipat / sayap merpati | 0.2.0 | | Belum |
-| sfx_coin | Uang masuk | Volume kecil, dibatasi maks 4 per detik | 0.2.0 | | Belum |
-| sfx_debunk_stamp | Pembongkar fakta mengecap HOAKS | Stempel keras | 0.2.0 | | Belum |
-| sfx_event_alert | Banner event muncul | Beda nada untuk modifier vs ancaman | 0.2.0 | | Belum |
-| sfx_ui_click | Tombol UI umum | | 0.2.0 | | Belum |
+| sfx_type_key_1..3 | Tiap huruf headline diketik | 3 variasi diacak supaya tidak monoton; pitch ±5% | 0.2.0 | OpenGameArt typewriter-sounds (Cassie-OrbitGames), CC0, sementara | Selesai |
+| sfx_type_bell | Headline selesai diketik | Bel mesin tik | 0.2.0 | OpenGameArt SoundPack01 Coin01 (wobbleboxx), CC0, sementara | Selesai |
+| sfx_card_pick | Kartu diambil dari tangan | Gesekan kertas pendek | 0.2.0 | Kenney RPG sounds bookFlip1, CC0, sementara | Selesai |
+| sfx_card_place | Kartu masuk ke slot | Bunyi "tak" ringan | 0.2.0 | Kenney RPG sounds bookPlace1, CC0, sementara | Selesai |
+| sfx_send | Tombol KIRIM | Kertas dilipat / sayap merpati | 0.2.0 | Kenney RPG sounds cloth1, CC0, sementara | Selesai |
+| sfx_coin | Uang masuk | Volume kecil, dibatasi maks 4 per detik | 0.2.0 | Kenney RPG sounds handleCoins, CC0, sementara | Selesai |
+| sfx_debunk_stamp | Pembongkar fakta mengecap HOAKS | Stempel keras | 0.2.0 | Kenney RPG sounds chop, CC0, sementara | Selesai |
+| sfx_event_alert | Banner event muncul | Beda nada untuk modifier vs ancaman | 0.2.0 | OpenGameArt SoundPack01 Rise01 / Alarm (wobbleboxx), CC0, sementara | Selesai |
+| sfx_ui_click | Tombol UI umum | | 0.2.0 | Kenney UI SFX click3, CC0, sementara | Selesai |
 | sfx_carriage_return | Ganti template / reset meja | | 0.3.0 | | Belum |
 | sfx_follower_up | Pengikut naik milestone | | 0.3.0 | | Belum |
 | sfx_buy | Beli di toko | | 0.3.0 | | Belum |

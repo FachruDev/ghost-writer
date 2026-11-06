@@ -20,6 +20,8 @@ signal saluran_dipilih(saluran_id: String)
 @warning_ignore("unused_signal")
 signal kirim_diminta(data: Dictionary)
 @warning_ignore("unused_signal")
+signal headline_diketik(durasi: float)
+@warning_ignore("unused_signal")
 signal rumor_published(info: Dictionary)
 @warning_ignore("unused_signal")
 signal warga_berubah

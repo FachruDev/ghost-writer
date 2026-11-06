@@ -11,6 +11,7 @@ var _info: Label
 
 func _ready() -> void:
 	custom_minimum_size = UKURAN
+	add_to_group(&"tanpa_klik")
 	auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
 	var kotak := VBoxContainer.new()
 	kotak.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT, Control.PRESET_MODE_MINSIZE, 6)

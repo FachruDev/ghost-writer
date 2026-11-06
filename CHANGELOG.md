@@ -13,12 +13,49 @@ Rencana per versi ada di [`docs/versi/1.0.0/README.md`](docs/versi/1.0.0/README.
 
 ## [Belum dirilis]
 
+Menuju 0.2.0 (MVP). Masih kurang: uji di HP sendiri dan uji dengan 3–5 teman.
+
 ### Ditambah
 
-- Rancangan database save SQLite (plugin godot-sqlite): tabel progres pemain, kepemilikan, misi, status distrik, riwayat rumor dan event
-- README project
-- Project Godot 4.7 (renderer Mobile, stretch `canvas_items`, aspect `expand`)
-- Dokumentasi di `docs/`: panduan (konsep, struktur project, konvensi, rilis Android), rencana v1.0.0 (roadmap, checklist, event, aset), dan daftar ide 2.0.0
+- Konsekuensi: heat per rumor yang turun pelan, peluang rumor dibongkar, kredibilitas sebagai pengali "dipercaya", warga kebal (biru) yang pulih perlahan, stempel HOAKS
+- Saluran Merpati (gratis, satu distrik) dan Koran (30 uang, semua distrik, terbuka di 100 pengikut)
+- Pengikut sebagai mata uang ambang (+1 per 5 warga dari rumor yang tidak dibongkar, +3 per mutasi)
+- Lima misi berurutan dengan hadiah uang, tampil di HUD
+- Mutasi rumor (2% per warga tertular) dan feed headline di atas peta
+- Event E01 Hari Pasar, E02 Ronda Malam, E03 Pembongkar Fakta dengan banner dan sisa waktu
+- Save `user://save.json` dengan tulis atomik (`.tmp` → `.bak`), versi skema, autosave 30 detik dan saat aplikasi dijeda; rumor yang sedang menjalar disimpan sebagai proyeksi
+- Animasi: mesin tik mengetik, kartu terbang ke slot, kartu ditekan, denyut warga, uang melayang, banner event, stempel HOAKS dengan getar peta
+- Suara: bus Music dan SFX, 12 SFX dan musik latar era 1 (placeholder CC0 dari OpenGameArt, lihat `assets/LISENSI_AUDIO.md`)
+- Konten jadi 40 kata (10 per slot)
+- Export preset Android dan APK debug (`build/ghostwriter-debug.apk`)
+
+### Diubah
+
+- Kompresi tekstur ETC2/ASTC diaktifkan (wajib untuk ekspor Android)
+
+## [0.1.0] - 2026-11-05
+
+Prototipe lolos gerbang keputusan: seru dimainkan tanpa art.
+
+### Ditambah
+
+- ADR-0001 sampai ADR-0004: renderer Compatibility, save JSON atomik, model waktu GameClock, lokalisasi Indonesia–Inggris
+- Konfigurasi engine Godot 4.7.2 (`CLAUDE.md`, `project.yaml`) dan referensi engine bersumber resmi di `docs/engine-reference/godot/`
+- Prototipe: racik headline dari kartu kata ke template, skor viral dan dipercaya, penyebaran rumor di 3 distrik, uang, toko kata dan template, HUD
+- Data dua bahasa: 30 kata, 5 template, 3 distrik, teks UI di `localization/ui.csv`
+- Aturan desain: rumus konsekuensi, status warga, emosi dominan
+- README project dan dokumentasi di `docs/`
+
+### Diubah
+
+- Renderer Mobile → Compatibility; layar portrait 720×1280 (ADR-0001)
+- Nama file script dan scene PascalCase → snake_case; aturan kode modular ±300 baris per file
+- Angka penyebaran disetel lewat simulasi Monte Carlo; warga yang ragu ikut bercerita 1 detik (usulan prototipe)
+- Bahasa Inggris masuk v1 (sebelumnya di daftar ide 2.0.0)
+
+### Dihapus
+
+- Rancangan save SQLite dengan plugin godot-sqlite, diganti JSON (ADR-0002)
 
 <!--
 Contoh entri saat versi selesai:

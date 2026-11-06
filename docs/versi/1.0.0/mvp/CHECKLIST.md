@@ -10,7 +10,7 @@ Satu-satunya daftar centang untuk semua versi, dari setup sampai rilis. Rincian 
 - [x] Localization: fallback locale `id` ([ADR-0004](../../../architecture/adr-0004-lokalisasi.md))
 - [x] Buat struktur folder seperti di [struktur-project.md](../../../panduan/struktur-project.md)
 - [x] Inisialisasi git (commit kecil tiap hari)
-- [ ] Siapkan Android export: Android SDK, JDK 17+, export template, keystore debug, Android Build Template (Gradle, untuk AAB). Tambahkan filter `data/*.json` ke "Filters to export non-resource files" supaya konten JSON ikut terekspor
+- [x] Siapkan Android export: Android SDK, JDK 17+, export template, keystore debug, Android Build Template (Gradle, untuk AAB). Tambahkan filter `data/*.json` ke "Filters to export non-resource files" supaya konten JSON ikut terekspor
 - [ ] Pasang gdUnit4 (manual dari rilis GitHub) dan pastikan jalan di Godot 4.7.2
 - [ ] Uji coba: tulis dan baca `user://save.json` di HP Android
 - [ ] Ekspor scene kosong ke HP sendiri — pastikan jalan sekarang, bukan di minggu ke-11
@@ -86,14 +86,14 @@ Semua pakai kotak abu-abu dan teks polos. **Jangan sentuh art.**
 
 **Suara dasar** (lihat [suara.md](../aset/suara.md))
 
-- [ ] Bus audio: Master, Music, SFX
-- [ ] Tombol ketik mesin tik + bel akhir baris
-- [ ] Ambil & taruh kartu
-- [ ] Kirim rumor
-- [ ] Dapat uang
-- [ ] Stempel HOAKS (pembongkar fakta)
-- [ ] Alert event
-- [ ] 1 musik latar loop (era kamar)
+- [x] Bus audio: Master, Music, SFX
+- [x] Tombol ketik mesin tik + bel akhir baris
+- [x] Ambil & taruh kartu
+- [x] Kirim rumor
+- [x] Dapat uang
+- [x] Stempel HOAKS (pembongkar fakta)
+- [x] Alert event
+- [x] 1 musik latar loop (era kamar)
 
 **Animasi dasar** (lihat [animasi.md](../aset/animasi.md))
 
@@ -105,7 +105,7 @@ Semua pakai kotak abu-abu dan teks polos. **Jangan sentuh art.**
 
 **Uji**
 
-- [ ] Build APK debug terpasang di HP sendiri
+- [ ] Build APK debug terpasang di HP sendiri (APK sudah bisa dibangun: `build/ghostwriter-debug.apk`)
 - [ ] 3–5 teman main tanpa penjelasan
 - [ ] 3 hal paling membingungkan sudah diperbaiki
 - [ ] Mulai kumpulkan calon tester closed testing (target 15–25 orang)

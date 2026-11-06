@@ -24,6 +24,8 @@ Sumber: https://docs.godotengine.org/en/4.7/tutorials/export/android_gradle_buil
 - Target API: mulai 31 Agustus 2026 app baru dan update wajib target API 36+ (perpanjangan sampai 1 November 2026). https://developer.android.com/google/play/requirements/target-sdk
 - 16 KB page size: wajib untuk app yang menargetkan Android 15+ di perangkat 64-bit. Halaman Android saat ini menyebut update tanpa dukungan 16 KB tidak bisa dirilis mulai 1 Februari 2027. https://developer.android.com/guide/practices/page-sizes
 - Godot: "supports this feature out of the box" sejak 4.5 (https://godotengine.org/releases/4.5/; issue https://github.com/godotengine/godot/issues/106313 ditutup lewat PR #106358). Untuk 4.7 ini **disimpulkan** dari 4.5, tidak dikonfirmasi eksplisit di halaman rilis 4.7.
+- **Dikonfirmasi 2026-11-06 untuk template 4.7.2:** APK debug proyek ini berisi `libgodot_android.so` dan `libc++_shared.so` dengan `PT_LOAD p_align = 16384`, dan `zipalign -c -P 16 -v 4` lulus. AAB rilis (Gradle) tetap perlu dicek dengan `bundletool`.
+- Ekspor Android mewajibkan `rendering/textures/vram_compression/import_etc2_astc = true` (pesan error editor 4.7.2).
 - Biarkan `gradle_build/compress_native_libraries` = `false` untuk Play Store. https://docs.godotengine.org/en/4.7/classes/class_editorexportplatformandroid.html
 - Cara cek AAB: `bundletool dump config --bundle=<app.aab> | grep alignment` → harus `PAGE_ALIGNMENT_16K`; untuk APK: `zipalign -c -P 16 -v 4 app.apk`. https://developer.android.com/guide/practices/page-sizes
 

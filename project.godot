@@ -23,6 +23,7 @@ Bahasa="*res://scripts/autoload/bahasa.gd"
 GameClock="*res://scripts/autoload/game_clock.gd"
 GameState="*res://scripts/autoload/game_state.gd"
 SaveSystem="*res://scripts/autoload/save_system.gd"
+Suara="*res://scripts/autoload/suara.gd"
 
 [display]
 
@@ -41,3 +42,4 @@ locale/fallback="id"
 
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
+textures/vram_compression/import_etc2_astc=true
