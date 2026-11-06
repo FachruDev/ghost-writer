@@ -131,6 +131,15 @@ Contoh: headline heboh 8 dengan `dipercaya_akhir` 0,4 menambah heat ±9 dan puny
 | Misi | Lima misi berurutan, sekaligus tutorial ringan: kirim rumor pertama (+20 uang), yakinkan 20 warga sekaligus (+30), beli 2 kata (+30), kirim rumor *takut* ke Gang Sempit (+40), capai 100 pengikut (+50, Koran terbuka). Isi di `data/missions.json` |
 | Mutasi | Setiap warga yang tertular punya peluang 2% memicu mutasi: satu kata diganti kata lain dari slot yang sama (dari semua kata). Versi mutasi tampil di feed dan memberi +3 pengikut; skor rumor tidak berubah |
 
+### Era 2: kantor (0.3.0)
+
+| Sistem | Aturan |
+| --- | --- |
+| Naik era | Tombol **Sewa Kantor** di toko muncul setelah 200 pengikut; harga 400 uang, sekali beli. Efek: era = 2, latar meja kantor, dan isi era 2 terbuka (radio, staf, kata dan template baru, event era 2) |
+| Radio | 60 uang per kiriman, terbuka di era 2, heat ×1,2. Siaran 10 detik: tiap 2 detik satu warga di setiap distrik langsung mendengar (total 5 × 3 = 15 warga awal), jadi rumor sulit padam |
+| Staf otomatis | Rekrut 250 uang di era 2, maksimal 1 staf di 0.3.0. Tiap 40 detik staf mengirim rumor kecil dari kartu milik pemain secara acak lewat Merpati. Rumor ini **tidak** disimulasikan di peta: warga percaya ≈ 8 × dipercaya × cocok_emosi, lalu uang, heat (×0,7), dan peluang dibongkar dihitung seperti biasa; hasilnya tampil di feed sebagai "Staf: …". Rumus yang sama dipakai untuk penghasilan offline di 0.6.0 |
+| Event dilema | Banner berisi dua pilihan; `GameClock.jeda(&"dilema")` sampai pemain memilih (ADR-0003) |
+
 Peluang "per detik simulasi" dihitung per tick sebagai `peluang × SIM_TICK` ([ADR-0003](../architecture/adr-0003-model-waktu.md)).
 
 Angka-angka ini hanya titik awal. Taruh semuanya sebagai konstanta di satu file (`balance.gd`) supaya mudah diubah saat playtest.

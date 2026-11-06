@@ -33,6 +33,8 @@ naming:
 commands:
   # build: no export preset exists yet — set via /settings once export_presets.cfg has one (e.g. "Android")
   build: "[TO BE CONFIGURED]"
-  test: '"C:/Users/lenovo/Downloads/Godot_v4.7.2-stable_win64.exe/Godot_v4.7.2-stable_win64_console.exe" --headless -s -d --remote-debug tcp://127.0.0.1:0 res://addons/gdUnit4/bin/GdUnitCmdTool.gd -a res://tests --ignoreHeadlessMode'
+  test: '"C:/Users/lenovo/Downloads/Godot_v4.7.2-stable_win64.exe/Godot_v4.7.2-stable_win64_console.exe" --headless -s --path . res://addons/gdUnit4/bin/GdUnitCmdTool.gd -a res://tests --ignoreHeadlessMode -c'
+  # test: exit 0 = lulus, 100 = ada yang gagal. Di 4.7.2, --remote-debug tcp://127.0.0.1:0 ditolak (port 0), jadi tidak dipakai.
+  # balance: simulasi bot 8 sesi x 15 menit -> godot --headless --path . -s res://tools/sesi_bot.gd
   run: '"C:/Users/lenovo/Downloads/Godot_v4.7.2-stable_win64.exe/Godot_v4.7.2-stable_win64_console.exe" --path . --windowed --resolution 720x1280'
   smoke: '"C:/Users/lenovo/Downloads/Godot_v4.7.2-stable_win64.exe/Godot_v4.7.2-stable_win64_console.exe" --headless --quit-after 5'

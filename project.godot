@@ -33,6 +33,10 @@ window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 window/handheld/orientation=1
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/gdUnit4/plugin.cfg")
+
 [internationalization]
 
 locale/translations=PackedStringArray("res://localization/ui.id.translation", "res://localization/ui.en.translation")

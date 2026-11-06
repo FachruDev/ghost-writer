@@ -11,7 +11,7 @@ Satu-satunya daftar centang untuk semua versi, dari setup sampai rilis. Rincian 
 - [x] Buat struktur folder seperti di [struktur-project.md](../../../panduan/struktur-project.md)
 - [x] Inisialisasi git (commit kecil tiap hari)
 - [x] Siapkan Android export: Android SDK, JDK 17+, export template, keystore debug, Android Build Template (Gradle, untuk AAB). Tambahkan filter `data/*.json` ke "Filters to export non-resource files" supaya konten JSON ikut terekspor
-- [ ] Pasang gdUnit4 (manual dari rilis GitHub) dan pastikan jalan di Godot 4.7.2
+- [x] Pasang gdUnit4 v6.2.3 (jalan di Godot 4.7.2); tes di `tests/`, bot balancing di `tools/sesi_bot.gd`
 - [ ] Uji coba: tulis dan baca `user://save.json` di HP Android
 - [ ] Ekspor scene kosong ke HP sendiri — pastikan jalan sekarang, bukan di minggu ke-11
 
