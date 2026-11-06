@@ -5,8 +5,12 @@ extends Node
 
 var sim: SpreadSim
 
+## Event acak (modifier/peluang) yang sedang aktif; efeknya dibaca pengali_viral().
 var _aktif: Dictionary = {}
 var _sisa := 0.0
+## Ancaman berjalan di jalur sendiri supaya tidak menimpa event acak (EVENT.md).
+var _ancaman: Dictionary = {}
+var _sisa_ancaman := 0.0
 var _sejak_event := 0.0
 var _sejak_ancaman := Balance.ANCAMAN_JEDA_DETIK
 var _sejak_cek := 0.0
@@ -38,13 +42,20 @@ func _on_tick(dt: float) -> void:
 	_sejak_event += dt
 	_sejak_ancaman += dt
 	_sejak_cek += dt
+	if not _ancaman.is_empty():
+		_sisa_ancaman -= dt
+		if _sisa_ancaman <= 0.0:
+			_ancaman = {}
+			_selesai_atau_kembali()
 	if not _aktif.is_empty():
 		_sisa -= dt
-		Events.event_sisa.emit(maxf(_sisa, 0.0))
 		if _sisa <= 0.0:
-			var id := str(_aktif["id"])
 			_aktif = {}
-			Events.event_selesai.emit(id)
+			_selesai_atau_kembali()
+	if not _ancaman.is_empty():
+		Events.event_sisa.emit(maxf(_sisa_ancaman, 0.0))
+	elif not _aktif.is_empty():
+		Events.event_sisa.emit(maxf(_sisa, 0.0))
 	_cek_ancaman()
 	if _sejak_cek >= Balance.EVENT_CEK_DETIK:
 		_sejak_cek = 0.0
@@ -59,7 +70,9 @@ func _cek_ancaman() -> void:
 		if str(e.get("jenis", "")) == "ancaman" and str(pemicu.get("tipe", "")) == "kondisi" \
 				and _era_cocok(e) and GameState.heat >= float(pemicu.get("heat_min", 999)):
 			_sejak_ancaman = 0.0
-			_mulai(e)
+			_ancaman = e
+			_sisa_ancaman = float(e.get("durasi", 0))
+			_umumkan(e, _sisa_ancaman)
 			return
 
 
@@ -74,16 +87,35 @@ func _cek_acak() -> void:
 			return
 
 
+## Memulai event acak (modifier/peluang).
 func _mulai(e: Dictionary) -> void:
 	_aktif = e
 	_sisa = float(e.get("durasi", 0))
 	_sejak_event = 0.0
+	_umumkan(e, _sisa)
+
+
+func _umumkan(e: Dictionary, durasi: float) -> void:
 	GameState.catat_event(str(e["id"]))
-	var info := {"id": e["id"], "nama": e.get("nama", ""), "teks": e.get("teks", ""), "jenis": e.get("jenis", ""), "durasi": _sisa}
+	var info := _info(e, durasi)
 	for efek in e.get("efek", []):
 		_efek_langsung(efek, info)
 	Events.event_mulai.emit(info)
 	Events.feed_baru.emit({"jenis": "event", "teks": e.get("nama", ""), "info": info.get("hasil", "")})
+
+
+func _info(e: Dictionary, durasi: float) -> Dictionary:
+	return {"id": e["id"], "nama": e.get("nama", ""), "teks": e.get("teks", ""), "jenis": e.get("jenis", ""), "durasi": durasi}
+
+
+## Saat satu jalur selesai: tampilkan lagi event yang masih berjalan, atau tutup banner.
+func _selesai_atau_kembali() -> void:
+	if not _ancaman.is_empty():
+		Events.event_tampil.emit(_info(_ancaman, _sisa_ancaman))
+	elif not _aktif.is_empty():
+		Events.event_tampil.emit(_info(_aktif, _sisa))
+	else:
+		Events.event_selesai.emit("")
 
 
 func _efek_langsung(efek: Dictionary, info: Dictionary) -> void:

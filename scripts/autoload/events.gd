@@ -37,6 +37,9 @@ signal misi_berubah
 signal event_mulai(info: Dictionary)
 @warning_ignore("unused_signal")
 signal event_sisa(sisa_detik: float)
+## Banner menampilkan ulang event yang masih berjalan (tanpa bunyi alert).
+@warning_ignore("unused_signal")
+signal event_tampil(info: Dictionary)
 @warning_ignore("unused_signal")
 signal event_selesai(event_id: String)
 @warning_ignore("unused_signal")

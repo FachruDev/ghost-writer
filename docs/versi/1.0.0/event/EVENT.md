@@ -16,7 +16,7 @@ Semua event adalah data di `res://data/events.json`, dijalankan oleh `scenes/mai
 Aturan umum:
 
 - Maksimal **1 event aktif** di satu waktu (kecuali ancaman yang dipicu kondisi).
-- Jeda minimal antar event acak: 90 detik (atur di `balance.gd`).
+- Jeda minimal antar event acak: 180 detik; ancaman (mis. Pembongkar Fakta) berjalan di jalur sendiri dengan jeda 120 detik dan tidak menimpa event acak (atur di `balance.gd`).
 - Setiap event tampil sebagai **banner** di atas peta + ikon jenis event + sisa durasi.
 - Event dilema **menjeda waktu** sampai pemain memilih.
 

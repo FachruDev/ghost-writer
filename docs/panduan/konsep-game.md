@@ -103,7 +103,7 @@ Dimatikan dengan `DURASI_MENULAR_RAGU_DETIK = 0.0`. Diputuskan di gerbang protot
 Saat rumor dikirim:
   heat += heboh_total × (1.5 − dipercaya_akhir)
 Setiap detik simulasi:
-  heat −= 0.1                                   (±6 per menit)
+  heat −= 0.3                                   (±18 per menit)
 
 Saat rumor selesai menyebar:
   peluang_bongkar = (1 − dipercaya_akhir) × (0.3 + heat / 100 × 0.7)
@@ -127,7 +127,7 @@ Contoh: headline heboh 8 dengan `dipercaya_akhir` 0,4 menambah heat ±9 dan puny
 | --- | --- |
 | Merpati | Gratis. Satu distrik pilihan, 1–3 warga awal |
 | Koran | 30 uang per kiriman. Semua distrik sekaligus, 2 warga awal per distrik, heat ×1,3. Terbuka di 100 pengikut |
-| Pengikut | +1 per 5 warga percaya dari rumor yang **tidak** dibongkar; +3 per mutasi. Tidak dibelanjakan: mencapai ambang membuka hal baru (100 → Koran, 300 → E04 di 0.3.0) |
+| Pengikut | +1 per 12 warga percaya dari rumor yang **tidak** dibongkar; +3 per mutasi. Tidak dibelanjakan: mencapai ambang membuka hal baru (100 → Koran, 300 → E04 di 0.3.0) |
 | Misi | Lima misi berurutan, sekaligus tutorial ringan: kirim rumor pertama (+20 uang), yakinkan 20 warga sekaligus (+30), beli 2 kata (+30), kirim rumor *takut* ke Gang Sempit (+40), capai 100 pengikut (+50, Koran terbuka). Isi di `data/missions.json` |
 | Mutasi | Setiap warga yang tertular punya peluang 2% memicu mutasi: satu kata diganti kata lain dari slot yang sama (dari semua kata). Versi mutasi tampil di feed dan memberi +3 pengikut; skor rumor tidak berubah |
 

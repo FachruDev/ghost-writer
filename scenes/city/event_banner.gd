@@ -17,6 +17,7 @@ func _ready() -> void:
 	_teks = _label(kotak, 17)
 	visible = false
 	Events.event_mulai.connect(_on_mulai)
+	Events.event_tampil.connect(_on_mulai)
 	Events.event_sisa.connect(_on_sisa)
 	Events.event_selesai.connect(func(_id: String) -> void: _tutup())
 	Bahasa.bahasa_berubah.connect(func(_k: String) -> void: _on_sisa(float(_info.get("sisa", 0.0))))

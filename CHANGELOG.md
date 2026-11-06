@@ -32,6 +32,11 @@ Menuju 0.2.0 (MVP). Masih kurang: uji di HP sendiri dan uji dengan 3–5 teman.
 ### Diubah
 
 - Kompresi tekstur ETC2/ASTC diaktifkan (wajib untuk ekspor Android)
+- Balancing dari simulasi 8 sesi × 15 menit: heat turun 0,1 → 0,3/detik, jeda Pembongkar Fakta 60 → 120 detik, jeda event acak 90 → 180 detik, pengikut per 5 → per 12 warga, uang per warga 5 → 2
+
+### Diperbaiki
+
+- Ancaman (Pembongkar Fakta) menimpa event acak yang sedang aktif dan mereset jedanya, sehingga event acak hampir tidak muncul
 
 ## [0.1.0] - 2026-11-05
 
