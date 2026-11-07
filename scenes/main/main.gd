@@ -1,22 +1,29 @@
 extends Control
-## Layout portrait: HUD, peta kota, mesin tik, tangan kartu (struktur-project.md).
+## Layout portrait (kanvas papan 02): HUD, peta jaringan, lalu meja (kertas headline, tangan kartu,
+## saluran + KIRIM). Lapisan di atasnya: lembar saluran, toko, ending, dst.
 ## Juga menghubungkan pengendali rumor, misi, event, dan save.
 
 const HUD := preload("res://scenes/ui/hud.tscn")
 const CITY := preload("res://scenes/city/city.tscn")
 const DESK := preload("res://scenes/desk/desk.tscn")
-const HAND := preload("res://scenes/hand/hand.tscn")
+const SALURAN := preload("res://scenes/desk/saluran_sheet.gd")
+const LAPISAN := [
+	preload("res://scenes/ui/dilema_sheet.gd"),
+	preload("res://scenes/ui/tokoh_sheet.gd"),
+	preload("res://scenes/ui/final_sheet.gd"),
+	preload("res://scenes/ui/naik_era.gd"),
+	preload("res://scenes/ui/offline_sheet.gd"),
+	preload("res://scenes/ui/pengaturan_layar.gd"),
+]
 const SHOP := preload("res://scenes/ui/shop.tscn")
 const ENDING := preload("res://scenes/ui/ending.tscn")
 
-const UKURAN_FONT := 24
-const RASIO := {"hud": 0.1, "city": 0.43, "desk": 0.27, "hand": 0.2}
+## Tepi kiri-kanan isi layar (12 px kanvas).
+const TEPI := 24
 
 
 func _ready() -> void:
-	var tema := Theme.new()
-	tema.default_font_size = UKURAN_FONT
-	theme = tema
+	theme = Tema.buat()
 	var latar := ColorRect.new()
 	latar.color = Palet.LATAR
 	latar.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -53,19 +60,21 @@ func _ready() -> void:
 	misi.name = "MissionController"
 	add_child(misi)
 	SaveSystem.sumber_snapshot = rumor.snapshot_untuk_save
-	var tepi := MarginContainer.new()
-	tepi.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	for sisi in ["margin_left", "margin_right", "margin_top", "margin_bottom"]:
-		tepi.add_theme_constant_override(sisi, 10)
-	add_child(tepi)
 	var tata := VBoxContainer.new()
-	tata.add_theme_constant_override("separation", 8)
-	tepi.add_child(tata)
-	_tambah(tata, HUD.instantiate(), RASIO["hud"])
-	var kota := _tambah(tata, CITY.instantiate(), RASIO["city"])
+	tata.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	tata.add_theme_constant_override("separation", 14)
+	add_child(tata)
+	var atas := UiKit.margin(tata, TEPI, 20, TEPI, 0)
+	atas.add_child(HUD.instantiate())
+	var bingkai_kota := UiKit.margin(tata, TEPI, 0, TEPI, 0)
+	bingkai_kota.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	var kota := CITY.instantiate()
+	bingkai_kota.add_child(kota)
 	kota.atur_sim(rumor.sim)
-	_tambah(tata, DESK.instantiate(), RASIO["desk"])
-	_tambah(tata, HAND.instantiate(), RASIO["hand"])
+	tata.add_child(DESK.instantiate())
+	add_child(SALURAN.new())
+	for lapisan in LAPISAN:
+		add_child(lapisan.new())
 	add_child(SHOP.instantiate())
 	add_child(ENDING.instantiate())
 	_umumkan_offline.call_deferred()
@@ -78,9 +87,3 @@ func _umumkan_offline() -> void:
 		Events.feed_baru.emit({"jenis": "offline", "uang": uang, "detik": float(SaveSystem.offline["detik"])})
 		SaveSystem.offline = {}
 
-
-func _tambah(induk: Control, anak: Control, rasio: float) -> Control:
-	anak.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	anak.size_flags_stretch_ratio = rasio
-	induk.add_child(anak)
-	return anak

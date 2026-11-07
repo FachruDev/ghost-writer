@@ -17,12 +17,17 @@ func _ready() -> void:
 
 func _on_tick(dt: float) -> void:
 	# E11 Server Down bisa mematikan staf sementara (kunci dengan id upgrade).
-	if not GameState.punya_upgrade(UPGRADE_ID) or GameState.saluran_terkunci.has(UPGRADE_ID):
+	if not GameState.punya_upgrade(UPGRADE_ID):
+		return
+	var jeda := float(DataDB.get_upgrade(UPGRADE_ID).get("jeda_detik", 40))
+	if GameState.saluran_terkunci.has(UPGRADE_ID):
+		Events.staf_hitung.emit(-1.0, jeda)
 		return
 	_hitung += dt
-	if _hitung >= float(DataDB.get_upgrade(UPGRADE_ID).get("jeda_detik", 40)):
+	if _hitung >= jeda:
 		_hitung = 0.0
 		kirim()
+	Events.staf_hitung.emit(jeda - _hitung, jeda)
 
 
 ## Satu rumor staf. Mengembalikan ringkasan hasil, atau {} kalau ada slot tanpa kartu.

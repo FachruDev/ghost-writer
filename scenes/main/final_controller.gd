@@ -123,6 +123,7 @@ func _akhiri(hasil: String) -> void:
 	_teks_terakhir = ""
 	Events.event_selesai.emit(EVENT_ID)
 	Events.final_progres.emit("")
+	Events.final_data.emit({})
 	Events.final_berubah.emit()
 	Events.ending_tercapai.emit(hasil)
 	SaveSystem.simpan()
@@ -133,6 +134,8 @@ func _umumkan_progres() -> void:
 	if not GameState.final_berjalan:
 		return
 	var sisa := maxi(0, ceili(_sisa))
+	Events.final_data.emit({"percaya": persen(SpreadSim.Status.PERCAYA), "kebal": persen(SpreadSim.Status.KEBAL),
+		"sisa": sisa})
 	var teks := tr("UI_FINAL_JALAN") % [roundi(persen(SpreadSim.Status.PERCAYA) * 100.0),
 		roundi(Balance.FINAL_TARGET_PERCAYA * 100.0), roundi(persen(SpreadSim.Status.KEBAL) * 100.0),
 		roundi(Balance.FINAL_BATAS_KEBAL * 100.0), "%d:%02d" % [sisa / 60, sisa % 60]]

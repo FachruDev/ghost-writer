@@ -129,7 +129,7 @@ Semua pakai kotak abu-abu dan teks polos. **Jangan sentuh art.**
 - [x] Musik era 2 (placeholder CC0)
 - [ ] Animasi: kirim kertas, mutasi headline, buka toko, umpan balik tombol (menunggu desain UI)
 - [ ] Art pertama: kartu, slot, kertas, meja era 1–2, peta, distrik 1–3, panel UI, stempel HOAKS (menunggu desain UI)
-- [ ] Ikon radio dan staf
+- [x] Ikon radio dan staf
 
 ## 0.4.0 — Era gedung media
 
@@ -171,7 +171,7 @@ Save dasar sudah dibuat di 0.2.0 ([ADR-0002](../../../architecture/adr-0002-back
 - [x] Uji: `save.json` dirusak manual → game memuat dari `save.bak` tanpa crash (tes headless `test_save.gd`)
 - [x] Uji: save skema lama termuat setelah migrasi (tes headless: save 0.2.0 + urutan migrasi)
 - [ ] Proyeksi rumor saat menyimpan < 50 ms di HP kelas bawah ([ADR-0003](../../../architecture/adr-0003-model-waktu.md)) — desktop 8 ms di kota terbesar; perlu diukur di HP
-- [ ] Tombol reset progres di pengaturan (`settings.cfg` tidak ikut terhapus)
+- [x] Tombol reset progres di pengaturan (`settings.cfg` tidak ikut terhapus)
 
 **Onboarding**
 
@@ -190,7 +190,7 @@ Save dasar sudah dibuat di 0.2.0 ([ADR-0002](../../../architecture/adr-0002-back
 
 - [ ] Uji di minimal 2 HP berbeda (satu kelas bawah)
 - [ ] Batasi jumlah titik warga yang digambar; pakai `_draw()` satu node per distrik, bukan satu node per warga, jika mulai lag
-- [ ] Pengaturan: suara, musik, getar, bahasa (Indonesia, Inggris) — backend `Pengaturan` selesai, layar menunggu desain UI
+- [x] Pengaturan: suara, musik, getar, bahasa (Indonesia, Inggris)
 - [x] Semua teks EN lengkap: tes headless tidak menemukan field `en` kosong ([ADR-0004](../../../architecture/adr-0004-lokalisasi.md))
 - [ ] Kata EN terpanjang muat di kartu; uji UI dengan pseudolokalisasi
 - [ ] Safe area untuk notch: beri margin atas di HUD

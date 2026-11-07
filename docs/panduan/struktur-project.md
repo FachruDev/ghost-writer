@@ -19,7 +19,7 @@ res://
   localization/
     ui.csv            # teks UI: keys,id,en
   scenes/
-    main/main.tscn          # layout portrait: HUD, kota, meja, tangan
+    main/main.tscn          # layout portrait: HUD, peta, meja (kertas + tangan + saluran/KIRIM)
     main/rumor_controller.gd    # alur satu rumor: kirim, menjalar, mutasi, konsekuensi
     main/event_controller.gd    # event kota (EVENT.md)
     main/mission_controller.gd  # misi berurutan
@@ -27,16 +27,23 @@ res://
     main/campaign_controller.gd # kontrak kampanye era 3
     main/tokoh_controller.gd    # tokoh target dan pertahanannya (era 4)
     main/final_controller.gd    # kampanye akhir + E12
-    city/city.tscn          # peta + titik warga
-    city/district.tscn
-    city/feed.tscn          # feed headline yang beredar
-    city/event_banner.tscn  # banner event
-    desk/desk.tscn          # mesin tik + slot template
-    desk/channel_picker.tscn    # pilihan saluran
-    hand/hand.tscn          # deretan kartu
-    card/word_card.tscn
-    ui/hud.tscn
-    ui/shop.tscn
+    city/city.tscn          # peta: feed, banner, stempel HOAKS, uang melayang
+    city/peta_jaringan.gd   # warga = wajah, tetangga = garis (Konsep A "Jaringan Gosip")
+    city/feed.tscn          # feed kabar satu baris, ketuk untuk 5 terakhir
+    city/event_banner.tscn  # banner modifier/peluang/ancaman
+    desk/desk.tscn          # meja: kertas headline, tangan, saluran + KIRIM
+    desk/kertas_headline.gd # kalimat dengan chip slot, skor, animasi mesin tik
+    desk/saluran_sheet.gd   # lembar Pilih Saluran
+    hand/hand.tscn          # deretan kartu untuk slot aktif
+    card/word_card.tscn     # kartu kata (pita emosi, varian tokoh/calon/sementara)
+    ui/judul.tscn           # layar judul (main scene)
+    ui/hud.tscn             # menu hantu, era, uang, pengikut, toko, meter, strip misi/tokoh/kontrak
+    ui/shop.tscn            # toko layar penuh: Kata, Template, Kantor & staf
+    ui/ending.tscn          # ending menang/kalah
+    ui/lembar.gd            # dasar lembar bawah/layar penuh
+    ui/dilema_sheet.gd, tokoh_sheet.gd, final_sheet.gd, naik_era.gd,
+    ui/offline_sheet.gd, pengaturan_layar.gd   # lapisan lain (kanvas papan 10–20)
+    ui/hantu.gd             # maskot Si Hantu Penulis (digambar, 4 suasana)
   scripts/
     autoload/game_state.gd   # uang, pengikut, kredibilitas, kartu dimiliki
     autoload/data_db.gd      # memuat semua JSON saat start
@@ -55,13 +62,16 @@ res://
     systems/konsekuensi.gd   # heat, pembongkaran, kredibilitas, pengikut
     systems/mutasi.gd        # ganti satu kata saat menyebar
     systems/staf.gd          # rumus rumor abstrak staf (juga untuk offline)
-    ui/palet.gd              # warna prototipe
+    ui/palet.gd              # warna "Kota Gosip Malam" + StyleBox tombol tebal
+    ui/tema.gd               # Theme global + font (Lilita One, Fredoka, Courier Prime)
+    ui/ui_kit.gd             # pembuat label, tombol, pil, bar, ikon
+    ui/gambar_wajah.gd       # menggambar wajah warga per status
     systems/headline_builder.gd  # susun headline dari template_id + kata_ids
   tests/                     # tes gdUnit4
   tools/sesi_bot.gd          # bot balancing: simulasi sesi headless
   addons/gdUnit4/            # framework tes (tidak ikut diekspor)
   assets/
-    fonts/  sfx/  ui/
+    fonts/  sfx/  music/  ui/ikon/   # font OFL + lisensi, ikon SVG garis
 ```
 
 Nama file dan scene memakai `snake_case`; nama class dan autoload tetap `PascalCase`. Satu tanggung jawab per script, dengan batas lunak ±300 baris; kalau lewat, pecah ke file baru (lihat [konvensi](konvensi.md)).

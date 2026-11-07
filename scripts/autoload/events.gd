@@ -84,3 +84,20 @@ signal ending_tercapai(hasil: String)
 ## Pemain menutup layar ending dan lanjut bermain bebas.
 @warning_ignore("unused_signal")
 signal ending_ditutup
+
+# --- Sinyal tampilan (desain UI 0.9.0) ---
+## Minta lapisan UI dibuka: "pengaturan", "tokoh", "final", "saluran".
+@warning_ignore("unused_signal")
+signal layar_diminta(nama: String)
+## Progres kontrak terstruktur: {"distrik": [i, j], "persen": [a, b], "sisa": detik}; {} = tidak ada.
+@warning_ignore("unused_signal")
+signal kontrak_progres(info: Dictionary)
+## Progres kampanye akhir: {"percaya": 0..1, "kebal": 0..1, "sisa": detik}; {} = tidak berjalan.
+@warning_ignore("unused_signal")
+signal final_data(info: Dictionary)
+## Staf: detik menuju rumor berikut dan jedanya; sisa < 0 = staf sedang mati (E11).
+@warning_ignore("unused_signal")
+signal staf_hitung(sisa: float, jeda: float)
+## Slot template yang sedang diisi dari tangan kartu.
+@warning_ignore("unused_signal")
+signal slot_aktif(slot: String)

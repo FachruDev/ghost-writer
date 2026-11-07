@@ -17,6 +17,14 @@ Berisi sisa 0.2.0 (MVP; masih kurang uji di HP dan uji dengan 3–5 teman) dan i
 
 ### Ditambah
 
+- Desain UI "Kota Gosip Malam" (kanvas desain, papan 01–20): tema gelap, tombol tebal, font OFL Lilita One, Fredoka, Courier Prime di `assets/fonts/`, ikon SVG garis di `assets/ui/ikon/`
+- Peta "Jaringan Gosip": tiap warga digambar sebagai wajah (ekspresi + cincin status + gelembung !/?), garis tetangga, titik pink merambat saat menular, gugus distrik bercahaya warna emosi, label persen percaya, cincin TARGET
+- Maskot Si Hantu Penulis (4 suasana) di HUD, judul, naik era, kampanye akhir, ending
+- Layar judul sebagai main scene: LANJUTKAN/MAIN, Main baru (tekan dua kali), Pengaturan, bahasa
+- Meja baru: kertas headline dengan chip slot yang bisa diketuk, pengganti template, skor emosi/viral/dipercaya; tangan kartu per slot yang bisa digeser; kartu tokoh/calon/sementara; tombol saluran + KIRIM!
+- Lapisan: Pilih Saluran, toko layar penuh (Kata, Template, Kantor & staf), banner event, lembar Dilema dan Tawaran Kontrak, Tokoh Target, Kampanye Akhir, Naik Era, Selamat Datang Kembali (offline), Pengaturan (musik, efek suara, getar, bahasa, hapus progres), ending menang/kalah dengan 6 statistik
+- HUD: era, uang, pengikut, bar kredibilitas & panas, cincin staf, strip misi/tokoh/kampanye akhir dan strip kontrak
+- Sinyal tampilan `layar_diminta`, `kontrak_progres`, `final_data`, `staf_hitung`, `slot_aktif`; deskripsi saluran (`info`) di `data/upgrades.json`; 120-an kunci teks UI baru (id + en)
 - Era 2 (kantor, 0.3.0): tombol Sewa Kantor di toko (200 pengikut, 400 uang), warna meja kantor sementara, musik era 2
 - Saluran Radio: siaran 10 detik, tiap 2 detik satu warga di setiap distrik langsung percaya (60 uang, heat ×1,2)
 - Staf otomatis: rumor abstrak tiap 40 detik dari kartu milik pemain, hasil di feed
@@ -58,6 +66,7 @@ Berisi sisa 0.2.0 (MVP; masih kurang uji di HP dan uji dengan 3–5 teman) dan i
 
 ### Diubah
 
+- Tes ending memeriksa 6 kotak statistik + kartu rumor terbaik (sebelumnya 12 label)
 - `Balance.X` dibaca dari `data/balance.json` (static var); konstanta teknis tetap `const`
 - Serialisasi save dipindah dari `game_state.gd` ke `scripts/systems/state_serial.gd` (game_state.gd 297 → ±250 baris); save menyimpan hasil kampanye akhir
 - Kredibilitas bisa pulih: +1 dihitung dari dipercaya dasar kartu, dibongkar −(5 + heboh × 0,5), dan di bawah 50 pulih 0,1 per detik ("orang lupa")
@@ -68,6 +77,10 @@ Berisi sisa 0.2.0 (MVP; masih kurang uji di HP dan uji dengan 3–5 teman) dan i
 - Pemilih saluran memendekkan label dan menyembunyikan saluran era berikutnya (sebelumnya 4 tombol mendorong layout melebihi lebar layar)
 - Kompresi tekstur ETC2/ASTC diaktifkan (wajib untuk ekspor Android)
 - Balancing dari simulasi 8 sesi × 15 menit: heat turun 0,1 → 0,3/detik, jeda Pembongkar Fakta 60 → 120 detik, jeda event acak 90 → 180 detik, pengikut per 5 → per 12 warga, uang per warga 5 → 2
+
+### Dihapus
+
+- `scenes/city/district.tscn` (kotak distrik + titik) diganti `peta_jaringan.gd`; `scenes/desk/channel_picker.tscn` diganti lembar Pilih Saluran
 
 ### Diperbaiki
 

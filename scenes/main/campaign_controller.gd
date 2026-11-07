@@ -61,7 +61,8 @@ func _tawarkan() -> void:
 	_tawaran = {"distrik": [acak[0], acak[1]]}
 	GameClock.jeda(&"kontrak")
 	Events.event_mulai.emit({
-		"id": ID, "jenis": "peluang", "durasi": 0.0,
+		"id": ID, "jenis": "peluang", "durasi": 0.0, "distrik": [acak[0], acak[1]],
+		"persen": [progres(acak[0]), progres(acak[1])],
 		"nama": tr("UI_KONTRAK_NAMA"),
 		"teks": tr("UI_KONTRAK_TEKS") % [Bahasa.angka(Balance.KONTRAK_UANG), roundi(Balance.KONTRAK_PERSEN * 100.0),
 			_nama(acak[0]), _nama(acak[1]), roundi(Balance.KONTRAK_DURASI_DETIK / 60.0)],
@@ -98,9 +99,11 @@ func _gagal() -> void:
 func _umumkan_progres() -> void:
 	if _kontrak.is_empty():
 		Events.kontrak_berubah.emit("")
+		Events.kontrak_progres.emit({})
 		return
 	var t: Array = _kontrak["distrik"]
 	var sisa := maxi(0, ceili(float(_kontrak["sisa"])))
+	Events.kontrak_progres.emit({"distrik": t, "persen": [progres(t[0]), progres(t[1])], "sisa": sisa})
 	Events.kontrak_berubah.emit(tr("UI_KONTRAK_JALAN") % [_nama(t[0]), roundi(progres(t[0]) * 100.0),
 		_nama(t[1]), roundi(progres(t[1]) * 100.0), "%d:%02d" % [sisa / 60, sisa % 60]])
 

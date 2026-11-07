@@ -1,24 +1,40 @@
 extends PanelContainer
-## Banner event di atas peta: ikon jenis, nama, teks, sisa durasi. Masuk/keluar dengan tween.
+## Banner event di atas peta (papan 06/09): modifier kuning, peluang cyan, ancaman pink, dengan ikon,
+## nama, sisa detik, dan teks. Event dengan pilihan (dilema, kontrak) ditangani DilemaSheet.
 
-const IKON := {"modifier": "☀", "ancaman": "⚠", "dilema": "?", "peluang": "★"}
+const IKON := {
+	"e_hari_pasar": "toko", "e_ronda_malam": "takut", "e_pembongkar_fakta": "kaca_pembesar",
+	"e_pemilihan_rt": "orang", "e_festival": "lucu", "e_dokumen_bocor": "koran", "e_viral_challenge": "medsos",
+	"e_razia_hoaks": "gembok", "e_rumor_tandingan": "medsos", "e_kota_tak_percaya": "perisai",
+}
+const IKON_JENIS := {"modifier": "api", "peluang": "mahkota", "ancaman": "kaca_pembesar"}
 
+## Deskripsi event dilipat setelah beberapa detik supaya peta tidak tertutup lama.
+const DETIK_LIPAT := 4.0
+
+var _info: Dictionary = {}
+var _lipat: Tween
+var _tile: PanelContainer
+var _ikon: TextureRect
 var _judul: Label
 var _teks: Label
-var _baris_pilihan: HBoxContainer
-var _info: Dictionary = {}
 
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_theme_stylebox_override("panel", Palet.kotak(Color(Palet.PANEL, 0.92), Palet.AKSEN, 10))
-	var kotak := VBoxContainer.new()
-	add_child(kotak)
-	_judul = _label(kotak, 22)
-	_teks = _label(kotak, 17)
-	_baris_pilihan = HBoxContainer.new()
-	_baris_pilihan.add_theme_constant_override("separation", 10)
-	kotak.add_child(_baris_pilihan)
+	var h := UiKit.baris(self, 16)
+	_tile = PanelContainer.new()
+	_tile.custom_minimum_size = Vector2(64, 64)
+	_tile.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	_tile.add_theme_stylebox_override("panel", Palet.kotak(Palet.MALAM, Color.TRANSPARENT, 24))
+	h.add_child(_tile)
+	_ikon = UiKit.ikon(_tile, "api", 36, Palet.KUNING)
+	var k := UiKit.kolom(h, 2)
+	k.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_judul = UiKit.label(k, 24, Palet.TINTA, Tema.font_ui(700))
+	_judul.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	_teks = UiKit.label(k, 20, Palet.TINTA, Tema.font_ui(500))
+	_teks.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	visible = false
 	Events.event_mulai.connect(_on_mulai)
 	Events.event_tampil.connect(_on_mulai)
@@ -28,10 +44,31 @@ func _ready() -> void:
 
 
 func _on_mulai(info: Dictionary) -> void:
+	if not info.get("pilihan", []).is_empty():
+		_tutup()
+		return
 	_info = info.duplicate()
 	_info["sisa"] = float(info.get("durasi", 0.0))
+	var jenis := str(info.get("jenis", "modifier"))
+	var warna: Color = {"modifier": Palet.KUNING, "peluang": Palet.CYAN, "ancaman": Palet.PINK}.get(jenis, Palet.KUNING)
+	var bayang: Color = {"modifier": Palet.KUNING_GELAP, "peluang": Palet.CYAN_GELAP, "ancaman": Palet.PINK_GELAP}.get(jenis, Palet.KUNING_GELAP)
+	var gaya := Palet.tebal(warna, bayang, 32, 10)
+	gaya.content_margin_left = 12
+	gaya.content_margin_right = 18
+	gaya.content_margin_top = 10
+	gaya.content_margin_bottom = 14
+	add_theme_stylebox_override("panel", gaya)
+	_ikon.texture = UiKit.muat_ikon(IKON.get(str(info.get("id", "")), IKON_JENIS.get(jenis, "api")))
+	_ikon.modulate = warna
 	_on_sisa(_info["sisa"])
-	_buat_pilihan(info.get("pilihan", []))
+	_teks.visible = true
+	if _lipat:
+		_lipat.kill()
+	_lipat = create_tween()
+	_lipat.tween_interval(DETIK_LIPAT)
+	_lipat.tween_callback(func() -> void:
+		_teks.visible = false
+		reset_size())
 	visible = true
 	modulate.a = 0.0
 	scale = Vector2(1.0, 0.6)
@@ -45,42 +82,16 @@ func _on_sisa(sisa: float) -> void:
 	if _info.is_empty():
 		return
 	_info["sisa"] = sisa
-	var ikon: String = IKON.get(str(_info.get("jenis", "")), "•")
 	var nama := Bahasa.teks(_info.get("nama", ""))
-	if _info.get("pilihan", []).is_empty():
-		_judul.text = "%s %s · %s" % [ikon, nama, tr("UI_SISA_DETIK") % ceili(sisa)]
-	else:
-		_judul.text = "%s %s" % [ikon, nama]
+	_judul.text = "%s · %s" % [nama, tr("UI_SISA_DETIK") % ceili(sisa)] if sisa > 0.0 else nama
 	_teks.text = Bahasa.teks(_info.get("teks", ""))
 
 
-## Dilema: satu tombol per pilihan; waktu permainan dijeda sampai pemain memilih.
-func _buat_pilihan(label: Array) -> void:
-	for anak in _baris_pilihan.get_children():
-		anak.queue_free()
-	_baris_pilihan.visible = not label.is_empty()
-	for i in label.size():
-		var b := Button.new()
-		b.auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
-		b.text = Bahasa.teks(label[i])
-		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		b.custom_minimum_size = Vector2(0, 52)
-		Palet.gaya_tombol(b, Palet.AKSEN if i == 0 else Palet.TEKS_REDUP)
-		b.pressed.connect(func() -> void: Events.dilema_dipilih.emit(i))
-		_baris_pilihan.add_child(b)
-
-
 func _tutup() -> void:
+	if not visible:
+		_info = {}
+		return
 	_info = {}
 	var t := create_tween()
 	t.tween_property(self, "modulate:a", 0.0, 0.3)
 	t.tween_callback(func() -> void: visible = false)
-
-
-func _label(induk: Control, ukuran: int) -> Label:
-	var l := Label.new()
-	l.auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
-	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	l.add_theme_font_size_override("font_size", ukuran)
-	induk.add_child(l)
-	return l

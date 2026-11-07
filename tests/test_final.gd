@@ -131,7 +131,9 @@ func test_layar_ending_menjeda_waktu_dan_lanjut_bermain() -> void:
 	assert_bool(ending.visible).is_true()
 	assert_bool(GameClock.sedang_jeda()).is_true()
 	assert_str(ending._judul.text).is_equal(Bahasa.teks(DataDB.endings["menang"]["judul"]))
-	assert_int(ending._statistik.get_child_count()).is_equal(12)
+	# 6 kotak statistik (rumor, uang, tokoh, dibongkar, waktu, pengikut); rumor terbaik di kartu terpisah.
+	assert_int(ending._statistik.get_child_count()).is_equal(6)
+	assert_bool(ending._terbaik.visible).is_true()
 	ending._on_lanjut()
 	assert_bool(ending.visible).is_false()
 	assert_bool(GameClock.sedang_jeda()).is_false()
