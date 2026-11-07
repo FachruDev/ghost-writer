@@ -206,3 +206,12 @@ UI_NAMA_ID,Indonesia,Indonesia
 UI_NAMA_EN,English,English
 UI_N_KATA_1,1 kata baru,1 new word
 UI_N_TEMPLATE_1,1 template baru,1 new template
+UI_TUT_ISI_SLOT,Ketuk kartu untuk mengisi slot yang kosong,Tap a card to fill the empty slot
+UI_TUT_DISTRIK,Ketuk satu distrik di peta sebagai sasaran,Tap a district on the map as your target
+UI_TUT_SALURAN,Saluran ini belum bisa dipakai. Ganti saluran,This channel isn't available. Switch channels
+UI_TUT_KIRIM,Headline siap. Tekan KIRIM!,Headline ready. Press SEND!
+UI_TUT_TOKO,Uangmu cukup untuk kata baru. Buka Toko,You can afford a new word. Open the Shop
+UI_TUT_BELI,Beli satu kata untuk menambah pilihan rumor,Buy a word to get more rumor options
+UI_TUT_LANGKAH,LANGKAH %d/%d,STEP %d/%d
+UI_TUT_LEWATI,Lewati,Skip
+UI_TUT_SELESAI,Mantap! Sekarang kota ini milikmu.,Nice! This town is yours now.

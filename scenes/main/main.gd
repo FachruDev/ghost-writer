@@ -18,6 +18,7 @@ const LAPISAN := [
 const SHOP := preload("res://scenes/ui/shop.tscn")
 const JUDUL := "res://scenes/ui/judul.tscn"
 const ENDING := preload("res://scenes/ui/ending.tscn")
+const TUTORIAL := preload("res://scenes/ui/tutorial_lapisan.gd")
 
 ## Tepi kiri-kanan isi layar (12 px kanvas).
 const TEPI := 24
@@ -61,6 +62,9 @@ func _ready() -> void:
 	var misi := MissionController.new()
 	misi.name = "MissionController"
 	add_child(misi)
+	var tutorial := TutorialController.new()
+	tutorial.name = "TutorialController"
+	add_child(tutorial)
 	SaveSystem.sumber_snapshot = rumor.snapshot_untuk_save
 	var tata := VBoxContainer.new()
 	tata.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -79,6 +83,7 @@ func _ready() -> void:
 		add_child(lapisan.new())
 	add_child(SHOP.instantiate())
 	add_child(ENDING.instantiate())
+	add_child(TUTORIAL.new())  # CanvasLayer: selalu di atas lembar, termasuk toko
 	_umumkan_offline.call_deferred()
 
 

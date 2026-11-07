@@ -29,6 +29,7 @@ var _animasi_sampai := 0.0  # detik (jam dinding) sampai animasi gelembung seles
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
+	add_to_group(TutorialSasaran.PETA)
 	_font = Tema.font_ui(700)
 	_gaya_label = Palet.kotak(Color(Palet.MALAM, 0.88), Color.TRANSPARENT, 999)
 	var g := Gradient.new()
@@ -75,6 +76,11 @@ func _process(delta: float) -> void:
 ## Pusat gugus distrik dalam koordinat lokal (dipakai untuk uang melayang).
 func pusat_distrik(i: int) -> Vector2:
 	return _rect_gugus(i).get_center()
+
+
+## Kotak gugus distrik dalam koordinat lokal (cincin sorot tutorial).
+func rect_distrik(i: int) -> Rect2:
+	return _rect_gugus(i)
 
 
 func _dalam() -> Rect2:

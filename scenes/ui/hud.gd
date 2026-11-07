@@ -39,6 +39,7 @@ var _info_kontrak: Dictionary = {}
 
 func _ready() -> void:
 	add_theme_stylebox_override("panel", StyleBoxEmpty.new())
+	add_to_group(TutorialSasaran.HUD)
 	var kolom := UiKit.kolom(self, 10)
 	_baris_atas(kolom)
 	_baris_meter(kolom)
@@ -96,6 +97,7 @@ func _baris_atas(induk: Control) -> void:
 	_pengikut = _pil_sumber(baris, Palet.CYAN, Palet.CYAN_GELAP, "orang")
 	var toko := UiKit.tombol_ikon(baris, "toko", tr("UI_TOKO"), Palet.PINK, Palet.PINK_GELAP, Palet.TINTA)
 	toko.pressed.connect(func() -> void: Events.toko_diminta.emit(true))
+	toko.add_to_group(TutorialSasaran.TOKO)
 
 
 ## Pil uang/pengikut: lingkaran berwarna (koin "R" atau ikon) + angka.

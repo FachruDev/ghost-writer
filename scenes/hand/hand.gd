@@ -42,6 +42,7 @@ func _isi_ulang() -> void:
 	for id in _urutkan(_kartu_slot()):
 		var kartu := WORD_CARD.instantiate()
 		kartu.atur(id, id == _terpasang)
+		kartu.add_to_group(TutorialSasaran.KARTU)
 		_deret.add_child(kartu)
 
 

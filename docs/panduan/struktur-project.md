@@ -27,6 +27,7 @@ res://
     main/campaign_controller.gd # kontrak kampanye era 3
     main/tokoh_controller.gd    # tokoh target dan pertahanannya (era 4)
     main/final_controller.gd    # kampanye akhir + E12
+    main/tutorial_controller.gd # tutorial 3 langkah: sasaran yang ditunjuk UI
     city/city.tscn          # peta: feed, banner, stempel HOAKS, uang melayang
     city/peta_jaringan.gd   # warga = wajah, tetangga = garis (Konsep A "Jaringan Gosip")
     city/feed.tscn          # feed kabar satu baris, ketuk untuk 5 terakhir
@@ -45,6 +46,8 @@ res://
     ui/dilema_sheet.gd, tokoh_sheet.gd, final_sheet.gd, naik_era.gd,
     ui/offline_sheet.gd, pengaturan_layar.gd   # lapisan lain (kanvas papan 10–20)
     ui/hantu.gd             # maskot Si Hantu Penulis (digambar, 4 suasana)
+    ui/tutorial_lapisan.gd  # lapisan tutorial (CanvasLayer): tangan_tunjuk.gd, tutorial_gelembung.gd,
+    ui/tutorial_sasaran.gd  #   dan pencari node sasaran lewat grup
   scripts/
     autoload/game_state.gd   # uang, pengikut, kredibilitas, kartu dimiliki
     autoload/data_db.gd      # memuat semua JSON saat start
@@ -70,6 +73,7 @@ res://
     systems/headline_builder.gd  # susun headline dari template_id + kata_ids
   tests/                     # tes gdUnit4
   tools/sesi_bot.gd          # bot balancing: simulasi sesi headless
+  tools/uji_tutup_paksa.gd   # uji tutup paksa saat autosave (desktop)
   addons/gdUnit4/            # framework tes (tidak ikut diekspor)
   assets/
     fonts/  sfx/  music/  ui/ikon/   # font OFL + lisensi, ikon SVG garis

@@ -16,6 +16,7 @@ func _bangun_isi() -> void:
 	judul.text = tr("UI_PILIH_SALURAN")
 	_daftar = UiKit.kolom(isi, 14)
 	_pakai = UiKit.tombol_utama(isi, "")
+	_pakai.add_to_group(TutorialSasaran.SALURAN_PAKAI)
 	_pakai.pressed.connect(func() -> void:
 		Events.saluran_dipilih.emit(_pilihan)
 		tutup())
@@ -49,6 +50,9 @@ func _baris(s: Dictionary) -> void:
 	var b := Button.new()
 	b.custom_minimum_size = Vector2(0, 132)
 	b.disabled = not terbuka
+	if terbuka and GameState.uang >= int(s.get("biaya_kirim", 0)):
+		b.add_to_group(TutorialSasaran.SALURAN_OPSI)  # tutorial: saluran yang bisa langsung dipakai
+		b.set_meta("dipilih", dipilih)
 	b.tooltip_text = Bahasa.teks(s.get("nama", ""))
 	var gaya := Palet.kotak(Palet.PANEL_2 if dipilih else Palet.MALAM, Palet.PINK if dipilih else Color.TRANSPARENT, 32)
 	if not terbuka:

@@ -63,6 +63,9 @@ Berisi sisa 0.2.0 (MVP; masih kurang uji di HP dan uji dengan 3–5 teman) dan i
 - Suara: bus Music dan SFX, 12 SFX dan musik latar era 1 (placeholder CC0 dari OpenGameArt, lihat `assets/LISENSI_AUDIO.md`)
 - Konten jadi 40 kata (10 per slot)
 - Export preset Android dan APK debug (`build/ghostwriter-debug.apk`)
+- Uji tutup paksa saat autosave (`tools/uji_tutup_paksa.gd`): proses anak dibunuh di titik acak selagi menyimpan, dan tiap putaran harus memuat save yang utuh tanpa uang mundur. Save pemain dicadangkan lalu dikembalikan. Di desktop lolos 30 kali; save yang ditulis tanpa `.tmp` gagal di uji ini
+- Logika tutorial 3 langkah (isi slot → kirim → beli kata) di `scenes/main/tutorial_controller.gd`: menentukan sasaran yang perlu ditunjuk (kartu, distrik, saluran, KIRIM!, toko, kartu toko termurah) lewat sinyal `tutorial_langkah`, sembunyi saat lembar lain terbuka atau uang belum cukup, dan selesai saat kata pertama dibeli, era naik, atau pemain menekan Lewati (`tutorial_dilewati`, tersimpan di `statistik.tutorial_lewat`). Meja memancarkan `meja_berubah`, `GameClock` memancarkan `jeda_berubah`
+- Lapisan tutorial (`scenes/ui/tutorial_lapisan.gd`): tangan kartun yang mengetuk sasaran, cincin sorot kuning, dan gelembung Si Hantu berisi LANGKAH n/3, teks petunjuk, dan Lewati; Hantu girang sebentar saat tutorial selesai. Lapisan ini CanvasLayer, jadi tetap di atas toko, tetapi ketukan tembus kecuali Lewati. Sembunyi saat lembar lain menutupi sasaran. Node sasaran dicari lewat grup (`TutorialSasaran`): kartu paling kiri di tangan, distrik pertama, pilihan di lembar saluran, dan di toko cadangan ke filter "Semua" atau tab Kata. Teks ikut ganti bahasa; kunci baru `UI_TUT_SELESAI`
 
 ### Diubah
 

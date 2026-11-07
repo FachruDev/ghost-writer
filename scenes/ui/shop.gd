@@ -48,6 +48,8 @@ func _bangun_isi() -> void:
 			_tab = t[0]
 			_segarkan())
 		_tombol_tab[t[0]] = b
+		if t[0] == "kata":
+			b.add_to_group(TutorialSasaran.TAB_KATA)
 	_baris_filter = HFlowContainer.new()
 	_baris_filter.add_theme_constant_override("h_separation", 12)
 	_baris_filter.add_theme_constant_override("v_separation", 12)
@@ -113,6 +115,8 @@ func _isi_kata() -> void:
 		b.pressed.connect(func() -> void:
 			_filter = s
 			_segarkan())
+		if s.is_empty():
+			b.add_to_group(TutorialSasaran.FILTER_SEMUA)
 	var grid := GridContainer.new()
 	grid.columns = 2
 	grid.add_theme_constant_override("h_separation", 20)
@@ -139,6 +143,8 @@ func _kartu_toko(id: String, kata: Dictionary) -> Control:
 	gaya.border_width_bottom = 8
 	gaya.set_content_margin_all(0)
 	kartu.add_theme_stylebox_override("panel", gaya)
+	kartu.set_meta("kata_id", id)
+	kartu.add_to_group(TutorialSasaran.KARTU_TOKO)
 	var kolom := UiKit.kolom(kartu, 8)
 	var pita := PanelContainer.new()
 	var gp := StyleBoxFlat.new()
@@ -168,6 +174,7 @@ func _kartu_toko(id: String, kata: Dictionary) -> Control:
 	var bawah := UiKit.margin(kolom, 14, 4, 14, 14)
 	var b := _tombol_beli(bawah, harga)
 	b.pressed.connect(func() -> void: GameState.beli_kata(id))
+	b.add_to_group(TutorialSasaran.BELI)
 	return kartu
 
 

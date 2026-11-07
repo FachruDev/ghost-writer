@@ -167,7 +167,7 @@ Semua pakai kotak abu-abu dan teks polos. **Jangan sentuh art.**
 
 Save dasar sudah dibuat di 0.2.0 ([ADR-0002](../../../architecture/adr-0002-backend-save.md)). Di sini tinggal pengujian dan polish:
 
-- [ ] Uji: tutup paksa aplikasi saat autosave 10 kali, buka lagi, progres tetap utuh
+- [ ] Uji: tutup paksa aplikasi saat autosave 10 kali, buka lagi, progres tetap utuh — desktop lolos 30 kali (`tools/uji_tutup_paksa.gd`); tinggal diulang di HP
 - [x] Uji: `save.json` dirusak manual → game memuat dari `save.bak` tanpa crash (tes headless `test_save.gd`)
 - [x] Uji: save skema lama termuat setelah migrasi (tes headless: save 0.2.0 + urutan migrasi)
 - [ ] Proyeksi rumor saat menyimpan < 50 ms di HP kelas bawah ([ADR-0003](../../../architecture/adr-0003-model-waktu.md)) — desktop 8 ms di kota terbesar; perlu diukur di HP
@@ -175,7 +175,7 @@ Save dasar sudah dibuat di 0.2.0 ([ADR-0002](../../../architecture/adr-0002-back
 
 **Onboarding**
 
-- [ ] Tutorial 3 langkah yang dimainkan, bukan dibaca: isi slot → kirim → beli kata
+- [x] Tutorial 3 langkah yang dimainkan, bukan dibaca: isi slot → kirim → beli kata — logika `TutorialController` (tes `test_tutorial.gd`) + lapisan UI tangan penunjuk, teks, dan Lewati (`tutorial_lapisan.gd`, tes `test_tutorial_lapisan.gd`); belum diuji di HP
 - [ ] Tooltip singkat saat sistem baru terbuka (kredibilitas, saluran, staf)
 
 **Juice & aset**
@@ -192,8 +192,8 @@ Save dasar sudah dibuat di 0.2.0 ([ADR-0002](../../../architecture/adr-0002-back
 - [ ] Batasi jumlah titik warga yang digambar; pakai `_draw()` satu node per distrik, bukan satu node per warga, jika mulai lag
 - [x] Pengaturan: suara, musik, getar, bahasa (Indonesia, Inggris)
 - [x] Semua teks EN lengkap: tes headless tidak menemukan field `en` kosong ([ADR-0004](../../../architecture/adr-0004-lokalisasi.md))
-- [ ] Kata EN terpanjang muat di kartu; uji UI dengan pseudolokalisasi
-- [ ] Safe area untuk notch: beri margin atas di HUD
+- [ ] Kata EN terpanjang muat di kartu; uji UI dengan pseudolokalisasi — 311 dari 312 kartu (id + en) muat; "the community hall" lebih tinggi 7 px dari kartu
+- [x] Safe area untuk notch: beri margin atas di HUD (`UiKit.inset_aman`, juga tepi bawah lembar dan meja; belum diuji di HP bernotch)
 
 ## 1.0.0 — Rilis
 

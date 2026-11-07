@@ -27,6 +27,7 @@ var _tombol_kirim: Button
 
 func _ready() -> void:
 	add_theme_stylebox_override("panel", StyleBoxEmpty.new())
+	add_to_group(TutorialSasaran.MEJA)
 	_bangun_ui()
 	Events.kepemilikan_berubah.connect(_on_kepemilikan)
 	Events.kartu_dipilih.connect(_on_kartu)
@@ -89,6 +90,7 @@ func _bangun_kaki(induk: Control) -> void:
 	_tombol_saluran.tooltip_text = tr("UI_PILIH_SALURAN")
 	Palet.gaya_tombol(_tombol_saluran, Palet.PANEL_2, Palet.PANEL, Palet.TEKS, 28)
 	_tombol_saluran.pressed.connect(func() -> void: Events.layar_diminta.emit("saluran"))
+	_tombol_saluran.add_to_group(TutorialSasaran.SALURAN)
 	baris.add_child(_tombol_saluran)
 	var isi := UiKit.baris(null, 12)
 	isi.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -108,6 +110,7 @@ func _bangun_kaki(induk: Control) -> void:
 	_tombol_kirim = UiKit.tombol_utama(baris, tr("UI_KIRIM_SERU"))
 	_tombol_kirim.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_tombol_kirim.pressed.connect(_kirim)
+	_tombol_kirim.add_to_group(TutorialSasaran.KIRIM)
 
 
 func _template_id() -> String:
@@ -250,6 +253,8 @@ func _segarkan_saluran() -> void:
 
 func _segarkan_tombol() -> void:
 	var siap := _siap_kirim()
+	Events.meja_berubah.emit({"lengkap": _lengkap(), "butuh_distrik": not _semua_distrik() and _target.is_empty(),
+		"siap": siap, "rumor_aktif": _rumor_aktif})
 	_tombol_kirim.disabled = not siap
 	if siap:
 		_tombol_kirim.text = tr("UI_KIRIM_SERU")

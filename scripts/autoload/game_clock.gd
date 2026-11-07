@@ -2,6 +2,8 @@ extends Node
 ## Satu-satunya sumber waktu simulasi (ADR-0003). Logika permainan maju hanya lewat sinyal tick.
 
 signal tick(dt: float)
+## Alasan jeda bertambah atau berkurang (toko dibuka/ditutup, dilema, ...).
+signal jeda_berubah
 
 ## Pengali kecepatan; hanya untuk debug dan tes.
 var kecepatan: float = 1.0
@@ -30,15 +32,23 @@ func _process(delta: float) -> void:
 
 
 func jeda(alasan: StringName) -> void:
-	_alasan_jeda[alasan] = true
+	if not _alasan_jeda.has(alasan):
+		_alasan_jeda[alasan] = true
+		jeda_berubah.emit()
 
 
 func lanjut(alasan: StringName) -> void:
-	_alasan_jeda.erase(alasan)
+	if _alasan_jeda.erase(alasan):
+		jeda_berubah.emit()
 
 
 func sedang_jeda() -> bool:
 	return not _alasan_jeda.is_empty() or kecepatan <= 0.0
+
+
+## Alasan jeda yang aktif, mis. [&"toko"]. Kecepatan 0 (debug) tidak termasuk.
+func alasan_jeda() -> Array:
+	return _alasan_jeda.keys()
 
 
 ## Untuk tes headless: jalankan n tick tanpa _process.

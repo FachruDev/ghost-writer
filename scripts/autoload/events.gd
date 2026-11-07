@@ -101,3 +101,15 @@ signal staf_hitung(sisa: float, jeda: float)
 ## Slot template yang sedang diisi dari tangan kartu.
 @warning_ignore("unused_signal")
 signal slot_aktif(slot: String)
+
+# --- Tutorial (0.9.0) ---
+## Keadaan meja setiap kali tombol KIRIM disegarkan:
+## {"lengkap": bool, "butuh_distrik": bool, "siap": bool, "rumor_aktif": bool}.
+@warning_ignore("unused_signal")
+signal meja_berubah(info: Dictionary)
+## Langkah tutorial yang perlu ditunjuk UI; {} = tidak ada (lihat TutorialController).
+@warning_ignore("unused_signal")
+signal tutorial_langkah(info: Dictionary)
+## Pemain menekan Lewati di lapisan tutorial.
+@warning_ignore("unused_signal")
+signal tutorial_dilewati
