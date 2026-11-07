@@ -245,6 +245,10 @@ func rng() -> RandomNumberGenerator:
 	return _rng
 
 
+func tetangga(i: int) -> PackedInt32Array:
+	return _tetangga[i]
+
+
 func _percaya(i: int) -> void:
 	_dengar[i] = 1
 	_percaya_rumor[i] = 1

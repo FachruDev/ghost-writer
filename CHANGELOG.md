@@ -34,6 +34,16 @@ Berisi sisa 0.2.0 (MVP; masih kurang uji di HP dan uji dengan 3–5 teman) dan i
 - Tiga tokoh fiktif target (Pak Hartono, Bu Sasmita, Juragan Bramantyo) dengan reputasi 100 dan pertahanan Pengacara, Humas, Media sendiri; progres di HUD
 - E10 Rumor Tandingan (pemercaya jadi ragu), E11 Server Down (staf dan server mati 120 detik)
 - 30 kata era 4, 3 template (TRENDING, INVESTIGASI, VIDEO BEREDAR); musik era 4, stinger naik era, dengung server
+- Kampanye akhir (0.6.0): tombol Kampanye Akhir setelah ketiga tokoh jatuh; E12 Kota Tak Percaya Lagi (semua warga ragu, kebal menular ke tetangga tiap 10 detik dan tidak pulih); menang 60% warga percaya, kalah 50% kebal atau 5 menit habis; progres di HUD
+- Layar ending: Imperium Kabar Burung (menang) dan Kota Mati Rasa (kalah) dengan epilog satir dua bahasa, statistik (rumor, uang, tokoh jatuh, dibongkar, waktu main, rumor terbaik), Mulai Baru (tekan dua kali) dan Lanjut Bermain; musik ending (placeholder CC0)
+- Penghasilan offline dari staf saat memuat save (maks 8 jam × 0,5, ADR-0003), tampil di feed
+- Spreadsheet balancing: `balancing/angka.csv` dan `balancing/harga.csv`, diterapkan ke `data/balance.json` dan harga di `data/*.json` oleh `tools/terapkan_balancing.gd`; tes memastikan keduanya sinkron
+- Tes ketahanan save (0.9.0): save rusak dimuat dari `.bak`, save 0.2.0 tetap termuat, urutan migrasi, waktu proyeksi save (8 ms di desktop untuk kota 260 warga)
+- Autoload `Pengaturan` (volume musik dan SFX, getar) di `user://settings.cfg`, tidak ikut terhapus saat reset progres; layarnya menyusul bersama desain UI
+- Getar ringan saat headline dikirim dan saat rumor dibongkar (izin VIBRATE di preset Android)
+- Lapisan musik ancaman yang masuk/keluar pelan selama ancaman dan E12 (placeholder CC0); dering telepon untuk E05 Wartawan (dibuat prosedural)
+- Tes wajib: semua teks konten dan UI punya bahasa Indonesia dan Inggris
+- Bot balancing memainkan kampanye akhir, menimbang pertahanan Pengacara dengan tepat (varian rumor dengan/tanpa tokoh), mencatat jejak per 5 menit, dan punya mode `-- final` untuk menguji balapan saja; 25 tes baru (77 total)
 - Konsekuensi: heat per rumor yang turun pelan, peluang rumor dibongkar, kredibilitas sebagai pengali "dipercaya", warga kebal (biru) yang pulih perlahan, stempel HOAKS
 - Saluran Merpati (gratis, satu distrik) dan Koran (30 uang, semua distrik, terbuka di 100 pengikut)
 - Pengikut sebagai mata uang ambang (+1 per 5 warga dari rumor yang tidak dibongkar, +3 per mutasi)
@@ -48,6 +58,11 @@ Berisi sisa 0.2.0 (MVP; masih kurang uji di HP dan uji dengan 3–5 teman) dan i
 
 ### Diubah
 
+- `Balance.X` dibaca dari `data/balance.json` (static var); konstanta teknis tetap `const`
+- Serialisasi save dipindah dari `game_state.gd` ke `scripts/systems/state_serial.gd` (game_state.gd 297 → ±250 baris); save menyimpan hasil kampanye akhir
+- Kredibilitas bisa pulih: +1 dihitung dari dipercaya dasar kartu, dibongkar −(5 + heboh × 0,5), dan di bawah 50 pulih 0,1 per detik ("orang lupa")
+- Ritme naik era untuk target ±60 menit: Sewa Kantor 180 pengikut/350 uang, Gedung Media 400/1.800, Menara Server 700/2.200, reputasi tokoh 100 → 1.000. Hasil bot (8 sesi × 70 menit): Era 2 median ±9 menit (7–25), Era 3 ±24 (17–51, 7/8 sesi), Era 4 ±34 (29–68, 6/8 sesi); kampanye akhir tercapai di 4/8 sesi pada menit 39–68 (median ±55), 2 menang setelah beberapa kali coba. Variasi antar-run besar; perlu konfirmasi playtest
+- Pesan naik era tidak lagi selalu "Pindah ke kantor!"
 - Sinyal reputasi hanya dipancarkan saat angka heat/kredibilitas yang tampil berubah (sebelumnya tiap tick, HUD diformat ulang 5 kali per detik)
 - Headline panjang di meja mengecil otomatis supaya muat
 - Pemilih saluran memendekkan label dan menyembunyikan saluran era berikutnya (sebelumnya 4 tombol mendorong layout melebihi lebar layar)
@@ -56,6 +71,8 @@ Berisi sisa 0.2.0 (MVP; masih kurang uji di HP dan uji dengan 3–5 teman) dan i
 
 ### Diperbaiki
 
+- Kredibilitas 0 tidak bisa naik lagi (syarat +1 mustahil saat dipercaya akhir tertahan ≤ 0,5)
+- Statistik rumor terbaik tidak pernah diisi
 - Bot balancing crash (antrean pesan penuh) saat menjalankan banyak sesi panjang dalam satu frame
 - Ancaman (Pembongkar Fakta) menimpa event acak yang sedang aktif dan mereset jedanya, sehingga event acak hampir tidak muncul
 

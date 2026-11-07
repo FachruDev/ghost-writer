@@ -16,7 +16,7 @@ Semua event adalah data di `res://data/events.json`, dijalankan oleh `scenes/mai
 Aturan umum:
 
 - Maksimal **1 event aktif** di satu waktu (kecuali ancaman yang dipicu kondisi).
-- Jeda minimal antar event acak: 180 detik; ancaman (mis. Pembongkar Fakta) berjalan di jalur sendiri dengan jeda 120 detik dan tidak menimpa event acak (atur di `balance.gd`).
+- Jeda minimal antar event acak: 180 detik; ancaman (mis. Pembongkar Fakta) berjalan di jalur sendiri dengan jeda 120 detik dan tidak menimpa event acak (atur di `balancing/angka.csv`).
 - Setiap event tampil sebagai **banner** di atas peta + ikon jenis event + sisa durasi.
 - Event dilema **menjeda waktu** sampai pemain memilih.
 
@@ -74,7 +74,7 @@ Contoh event dilema (`pilihan` diisi):
 | E09 | Razia Hoaks | Ancaman | 3 | Kredibilitas < 30 | Saluran medsos dikunci 90 dtk, pengikut −5% | 0.4.0 | Selesai |
 | E10 | Rumor Tandingan | Ancaman | 3 | Acak | Media saingan menyebar rumor yang membuat warga "ragu" | 0.5.0 | Selesai |
 | E11 | Server Down | Dilema | 4 | Acak | Bayar perbaikan cepat atau kehilangan staf otomatis 120 dtk | 0.5.0 | Selesai |
-| E12 | Kota Tak Percaya Lagi | Ancaman (final) | 4 | Kampanye akhir dimulai | Kebal menyebar sendiri; pemain harus mencapai target sebelum kota "mati rasa" | 0.6.0 | Belum |
+| E12 | Kota Tak Percaya Lagi | Ancaman (final) | 4 | Pemain memulai kampanye akhir | Semua warga jadi ragu dan lebih sulit percaya; kebal tidak pulih dan menular ke tetangga tiap 10 dtk. Menang 60% percaya, kalah 50% kebal atau 5 menit habis | 0.6.0 | Selesai |
 
 ## Catatan desain
 

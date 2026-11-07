@@ -369,5 +369,24 @@
         ]
       }
     ]
+  },
+  {
+    "id": "e_kota_tak_percaya",
+    "nama": {
+      "id": "Kota Tak Percaya Lagi",
+      "en": "The City Stops Believing"
+    },
+    "jenis": "ancaman",
+    "era_min": 4,
+    "pemicu": {
+      "tipe": "final"
+    },
+    "durasi": 300,
+    "teks": {
+      "id": "Seluruh kota mendadak ragu dan susah diyakinkan. Yang kebal menulari tetangganya tiap %d detik. Buat %d%% kota percaya sebelum %d%% warga mati rasa!",
+      "en": "The whole city suddenly doubts everything and is hard to convince. The immune infect their neighbors every %d seconds. Get %d%% of the city believing before %d%% go numb!"
+    },
+    "efek": [],
+    "pilihan": []
   }
 ]

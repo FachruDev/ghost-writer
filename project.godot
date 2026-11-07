@@ -23,7 +23,9 @@ Bahasa="*res://scripts/autoload/bahasa.gd"
 GameClock="*res://scripts/autoload/game_clock.gd"
 GameState="*res://scripts/autoload/game_state.gd"
 SaveSystem="*res://scripts/autoload/save_system.gd"
+Pengaturan="*res://scripts/autoload/pengaturan.gd"
 Suara="*res://scripts/autoload/suara.gd"
+Getar="*res://scripts/autoload/getar.gd"
 
 [display]
 

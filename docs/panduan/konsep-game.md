@@ -109,13 +109,17 @@ Saat rumor selesai menyebar:
   peluang_bongkar = (1 − dipercaya_akhir) × (0.3 + heat / 100 × 0.7)
 
   Kalau dibongkar:
-    kredibilitas −= 5 + heboh_total
+    kredibilitas −= 5 + heboh_total × 0,5
     50% warga yang percaya rumor itu → kebal
     heat += 10
     stempel HOAKS di feed; uang yang sudah didapat tetap
-  Kalau tidak dibongkar dan dipercaya_akhir ≥ 0.7:
+  Kalau tidak dibongkar dan dipercaya (dasar, dari kartu) ≥ 0.7:
     kredibilitas += 1
+Setiap detik simulasi, kalau kredibilitas < 50:
+  kredibilitas += 0,1   ("orang lupa", ±6 per menit)
 ```
+
+**Disetel di 0.6.0.** Dengan aturan lama (+1 hanya kalau `dipercaya_akhir` ≥ 0,7, dibongkar −5 − heboh_total), kredibilitas yang sudah 0 tidak bisa naik lagi: `dipercaya_akhir` tertahan di ≤ 0,5 sehingga syarat +1 mustahil, sementara pembongkaran terus memotong. Bot balancing terjebak di kredibilitas 0 sejak menit 10–15 di separuh sesi. Sekarang +1 dihitung dari dipercaya dasar (rumor dari kartu kredibel memulihkan nama baik), hukuman heboh dikali 0,5, dan kredibilitas di bawah 50 pulih pelan sendiri.
 
 Heat dan kredibilitas berada di 0–100; kredibilitas mulai di 50. Ambang event: E05 Wartawan di heat ≥ 40, E03 Pembongkar Fakta di heat ≥ 70, E09 Razia Hoaks di kredibilitas < 30 (lihat [EVENT.md](../versi/1.0.0/event/EVENT.md)).
 
@@ -135,16 +139,16 @@ Contoh: headline heboh 8 dengan `dipercaya_akhir` 0,4 menambah heat ±9 dan puny
 
 | Sistem | Aturan |
 | --- | --- |
-| Naik era | Tombol **Sewa Kantor** di toko muncul setelah 200 pengikut; harga 400 uang, sekali beli. Efek: era = 2, latar meja kantor, dan isi era 2 terbuka (radio, staf, kata dan template baru, event era 2) |
+| Naik era | Tombol **Sewa Kantor** di toko muncul setelah 180 pengikut; harga 350 uang (0.6.0; awalnya 200/400), sekali beli. Efek: era = 2, latar meja kantor, dan isi era 2 terbuka (radio, staf, kata dan template baru, event era 2) |
 | Radio | 60 uang per kiriman, terbuka di era 2, heat ×1,2. Siaran 10 detik: tiap 2 detik satu warga di setiap distrik langsung mendengar (total 5 × 3 = 15 warga awal), jadi rumor sulit padam |
-| Staf otomatis | Rekrut 250 uang di era 2, maksimal 1 staf di 0.3.0. Tiap 40 detik staf mengirim rumor kecil dari kartu milik pemain secara acak lewat Merpati. Rumor ini **tidak** disimulasikan di peta: warga percaya ≈ 8 × dipercaya × cocok_emosi, lalu uang, heat (×0,7), dan peluang dibongkar dihitung seperti biasa; hasilnya tampil di feed sebagai "Staf: …". Rumus yang sama dipakai untuk penghasilan offline di 0.6.0 |
+| Staf otomatis | Rekrut 250 uang di era 2, maksimal 1 staf di 0.3.0. Tiap 40 detik staf mengirim rumor kecil dari kartu milik pemain secara acak lewat Merpati. Rumor ini **tidak** disimulasikan di peta: warga percaya ≈ 8 × dipercaya × cocok_emosi, lalu uang, heat (×0,7), dan peluang dibongkar dihitung seperti biasa; hasilnya tampil di feed sebagai "Staf: …". Rumus tertutup yang sama dipakai untuk penghasilan offline (0.6.0) |
 | Event dilema | Banner berisi dua pilihan; `GameClock.jeda(&"dilema")` sampai pemain memilih (ADR-0003) |
 
 ### Era 3: gedung media (0.4.0)
 
 | Sistem | Aturan |
 | --- | --- |
-| Naik era | Upgrade **Gedung Media** di toko: 350 pengikut, 1.200 uang (diturunkan dari 600/1.500: dengan angka lama, simulasi bot tidak pernah mencapai Era 3 dalam 35 menit). Membuka medsos, kontrak kampanye, kata dan template era 3, serta 3 distrik baru |
+| Naik era | Upgrade **Gedung Media** di toko: 400 pengikut, 1.800 uang (disetel ulang di 0.6.0 untuk target Era 3 ±menit 18). Membuka medsos, kontrak kampanye, kata dan template era 3, serta 3 distrik baru |
 | Peta meluas | Peta tetap satu layar, 3 → 6 distrik (2 kolom × 3 baris): Perumahan Elit (iri), Kampus (lucu), Pelabuhan (takut). Warga ±105 → ±200. Status warga lama dipertahankan saat peta ditata ulang |
 | Medsos | 100 uang per kiriman, heat ×1,5, 2 warga awal di satu distrik pilihan. Selama rumor medsos aktif, tiap penular juga mencoba menulari 2 "teman online" acak di mana pun di kota, sehingga rumor melompat antar distrik |
 | Kontrak kampanye | Tawaran klien fiktif tiap ±4 menit (bisa ditolak; waktu dijeda selama tawaran tampil): yakinkan 50% warga di 2 distrik dalam 3 menit. Berhasil: +600 uang, +60 pengikut. Gagal: kredibilitas −10. Maksimal satu kontrak aktif |
@@ -156,14 +160,49 @@ Contoh: headline heboh 8 dengan `dipercaya_akhir` 0,4 menambah heat ±9 dan puny
 
 | Sistem | Aturan |
 | --- | --- |
-| Naik era | Upgrade **Menara Server**: 450 pengikut, 1.600 uang (sementara; dari simulasi bot, Era 4 tercapai ±8 menit setelah Era 3). Ritme naik era keseluruhan disetel ulang di 0.6.0. Membuka saluran server, tokoh target, kata dan template era 4, serta 2 distrik baru |
+| Naik era | Upgrade **Menara Server**: 700 pengikut, 2.200 uang (disetel ulang di 0.6.0 untuk target Era 4 ±menit 30). Membuka saluran server, tokoh target, kata dan template era 4, serta 2 distrik baru |
 | Peta meluas | 6 → 8 distrik (2 kolom × 4 baris): Pusat Kota dan Kawasan Industri, keduanya beremosi marah (emosi yang belum punya distrik). Warga ±260 |
 | Server (jaringan bot) | 200 uang per kiriman, heat ×2, terbuka di Era 4. Selama 15 detik, tiap detik satu warga acak di mana pun di kota langsung percaya (15 total), ditambah lompatan 2 seperti Medsos |
-| Tokoh target | Tiga tokoh fiktif masuk ke tangan sebagai kartu SUBJEK khusus saat Era 4 dimulai. Masing-masing punya reputasi 100; tiap rumor tentang tokoh yang **tidak** dibongkar mengurangi reputasinya sebanyak warga yang percaya. Di 0 tokoh jatuh: +2.000 uang, +200 pengikut. Ketiganya jatuh = syarat kampanye akhir (0.6.0). Staf tidak memakai kartu tokoh |
+| Tokoh target | Tiga tokoh fiktif masuk ke tangan sebagai kartu SUBJEK khusus saat Era 4 dimulai. Masing-masing punya reputasi 1.000 (0.6.0; dengan 100, satu rumor server menjatuhkan satu tokoh); tiap rumor tentang tokoh yang **tidak** dibongkar mengurangi reputasinya sebanyak warga yang percaya. Di 0 tokoh jatuh: +2.000 uang, +200 pengikut. Ketiganya jatuh = syarat kampanye akhir (0.6.0). Staf tidak memakai kartu tokoh |
 | Pertahanan tokoh | **Pak Hartono** (wali kota fiktif) — *Pengacara*: rumor tentang dia dengan dipercaya < 60% otomatis dibongkar. **Bu Sasmita** (direktur bank fiktif) — *Humas*: heat ×2 untuk rumor tentang dia. **Juragan Bramantyo** (raja media fiktif) — *Media sendiri*: setiap rumor tentang dia memicu E10 Rumor Tandingan |
 | E10 Rumor Tandingan | Ancaman acak (Era 3+): media saingan membuat 40% warga yang percaya di distrik dengan pemercaya terbanyak menjadi ragu |
 | E11 Server Down | Dilema acak (Era 4): bayar perbaikan cepat (400 uang), atau biarkan sehingga staf otomatis dan saluran server mati 120 detik |
 
 Peluang "per detik simulasi" dihitung per tick sebagai `peluang × SIM_TICK` ([ADR-0003](../architecture/adr-0003-model-waktu.md)).
 
-Angka-angka ini hanya titik awal. Taruh semuanya sebagai konstanta di satu file (`balance.gd`) supaya mudah diubah saat playtest.
+### Kampanye akhir dan ending (0.6.0)
+
+| Sistem | Aturan |
+| --- | --- |
+| Syarat | Setelah ketiga tokoh jatuh, tombol **Kampanye Akhir** muncul di HUD. Pemain sendiri yang menekannya (tidak bisa saat waktu dijeda) |
+| E12 Kota Tak Percaya Lagi | Saat mulai, kota diseragamkan: semua warga jadi ragu, lalu 5% warga acak langsung kebal. Jadi tiap balapan mulai dari kondisi yang sama, berapa pun pemercaya sebelumnya (kalau hanya pemercaya yang jadi ragu, pemain yang sudah meyakinkan banyak warga justru dapat balapan lebih sulit). Selama balapan peluang percaya dikali 0,75, kebal tidak pulih, dan tiap 10 detik tiap warga kebal menulari satu tetangga acak (peluang 50%) yang belum dengar atau ragu; pemercaya tidak bisa ditulari |
+| Menang / kalah | Menang: 60% warga kota percaya sekaligus. Kalah: 5 menit habis, atau 50% warga kebal |
+| Selama balapan | Event acak, ancaman, dan kontrak berhenti; kontrak yang berjalan batal. Staf tetap bekerja. Progres di HUD: percaya %, kebal %, sisa waktu |
+| Ending | Menang: **Imperium Kabar Burung**. Kalah: **Kota Mati Rasa**. Layar berisi epilog satir (`data/endings.json`) dan statistik (rumor, uang, tokoh jatuh, dibongkar, waktu main, rumor terbaik), lalu [Mulai Baru] (tekan dua kali; menghapus progres) atau [Lanjut Bermain]. Waktu dijeda selama layar tampil |
+| Setelah ending | Lanjut bermain bebas. Setelah kalah, kampanye akhir bisa dicoba lagi dan mulai dari kondisi yang sama. Setelah menang, tombolnya hilang |
+| Simpan | Hasil terakhir (`hasil_akhir`) disimpan; balapan yang sedang berjalan tidak (seperti kontrak, ADR-0003). Kalau aplikasi tertutup di tengah balapan, tombol muncul lagi |
+
+### Penghasilan offline (0.6.0)
+
+Saat memuat save, staf dianggap bekerja selama aplikasi tertutup ([ADR-0003](../architecture/adr-0003-model-waktu.md)):
+
+```
+laju (uang/detik) = warga_dasar_staf × 0,6 × UANG_PER_WARGA / jeda_staf     (0 tanpa staf)
+detik_offline     = clamp(sekarang − disimpan_unix, 0, 28.800)                (maks 8 jam)
+uang_offline      = floor(laju × detik_offline × 0,5)
+```
+
+Dengan staf awal (8 warga, 40 detik) lajunya ±0,24 uang/detik: pergi 1 jam memberi ±430 uang, 8 jam atau lebih ±3.450. Heat, kredibilitas, dan pengikut tidak berubah. Hasilnya tampil sekali di feed.
+
+### Ritme dan spreadsheet balancing (0.6.0)
+
+Target satu perjalanan penuh ±60 menit: Era 2 ±menit 8, Era 3 ±18, Era 4 ±30, kampanye akhir ±50–60. Ritme diukur dengan bot `tools/sesi_bot.gd` (8 sesi × 70 menit waktu simulasi); hasil terakhir dicatat di CHANGELOG.
+
+Semua angka balancing ada di `balancing/angka.csv` (kunci, nilai, catatan; pecahan seperti `1/60` boleh) dan harga di `balancing/harga.csv` (id, jenis, harga, pengikut_min, catatan). Kolom harga berarti harga beli untuk kata, template, dan upgrade, biaya kirim untuk saluran, dan reputasi awal untuk tokoh. Alurnya:
+
+```
+edit balancing/*.csv  →  godot --headless --path . -s res://tools/terapkan_balancing.gd
+                      →  data/balance.json + harga di data/*.json  →  jalankan bot / tes
+```
+
+Kode tetap memakai `Balance.X`; nilainya dibaca dari `data/balance.json` saat class dimuat. Jangan ubah `data/balance.json` atau harga di `data/*.json` langsung: tes `test_final.gd` memeriksa keduanya sinkron dengan CSV.

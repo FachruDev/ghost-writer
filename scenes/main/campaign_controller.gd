@@ -17,6 +17,11 @@ func _ready() -> void:
 	GameClock.tick.connect(_on_tick)
 	Events.dilema_dipilih.connect(_on_pilih)
 	Events.sim_diganti.connect(func(s: SpreadSim) -> void: sim = s)
+	Events.final_berubah.connect(func() -> void:
+		# Kontrak batal saat kampanye akhir dimulai; tawaran berikutnya setelah jeda penuh.
+		_kontrak = {}
+		_hitung = 0.0
+		_umumkan_progres())
 	Bahasa.bahasa_berubah.connect(func(_k: String) -> void: _umumkan_progres())
 
 
@@ -31,7 +36,7 @@ func progres(distrik: int) -> float:
 
 
 func _on_tick(dt: float) -> void:
-	if GameState.era < 3 or sim == null:
+	if GameState.era < 3 or sim == null or GameState.final_berjalan:
 		return
 	if not _kontrak.is_empty():
 		_kontrak["sisa"] -= dt

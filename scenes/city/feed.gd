@@ -81,6 +81,9 @@ func _teks(e: Dictionary) -> String:
 			return tr("UI_KONTRAK_GAGAL") % roundi(Balance.KONTRAK_KRED_GAGAL)
 		"era":
 			return tr("UI_ERA_NAIK") % int(e.get("era", 2))
+		"offline":
+			var menit := roundi(float(e.get("detik", 0)) / 60.0)
+			return tr("UI_OFFLINE") % [Bahasa.angka(int(e.get("uang", 0))), "%d:%02d" % [menit / 60, menit % 60]]
 		"event":
 			var info := str(e.get("info", ""))
 			return "⚑ " + Bahasa.teks(e.get("teks", "")) + ("" if info.is_empty() else " · " + info)
@@ -93,7 +96,7 @@ func _warna(e: Dictionary) -> Color:
 			return Palet.emosi("lucu")
 		"hoaks":
 			return Palet.emosi("marah")
-		"misi", "era":
+		"misi", "era", "offline":
 			return Palet.emosi("iri")
 		"kontrak":
 			return Palet.emosi("iri") if e.get("berhasil", false) else Palet.emosi("marah")

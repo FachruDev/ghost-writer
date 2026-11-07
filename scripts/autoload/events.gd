@@ -69,3 +69,18 @@ signal dibeli
 signal aksi_gagal
 @warning_ignore("unused_signal")
 signal dilema_dipilih(indeks: int)
+## Pemain menekan tombol Kampanye Akhir.
+@warning_ignore("unused_signal")
+signal final_diminta
+## Kampanye akhir dimulai atau selesai (lihat GameState.final_berjalan).
+@warning_ignore("unused_signal")
+signal final_berubah
+## Teks progres kampanye akhir untuk HUD ("" = tidak berjalan).
+@warning_ignore("unused_signal")
+signal final_progres(teks: String)
+## Kampanye akhir selesai: "menang" atau "kalah". Layar ending tampil.
+@warning_ignore("unused_signal")
+signal ending_tercapai(hasil: String)
+## Pemain menutup layar ending dan lanjut bermain bebas.
+@warning_ignore("unused_signal")
+signal ending_ditutup

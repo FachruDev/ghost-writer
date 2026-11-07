@@ -8,6 +8,7 @@ const PATH_UPGRADES := "res://data/upgrades.json"
 const PATH_MISSIONS := "res://data/missions.json"
 const PATH_EVENTS := "res://data/events.json"
 const PATH_TOKOH := "res://data/tokoh.json"
+const PATH_ENDINGS := "res://data/endings.json"
 
 var words: Dictionary = {}
 var templates: Dictionary = {}
@@ -20,6 +21,8 @@ var missions: Array[Dictionary] = []
 var events: Array[Dictionary] = []
 ## Tokoh fiktif target besar (Era 4).
 var tokoh: Array[Dictionary] = []
+## Dua ending kampanye akhir, per id ("menang", "kalah").
+var endings: Dictionary = {}
 
 
 func _ready() -> void:
@@ -30,6 +33,7 @@ func _ready() -> void:
 	missions.assign(_muat(PATH_MISSIONS))
 	events.assign(_muat(PATH_EVENTS))
 	tokoh.assign(_muat(PATH_TOKOH))
+	endings = _index(_muat(PATH_ENDINGS))
 	atur_era(1)
 	Events.era_berubah.connect(atur_era)
 

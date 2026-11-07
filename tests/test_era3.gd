@@ -24,7 +24,7 @@ func _rumor() -> Node:
 
 
 func _naik_era_3() -> void:
-	GameState.tambah_pengikut(350)
+	GameState.tambah_pengikut(int(DataDB.get_upgrade("gedung_media")["pengikut_min"]))
 	GameState.uang = 5000
 	assert_bool(GameState.beli_upgrade("kantor")).is_true()
 	assert_bool(GameState.beli_upgrade("gedung_media")).is_true()
@@ -47,7 +47,7 @@ func test_gedung_media_meluaskan_peta_dan_mempertahankan_warga() -> void:
 
 
 func test_peta_meluas_saat_rumor_berjalan_menyelesaikannya_dulu() -> void:
-	GameState.tambah_pengikut(350)
+	GameState.tambah_pengikut(int(DataDB.get_upgrade("gedung_media")["pengikut_min"]))
 	GameState.uang = 5000
 	GameState.beli_upgrade("kantor")
 	var hasil := {}

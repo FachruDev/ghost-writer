@@ -21,6 +21,7 @@ const SFX := {
 	"dilemma": [preload("res://assets/sfx/sfx_dilemma_choice.wav")],
 	"notif": [preload("res://assets/sfx/sfx_notif.wav")],
 	"era_up": [preload("res://assets/sfx/sfx_era_up.ogg")],
+	"phone": [preload("res://assets/sfx/sfx_phone_ring.wav")],
 }
 ## Musik per era; loop diatur di file .import masing-masing.
 const MUSIK_ERA := {
@@ -29,6 +30,15 @@ const MUSIK_ERA := {
 	3: preload("res://assets/music/mus_era3_gedung.mp3"),
 	4: preload("res://assets/music/mus_era4_server.mp3"),
 }
+## Layar ending: diputar sekali (tidak loop), lalu kembali ke musik era saat lanjut bermain.
+const MUSIK_ENDING := preload("res://assets/music/mus_ending.ogg")
+## Lapisan tegang di atas musik era selama ancaman (termasuk E12); loop diatur di .import.
+const MUSIK_ANCAMAN := preload("res://assets/music/mus_threat.ogg")
+const VOLUME_ANCAMAN_DB := -4.0
+const SENYAP_DB := -40.0
+const FADE_ANCAMAN := 1.5
+## Event yang berbunyi telepon, bukan alarm.
+const EVENT_TELEPON := ["e_wartawan"]
 const KELIPATAN_PENGIKUT := 50
 const DENGUNG_SERVER := preload("res://assets/sfx/sfx_server_hum.wav")
 const VOLUME_DENGUNG_DB := -18.0
@@ -47,11 +57,16 @@ var _waktu_koin := 0.0
 var _ambang_pengikut := 0
 var _era_musik := 0
 var _dengung: AudioStreamPlayer
+var _ancaman: AudioStreamPlayer
+var _ancaman_aktif := false
+var _tween_ancaman: Tween
 
 
 func _ready() -> void:
-	_siapkan_bus("Music", VOLUME_MUSIK_DB)
-	_siapkan_bus("SFX", VOLUME_SFX_DB)
+	_siapkan_bus("Music")
+	_siapkan_bus("SFX")
+	_terapkan_volume()
+	Pengaturan.berubah.connect(func(_k: String) -> void: _terapkan_volume())
 	for i in JUMLAH_PEMUTAR:
 		var p := AudioStreamPlayer.new()
 		p.bus = "SFX"
@@ -66,6 +81,11 @@ func _ready() -> void:
 	_dengung.volume_db = VOLUME_DENGUNG_DB
 	_dengung.finished.connect(_dengung.play)  # ambience berulang
 	add_child(_dengung)
+	_ancaman = AudioStreamPlayer.new()
+	_ancaman.bus = "Music"
+	_ancaman.stream = MUSIK_ANCAMAN
+	_ancaman.volume_db = SENYAP_DB
+	add_child(_ancaman)
 	putar_musik_era(GameState.era)
 	_ambang_pengikut = floori(float(GameState.pengikut) / KELIPATAN_PENGIKUT)
 	_hubungkan()
@@ -75,6 +95,7 @@ func _ready() -> void:
 func _exit_tree() -> void:
 	_musik.stop()
 	_dengung.stop()
+	_ancaman.stop()
 	for p in _pemutar:
 		p.stop()
 
@@ -105,6 +126,26 @@ func putar(nama: String, variasi_pitch: float = 0.0) -> void:
 	p.play()
 
 
+## Lapisan musik ancaman masuk/keluar pelan di atas musik era.
+func atur_lapisan_ancaman(aktif: bool) -> void:
+	if aktif == _ancaman_aktif:
+		return
+	_ancaman_aktif = aktif
+	if _tween_ancaman:
+		_tween_ancaman.kill()
+	if aktif and not _ancaman.playing:
+		_ancaman.volume_db = SENYAP_DB
+		_ancaman.play()
+	_tween_ancaman = create_tween()
+	_tween_ancaman.tween_property(_ancaman, "volume_db", VOLUME_ANCAMAN_DB if aktif else SENYAP_DB, FADE_ANCAMAN)
+	if not aktif:
+		_tween_ancaman.tween_callback(_ancaman.stop)
+
+
+func lapisan_ancaman_aktif() -> bool:
+	return _ancaman_aktif
+
+
 ## Ketukan mesin tik selama headline diketik, lalu bel di akhir.
 func ketik(durasi: float) -> void:
 	var t := create_tween()
@@ -127,6 +168,14 @@ func _hubungkan() -> void:
 	Events.aksi_gagal.connect(putar.bind("error"))
 	Events.dilema_dipilih.connect(func(_i: int) -> void: putar("dilemma"))
 	Events.era_berubah.connect(putar_musik_era)
+	Events.ending_tercapai.connect(func(_h: String) -> void:
+		atur_lapisan_ancaman(false)
+		_dengung.stop()
+		_musik.stream = MUSIK_ENDING
+		_musik.play())
+	Events.ending_ditutup.connect(func() -> void:
+		_era_musik = 0  # paksa ganti lagu tanpa stinger naik era
+		putar_musik_era(GameState.era))
 	Events.pengikut_berubah.connect(func(p: int) -> void:
 		var ambang := floori(float(p) / KELIPATAN_PENGIKUT)
 		if ambang > _ambang_pengikut:
@@ -146,7 +195,14 @@ func _hubungkan() -> void:
 		if e.get("jenis", "") == "hoaks":
 			putar("stamp"))
 	Events.event_mulai.connect(func(info: Dictionary) -> void:
-		putar("alert_threat" if info.get("jenis", "") == "ancaman" else "alert"))
+		if str(info.get("id", "")) in EVENT_TELEPON:
+			putar("phone")
+		else:
+			putar("alert_threat" if info.get("jenis", "") == "ancaman" else "alert")
+		atur_lapisan_ancaman(info.get("jenis", "") == "ancaman"))
+	Events.event_tampil.connect(func(info: Dictionary) -> void:
+		atur_lapisan_ancaman(info.get("jenis", "") == "ancaman"))
+	Events.event_selesai.connect(func(_id: String) -> void: atur_lapisan_ancaman(false))
 
 
 ## Bunyi klik untuk semua tombol UI, kecuali kartu kata yang punya bunyinya sendiri.
@@ -155,11 +211,19 @@ func _on_node_added(node: Node) -> void:
 		(node as BaseButton).pressed.connect(putar.bind("click"))
 
 
-func _siapkan_bus(nama: String, volume_db: float) -> void:
+## Volume bus = dasar (VOLUME_*_DB) + slider pengaturan (0..1, linear). 0 = bisu.
+func _terapkan_volume() -> void:
+	for pasangan in [["Music", VOLUME_MUSIK_DB, "musik"], ["SFX", VOLUME_SFX_DB, "sfx"]]:
+		var idx := AudioServer.get_bus_index(pasangan[0])
+		var v := float(Pengaturan.ambil(pasangan[2]))
+		AudioServer.set_bus_mute(idx, v <= 0.001)
+		AudioServer.set_bus_volume_db(idx, float(pasangan[1]) + linear_to_db(maxf(v, 0.001)))
+
+
+func _siapkan_bus(nama: String) -> void:
 	var idx := AudioServer.get_bus_index(nama)
 	if idx < 0:
 		AudioServer.add_bus()
 		idx = AudioServer.bus_count - 1
 		AudioServer.set_bus_name(idx, nama)
 		AudioServer.set_bus_send(idx, "Master")
-	AudioServer.set_bus_volume_db(idx, volume_db)

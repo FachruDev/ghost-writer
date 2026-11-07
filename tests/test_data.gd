@@ -21,7 +21,8 @@ func test_jumlah_konten() -> void:
 	assert_int(DataDB.saluran().size()).is_equal(5)
 	assert_int(DataDB.tokoh.size()).is_equal(3)
 	assert_int(DataDB.missions.size()).is_equal(5)
-	assert_int(DataDB.events.size()).is_equal(11)
+	assert_int(DataDB.events.size()).is_equal(12)
+	assert_int(DataDB.endings.size()).is_equal(2)
 
 
 func test_kartu_hadiah_event_tidak_dijual_dan_tidak_dimiliki_di_awal() -> void:
@@ -31,30 +32,58 @@ func test_kartu_hadiah_event_tidak_dijual_dan_tidak_dimiliki_di_awal() -> void:
 		assert_bool(GameState.punya_kata(id)).is_false()
 
 
-func test_semua_teks_punya_bahasa_indonesia() -> void:
+## ADR-0004: semua teks konten wajib ada dalam bahasa Indonesia dan Inggris (wajib sejak 0.9.0).
+func test_semua_teks_konten_punya_id_dan_en() -> void:
+	for bahasa in ["id", "en"]:
+		var kosong: Array[String] = []
+		for nama_teks in _semua_teks():
+			var field: Variant = nama_teks[1]
+			if not field is Dictionary or str(field.get(bahasa, "")).strip_edges().is_empty():
+				kosong.append(str(nama_teks[0]))
+		assert_array(kosong).override_failure_message("Teks %s kosong: %s" % [bahasa, str(kosong)]).is_empty()
+
+
+func test_semua_teks_ui_punya_terjemahan() -> void:
+	var f := FileAccess.open("res://localization/ui.csv", FileAccess.READ)
+	var kepala := f.get_csv_line()
+	assert_array(Array(kepala)).contains_exactly(["keys", "id", "en"])
 	var kosong: Array[String] = []
-	for id in DataDB.words:
-		_cek_teks(DataDB.words[id].get("text"), "kata " + id, kosong)
-	for id in DataDB.templates:
-		_cek_teks(DataDB.templates[id].get("pola"), "template " + id, kosong)
-	for d in DataDB.semua_distrik:
-		_cek_teks(d.get("nama"), "distrik " + str(d["id"]), kosong)
-	for e in DataDB.events:
-		_cek_teks(e.get("nama"), "event " + str(e["id"]), kosong)
-		_cek_teks(e.get("teks"), "event " + str(e["id"]), kosong)
-	for m in DataDB.missions:
-		_cek_teks(m.get("teks"), "misi " + str(m["id"]), kosong)
+	while not f.eof_reached():
+		var sel := f.get_csv_line()
+		if sel.size() < 1 or sel[0].is_empty():
+			continue
+		if sel.size() < 3 or sel[1].strip_edges().is_empty() or sel[2].strip_edges().is_empty():
+			kosong.append(sel[0])
 	assert_array(kosong).is_empty()
 
 
-## Mulai 0.9.0 semua teks Inggris wajib terisi (ADR-0004). Sekarang hanya dilaporkan.
-func test_laporan_teks_inggris_kosong() -> void:
-	var n := 0
+## [nama, field {"id","en"}] untuk setiap teks konten di res://data/.
+func _semua_teks() -> Array:
+	var hasil := []
 	for id in DataDB.words:
-		if str(DataDB.words[id]["text"].get("en", "")).is_empty():
-			n += 1
-	print("Teks EN kosong (kata): %d" % n)
-	assert_int(n).is_greater_equal(0)
+		hasil.append(["kata " + id, DataDB.words[id].get("text")])
+	for id in DataDB.templates:
+		hasil.append(["template " + id, DataDB.templates[id].get("pola")])
+	for d in DataDB.semua_distrik:
+		hasil.append(["distrik " + str(d["id"]), d.get("nama")])
+	for e in DataDB.events:
+		hasil.append(["event nama " + str(e["id"]), e.get("nama")])
+		hasil.append(["event teks " + str(e["id"]), e.get("teks")])
+		for p in e.get("pilihan", []):
+			hasil.append(["event pilihan " + str(e["id"]), p.get("label")])
+	for m in DataDB.missions:
+		hasil.append(["misi " + str(m["id"]), m.get("teks")])
+	for id in DataDB.upgrades:
+		hasil.append(["upgrade nama " + id, DataDB.upgrades[id].get("nama")])
+		if DataDB.upgrades[id].has("info"):
+			hasil.append(["upgrade info " + id, DataDB.upgrades[id].get("info")])
+	for t in DataDB.tokoh:
+		hasil.append(["tokoh nama " + str(t["id"]), t.get("nama")])
+		hasil.append(["tokoh info " + str(t["id"]), t.get("info")])
+	for id in DataDB.endings:
+		hasil.append(["ending judul " + id, DataDB.endings[id].get("judul")])
+		hasil.append(["ending epilog " + id, DataDB.endings[id].get("epilog")])
+	return hasil
 
 
 func test_pola_template_memakai_slotnya() -> void:
@@ -67,8 +96,3 @@ func test_pola_template_memakai_slotnya() -> void:
 			for slot in RumorScorer.URUTAN_SLOT:
 				if not (slot in t["slot"]):
 					assert_str(pola).not_contains("{%s}" % slot)
-
-
-func _cek_teks(field: Variant, nama: String, kosong: Array[String]) -> void:
-	if not field is Dictionary or str(field.get("id", "")).is_empty():
-		kosong.append(nama)

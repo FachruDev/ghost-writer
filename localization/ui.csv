@@ -42,7 +42,7 @@ UI_TOKO_UPGRADE,Kantor & staf,Office & staff
 UI_ERA,Era %d,Era %d
 UI_STAF,Staf: %s,Staff: %s
 UI_STAF_HOAKS,Rumor staf dibongkar! Kredibilitas -%d,Staff rumor debunked! Credibility -%d
-UI_ERA_NAIK,Pindah ke kantor! Era %d dimulai,Moved to an office! Era %d begins
+UI_ERA_NAIK,Era %d dimulai! Ada barang baru di toko,Era %d begins! New items in the shop
 UI_DILEMA_DIPILIH,Kamu memilih: %s,You chose: %s
 UI_KONTRAK_NAMA,Tawaran Kontrak,Contract Offer
 UI_KONTRAK_TEKS,Klien misterius membayar %s jika %d%% warga %s dan %s percaya dalam %d menit.,A mysterious client pays %s if %d%% of %s and %s believe within %d minutes.
@@ -58,3 +58,21 @@ UI_TOKOH_JATUH,%s jatuh! +%s uang · +%d pengikut,%s has fallen! +%s money · +%
 UI_TOKOH_SERANG,%s: reputasi -%d (sisa %d),%s: reputation -%d (%d left)
 UI_PENGACARA,Pengacara %s membantah rumormu!,%s's lawyers shut your rumor down!
 UI_TOKOH_SEMUA_JATUH,Semua tokoh jatuh,All targets have fallen
+UI_OFFLINE,Staf bekerja selama kamu pergi: +%s uang (%s jam),Your staff worked while you were away: +%s money (%s h)
+UI_FINAL_TOMBOL,Kampanye Akhir,Final Campaign
+UI_FINAL_SIAP,Semua tokoh jatuh. Kota menunggu kampanye akhir.,All targets have fallen. The city awaits the final campaign.
+UI_FINAL_ULANG,Kota mati rasa. Coba kampanye akhir lagi?,The city went numb. Try the final campaign again?
+UI_FINAL_BEBAS,Imperium berdiri. Main bebas.,The empire stands. Free play.
+UI_FINAL_JALAN,Kampanye akhir: percaya %d%%/%d%% · kebal %d%%/%d%% · %s,Final campaign: believe %d%%/%d%% · immune %d%%/%d%% · %s
+UI_ENDING,ENDING,ENDING
+UI_MULAI_BARU,Mulai Baru,New Game
+UI_MULAI_BARU_YAKIN,Hapus progres? Tekan lagi,Erase progress? Tap again
+UI_LANJUT_MAIN,Lanjut Bermain,Keep Playing
+UI_STAT_RUMOR,Rumor dikirim,Rumors sent
+UI_STAT_UANG,Uang terkumpul,Money earned
+UI_STAT_TOKOH,Tokoh jatuh,Targets fallen
+UI_STAT_DIBONGKAR,Dibongkar,Debunked
+UI_STAT_WAKTU,Waktu main,Play time
+UI_STAT_TERBAIK,Rumor terbaik,Best rumor
+UI_STAT_TERBAIK_ISI,%s (%d warga percaya),%s (%d believers)
+UI_STAT_WAKTU_ISI,%d jam %d menit,%dh %dm

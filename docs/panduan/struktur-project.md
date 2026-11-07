@@ -13,6 +13,8 @@ res://
     upgrades.json     # saluran (Merpati, Koran, Radio), Sewa Kantor (era), staf
     missions.json     # misi berurutan
     tokoh.json        # tokoh fiktif target besar (era 4)
+    endings.json      # dua ending: judul + epilog
+    balance.json      # dibuat dari balancing/angka.csv; jangan diedit langsung
     events.json       # event (lihat EVENT.md)
   localization/
     ui.csv            # teks UI: keys,id,en
@@ -24,6 +26,7 @@ res://
     main/staff_controller.gd    # staf otomatis era 2
     main/campaign_controller.gd # kontrak kampanye era 3
     main/tokoh_controller.gd    # tokoh target dan pertahanannya (era 4)
+    main/final_controller.gd    # kampanye akhir + E12
     city/city.tscn          # peta + titik warga
     city/district.tscn
     city/feed.tscn          # feed headline yang beredar
@@ -41,7 +44,11 @@ res://
     autoload/game_clock.gd   # tick simulasi tetap 0,2 detik (ADR-0003)
     autoload/save_system.gd  # simpan/muat user://save.json (ADR-0002)
     autoload/bahasa.gd       # bahasa aktif, teks konten, format angka (ADR-0004)
-    systems/balance.gd       # semua konstanta balancing
+    autoload/pengaturan.gd   # volume musik/SFX, getar di user://settings.cfg
+    autoload/suara.gd        # bus audio, musik era, lapisan ancaman, SFX
+    autoload/getar.gd        # getar ringan di HP (kirim, HOAKS)
+    systems/balance.gd       # Balance.X: angka dari data/balance.json + konstanta teknis
+    systems/state_serial.gd  # GameState <-> dictionary save
     systems/rumor_scorer.gd  # hitung viral & dipercaya
     systems/spread_sim.gd    # simulasi penyebaran per tick
     systems/economy.gd       # pendapatan, harga, upgrade

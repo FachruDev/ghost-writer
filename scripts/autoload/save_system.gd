@@ -14,6 +14,9 @@ const MIGRASI: Array[Callable] = []
 ## () -> {"distrik_status": Dictionary, "delta": Dictionary}. Diisi RumorController.
 var sumber_snapshot: Callable
 
+## Hasil penghasilan offline saat memuat terakhir: {"detik", "uang"} (ADR-0003). Ditampilkan main.
+var offline: Dictionary = {}
+
 var _timer: Timer
 
 
@@ -60,11 +63,22 @@ func muat() -> bool:
 		if data.is_empty():
 			continue
 		GameState.dari_dict(_migrasi(data))
+		_hitung_offline(float(data.get("disimpan_unix", Time.get_unix_time_from_system())))
 		return true
 	return false
 
 
+## Staf bekerja selama aplikasi tertutup: maks 8 jam × 0,5 (ADR-0003).
+func _hitung_offline(disimpan_unix: float) -> void:
+	var detik := Economy.detik_offline(disimpan_unix, Time.get_unix_time_from_system())
+	var laju := Economy.laju_pasif_per_detik(GameState.punya_upgrade("staf_1"), DataDB.get_upgrade("staf_1"))
+	offline = {"detik": detik, "uang": Economy.uang_offline(laju, detik)}
+	if int(offline["uang"]) > 0:
+		GameState.tambah_uang(int(offline["uang"]))
+
+
 func reset_progres() -> void:
+	offline = {}
 	for path in [PATH, PATH_BAK, PATH_TMP]:
 		if FileAccess.file_exists(path):
 			DirAccess.remove_absolute(path)
@@ -82,11 +96,13 @@ func _baca(path: String) -> Dictionary:
 	return {}
 
 
-func _migrasi(data: Dictionary) -> Dictionary:
+## `daftar` bisa diganti untuk tes; permainan selalu memakai MIGRASI.
+func _migrasi(data: Dictionary, daftar: Array = MIGRASI) -> Dictionary:
 	var versi := int(data.get("versi_skema", 1))
-	while versi - 1 < MIGRASI.size():
-		data = MIGRASI[versi - 1].call(data)
+	while versi - 1 < daftar.size():
+		data = daftar[versi - 1].call(data)
 		versi += 1
+		data["versi_skema"] = versi
 	return data
 
 

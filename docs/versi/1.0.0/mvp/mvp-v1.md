@@ -43,7 +43,7 @@ Semua ini dicatat di [daftar ide 2.0.0](../../2.0.0/IDE.md).
 | --- | --- | --- |
 | Scope membengkak | Menambah fitur sebelum yang lama selesai | Setiap ide baru masuk ke [IDE.md](../../2.0.0/IDE.md), bukan langsung dikerjakan |
 | Core loop ternyata tidak seru | Bosan sendiri di prototipe | Gerbang keputusan Fase 1; berani ubah atau buang |
-| Balancing berantakan | Pemain macet atau terlalu cepat kaya | Semua angka di `balance.gd`/spreadsheet; uji ritme unlock |
+| Balancing berantakan | Pemain macet atau terlalu cepat kaya | Semua angka di `balancing/*.csv` → JSON; uji ritme unlock |
 | Tema sensitif | Mirip tokoh atau isu nyata | Semua fiktif, nada satir, konsekuensi selalu ada |
 | Motivasi turun | Berhari-hari tidak commit | Target kecil harian; tunjukkan progres ke teman tiap minggu |
 | Terhambat closed testing | Tester kurang dari 12 | Kumpulkan tester sejak Fase 2 |

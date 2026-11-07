@@ -84,7 +84,9 @@ func _on_kirim(data: Dictionary) -> void:
 	_warga_percaya = 0
 	_uang_didapat = 0
 	_catat_kiriman(skor["emosi"], benih.keys())
-	var awal := sim.mulai(benih, viral, skor["dipercaya_akhir"], int(saluran.get("lompatan", 0)))
+	# E12: kota yang tak percaya lagi lebih sulit diyakinkan selama kampanye akhir.
+	var percaya: float = skor["dipercaya_akhir"] * (Balance.FINAL_PENGALI_PERCAYA if GameState.final_berjalan else 1.0)
+	var awal := sim.mulai(benih, viral, percaya, int(saluran.get("lompatan", 0)))
 	_siaran = {}
 	if str(saluran.get("cakupan", "")) in ["siaran", "jaringan"]:
 		var jeda := float(saluran.get("siaran_jeda", 2.0))
@@ -113,6 +115,9 @@ func _on_tick(dt: float) -> void:
 			_mutasi()
 	if GameState.heat > 0.0:
 		GameState.ubah_heat(-Balance.HEAT_TURUN_PER_DETIK * dt)
+	# Orang lupa: kredibilitas rendah pulih pelan sampai batas tertentu.
+	if GameState.kredibilitas < Balance.KRED_PULIH_SAMPAI:
+		GameState.ubah_kredibilitas(minf(Balance.KRED_PULIH_PER_DETIK * dt, Balance.KRED_PULIH_SAMPAI - GameState.kredibilitas))
 	Events.warga_berubah.emit()
 	if aktif_sebelum and hasil["selesai"]:
 		_selesai()

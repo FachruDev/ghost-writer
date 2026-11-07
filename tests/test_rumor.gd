@@ -68,7 +68,7 @@ func test_format_angka() -> void:
 
 
 func test_konsekuensi() -> void:
-	var skor := {"heboh_total": 8.0, "dipercaya_akhir": 0.4}
+	var skor := {"heboh_total": 8.0, "dipercaya": 0.4, "dipercaya_akhir": 0.4}
 	assert_float(Konsekuensi.heat_kirim(skor, 1.0)).is_equal_approx(8.8, 0.001)
 	assert_float(Konsekuensi.peluang_bongkar(0.4, 20.0)).is_equal_approx(0.264, 0.001)
 	assert_int(Konsekuensi.pengikut_dari_warga(24)).is_equal(floori(24.0 / Balance.WARGA_PER_PENGIKUT))
@@ -77,7 +77,7 @@ func test_konsekuensi() -> void:
 func test_frekuensi_bongkar_sesuai_peluang() -> void:
 	var rng := RandomNumberGenerator.new()
 	rng.seed = 1
-	var skor := {"heboh_total": 8.0, "dipercaya_akhir": 0.4}
+	var skor := {"heboh_total": 8.0, "dipercaya": 0.4, "dipercaya_akhir": 0.4}
 	var n := 0
 	for i in 4000:
 		if Konsekuensi.akhir_rumor(skor, 10, 20.0, rng)["dibongkar"]:

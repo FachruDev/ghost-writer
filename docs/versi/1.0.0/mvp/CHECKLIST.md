@@ -48,7 +48,7 @@ Semua pakai kotak abu-abu dan teks polos. **Jangan sentuh art.**
 
 - [ ] Main sendiri minimal 3 sesi × 10 menit
 - [ ] Catat: kapan mulai bosan? Kombinasi mana yang terasa lucu? Apakah melihat rumor menjalar itu memuaskan?
-- [ ] Ubah angka di `balance.gd`, coba lagi
+- [ ] Ubah angka di `balancing/angka.csv`, coba lagi
 - [ ] Putuskan lanjut / ubah / buang sesuai [gerbang keputusan](mvp-v1.md#gerbang-keputusan-prototipe)
 
 ## 0.2.0 — MVP
@@ -125,7 +125,7 @@ Semua pakai kotak abu-abu dan teks polos. **Jangan sentuh art.**
 - [x] ±80 kata, 6 template (82 kata termasuk 2 calon RT dari E04)
 - [x] Sistem event dilema (pilihan A/B, waktu dijeda)
 - [x] Event E04 Pemilihan Ketua RT, E05 Wartawan Penasaran, E06 Festival Kampung
-- [ ] SFX: carriage return, pengikut naik, beli, error, pilih dilema (selesai, placeholder CC0); telepon belum ada sumbernya
+- [x] SFX: carriage return, pengikut naik, beli, error, pilih dilema (placeholder CC0); telepon dibuat prosedural
 - [x] Musik era 2 (placeholder CC0)
 - [ ] Animasi: kirim kertas, mutasi headline, buka toko, umpan balik tombol (menunggu desain UI)
 - [ ] Art pertama: kartu, slot, kertas, meja era 1–2, peta, distrik 1–3, panel UI, stempel HOAKS (menunggu desain UI)
@@ -137,7 +137,7 @@ Semua pakai kotak abu-abu dan teks polos. **Jangan sentuh art.**
 - [x] Kampanye multi-distrik (kontrak klien fiktif)
 - [x] Distrik 4–6 (peta 2×3, warga ±200), ±120 kata (123), 9 template
 - [x] Event E07 Dokumen Bocor, E08 Viral Challenge, E09 Razia Hoaks
-- [ ] SFX notifikasi medsos dan musik era 3 (selesai, placeholder CC0); lapisan musik ancaman belum (kandidat CC0 13,6 MB terlalu besar)
+- [x] SFX notifikasi medsos dan musik era 3 (placeholder CC0); lapisan musik ancaman (Panic mode, CC0, 372 KB)
 - [ ] Animasi staf bekerja (menunggu desain UI)
 - [ ] Art meja era 3, distrik 4–6, ikon medsos (menunggu desain UI)
 
@@ -153,12 +153,12 @@ Semua pakai kotak abu-abu dan teks polos. **Jangan sentuh art.**
 
 ## 0.6.0 — Ending & balancing
 
-- [ ] Kampanye akhir dan layar ending
-- [ ] Event E12 Kota Tak Percaya Lagi
-- [ ] Penghasilan offline ringan
-- [ ] Semua harga dan pengali dipindah ke spreadsheet, diekspor ke JSON
+- [x] Kampanye akhir dan layar ending (dua ending, statistik, Mulai Baru / Lanjut Bermain)
+- [x] Event E12 Kota Tak Percaya Lagi
+- [x] Penghasilan offline ringan (staf, maks 8 jam × 0,5)
+- [x] Semua harga dan pengali dipindah ke spreadsheet (`balancing/*.csv`), diekspor ke JSON (`tools/terapkan_balancing.gd`)
 - [ ] Ritme unlock: hal baru tiap 3–5 menit di awal, 10–15 menit di akhir
-- [ ] Musik ending, animasi ending, art ending
+- [ ] Musik ending (placeholder CC0, selesai), animasi ending, art ending (menunggu desain UI)
 - [ ] Satu perjalanan penuh kamar → ending dimainkan tanpa macet
 
 ## 0.9.0 — Beta & polish
@@ -168,9 +168,9 @@ Semua pakai kotak abu-abu dan teks polos. **Jangan sentuh art.**
 Save dasar sudah dibuat di 0.2.0 ([ADR-0002](../../../architecture/adr-0002-backend-save.md)). Di sini tinggal pengujian dan polish:
 
 - [ ] Uji: tutup paksa aplikasi saat autosave 10 kali, buka lagi, progres tetap utuh
-- [ ] Uji: `save.json` dirusak manual → game memuat dari `save.bak` tanpa crash
-- [ ] Uji: save skema lama termuat setelah migrasi (tes headless)
-- [ ] Proyeksi rumor saat menyimpan < 50 ms di HP kelas bawah ([ADR-0003](../../../architecture/adr-0003-model-waktu.md))
+- [x] Uji: `save.json` dirusak manual → game memuat dari `save.bak` tanpa crash (tes headless `test_save.gd`)
+- [x] Uji: save skema lama termuat setelah migrasi (tes headless: save 0.2.0 + urutan migrasi)
+- [ ] Proyeksi rumor saat menyimpan < 50 ms di HP kelas bawah ([ADR-0003](../../../architecture/adr-0003-model-waktu.md)) — desktop 8 ms di kota terbesar; perlu diukur di HP
 - [ ] Tombol reset progres di pengaturan (`settings.cfg` tidak ikut terhapus)
 
 **Onboarding**
@@ -181,7 +181,7 @@ Save dasar sudah dibuat di 0.2.0 ([ADR-0002](../../../architecture/adr-0002-back
 **Juice & aset**
 
 - [ ] Angka uang melayang dari titik warga
-- [ ] Getar ringan (haptic) saat headline dikirim
+- [x] Getar ringan (haptic) saat headline dikirim (dan lebih kuat saat HOAKS; izin VIBRATE di preset Android)
 - [ ] Musik menu (`mus_menu`) dan kredit musik di layar Tentang
 - [ ] Rapikan semua art: satu palet, font utama + font mesin tik
 - [ ] Ikon aplikasi final (adaptive + monochrome), layar judul, splash
@@ -190,8 +190,8 @@ Save dasar sudah dibuat di 0.2.0 ([ADR-0002](../../../architecture/adr-0002-back
 
 - [ ] Uji di minimal 2 HP berbeda (satu kelas bawah)
 - [ ] Batasi jumlah titik warga yang digambar; pakai `_draw()` satu node per distrik, bukan satu node per warga, jika mulai lag
-- [ ] Pengaturan: suara, musik, getar, bahasa (Indonesia, Inggris)
-- [ ] Semua teks EN lengkap: tes headless tidak menemukan field `en` kosong ([ADR-0004](../../../architecture/adr-0004-lokalisasi.md))
+- [ ] Pengaturan: suara, musik, getar, bahasa (Indonesia, Inggris) — backend `Pengaturan` selesai, layar menunggu desain UI
+- [x] Semua teks EN lengkap: tes headless tidak menemukan field `en` kosong ([ADR-0004](../../../architecture/adr-0004-lokalisasi.md))
 - [ ] Kata EN terpanjang muat di kartu; uji UI dengan pseudolokalisasi
 - [ ] Safe area untuk notch: beri margin atas di HUD
 

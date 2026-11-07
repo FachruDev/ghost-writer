@@ -27,18 +27,21 @@ func _simpan_hasil(h: Dictionary) -> void:
 
 
 func _naik_era_2() -> void:
-	GameState.tambah_pengikut(200)
+	GameState.tambah_pengikut(int(DataDB.get_upgrade("kantor")["pengikut_min"]))
 	GameState.uang = 1000
 	assert_bool(GameState.beli_upgrade("kantor")).is_true()
 
 
-func test_sewa_kantor_butuh_200_pengikut_dan_400_uang() -> void:
+## Ambang dari balancing/harga.csv (pengikut_min, harga).
+func test_sewa_kantor_butuh_pengikut_dan_uang() -> void:
+	var u := DataDB.get_upgrade("kantor")
 	GameState.uang = 1000
+	GameState.tambah_pengikut(int(u["pengikut_min"]) - 1)
 	assert_bool(GameState.beli_upgrade("kantor")).is_false()
-	GameState.tambah_pengikut(200)
-	GameState.uang = 300
+	GameState.tambah_pengikut(1)
+	GameState.uang = int(u["harga"]) - 1
 	assert_bool(GameState.beli_upgrade("kantor")).is_false()
-	GameState.uang = 400
+	GameState.uang = int(u["harga"])
 	assert_bool(GameState.beli_upgrade("kantor")).is_true()
 	assert_int(GameState.era).is_equal(2)
 	assert_int(GameState.uang).is_equal(0)

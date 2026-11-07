@@ -82,7 +82,7 @@ func test_serangan_mengurangi_reputasi_tokoh() -> void:
 		GameClock.jalankan_tick(1)
 		n += 1
 	if not _hasil["dibongkar"]:
-		assert_int(int(GameState.tokoh_reputasi["sasmita"])).is_equal(maxi(0, 100 - int(_hasil["warga_percaya"])))
+		assert_int(int(GameState.tokoh_reputasi["sasmita"])).is_equal(maxi(0, int(DataDB.tokoh[1]["reputasi"]) - int(_hasil["warga_percaya"])))
 
 
 func test_pengacara_membantah_rumor_yang_kurang_dipercaya() -> void:
@@ -111,13 +111,13 @@ func test_tokoh_jatuh_memberi_hadiah() -> void:
 	_naik_era_4()
 	var tc := _main.get_node("TokohController")
 	var uang := GameState.uang
-	tc.serang(DataDB.tokoh[1], 150)
+	tc.serang(DataDB.tokoh[1], int(DataDB.tokoh[1]["reputasi"]) + 50)
 	assert_int(int(GameState.tokoh_reputasi["sasmita"])).is_equal(0)
 	assert_int(GameState.uang).is_equal(uang + 2000)
 	assert_dict(TokohController.tokoh_dari({"subjek": "tokoh_sasmita"})).is_empty()
 	assert_bool(TokohController.semua_jatuh()).is_false()
-	tc.serang(DataDB.tokoh[0], 100)
-	tc.serang(DataDB.tokoh[2], 100)
+	tc.serang(DataDB.tokoh[0], int(DataDB.tokoh[0]["reputasi"]))
+	tc.serang(DataDB.tokoh[2], int(DataDB.tokoh[2]["reputasi"]))
 	assert_bool(TokohController.semua_jatuh()).is_true()
 
 

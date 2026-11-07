@@ -18,7 +18,7 @@ SFX pendek disimpan di `res://assets/sfx/` sebagai `.wav` (latensi rendah). Semu
 | sfx_buy | Beli di toko | | 0.3.0 | Kenney RPG sounds handleCoins2, CC0, sementara | Selesai |
 | sfx_error | Aksi tidak bisa (uang kurang, slot kosong) | | 0.3.0 | Kenney RPG sounds metalClick, CC0, sementara | Selesai |
 | sfx_dilemma_choice | Memilih opsi event dilema | | 0.3.0 | Kenney UI SFX switch3, CC0, sementara | Selesai |
-| sfx_phone_ring | Event wartawan (era kantor) | | 0.3.0 | | Belum |
+| sfx_phone_ring | Event wartawan (era kantor) | Dua kali "kring" telepon jadul | 0.3.0 | Dibuat prosedural (dua lonceng 1,2/1,8 kHz dipukul 25×/detik), milik proyek | Selesai |
 | sfx_modem / sfx_notif | Saluran medsos (era gedung) | | 0.4.0 | sfx_notif: OpenGameArt ui-sounds-0 #2 (HaelDB), CC0, sementara | Selesai |
 | sfx_server_hum | Ambience era server | Loop pelan | 0.5.0 | Dibuat prosedural (sinus 60/120/180 Hz + desis), milik proyek | Selesai |
 | sfx_era_up | Naik era | Stinger 2–3 detik | 0.5.0 | Kenney 85 Short Music Jingles, jingles_SAX10, CC0, sementara | Selesai |

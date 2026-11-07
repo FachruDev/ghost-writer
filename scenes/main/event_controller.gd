@@ -21,6 +21,7 @@ func _ready() -> void:
 	Events.dilema_dipilih.connect(_on_dilema_dipilih)
 	Events.sim_diganti.connect(func(s: SpreadSim) -> void: sim = s)
 	Events.ancaman_diminta.connect(_on_ancaman_diminta)
+	Events.final_berubah.connect(_on_final_berubah)
 
 
 func sedang_dilema() -> bool:
@@ -65,6 +66,9 @@ func pengali_rumor(kata_ids: Dictionary) -> Dictionary:
 
 func _on_tick(dt: float) -> void:
 	GameState.kurangi_kunci(dt)
+	# Selama kampanye akhir hanya E12 yang berjalan (FinalController).
+	if GameState.final_berjalan:
+		return
 	_sejak_event += dt
 	_sejak_ancaman += dt
 	_sejak_cek += dt
@@ -87,6 +91,15 @@ func _on_tick(dt: float) -> void:
 	if _sejak_cek >= Balance.EVENT_CEK_DETIK:
 		_sejak_cek = 0.0
 		_cek_acak()
+
+
+## Kampanye akhir mulai: event yang berjalan dihentikan diam-diam (banner diganti E12).
+## Selesai: beri jeda sebelum event berikutnya.
+func _on_final_berubah() -> void:
+	_aktif = {}
+	_ancaman = {}
+	_sejak_event = 0.0
+	_sejak_ancaman = 0.0
 
 
 func _cek_ancaman() -> void:

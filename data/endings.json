@@ -1,0 +1,24 @@
+[
+  {
+    "id": "menang",
+    "judul": {
+      "id": "Imperium Kabar Burung",
+      "en": "The Rumor Empire"
+    },
+    "epilog": {
+      "id": "Kini seluruh kota bangun tiap pagi dengan satu pertanyaan: apa kata kamu hari ini? Koran, radio, dan grup arisan menyalin headline-mu kata demi kata, termasuk salah ketiknya. Pak Hartono pindah ke luar kota, Bu Sasmita membuka kursus \"Bertahan dari Gosip\", dan Juragan Bramantyo kini berlangganan kabarmu. Tidak ada lagi yang ingat mana yang fakta, dan anehnya, tidak ada yang keberatan.",
+      "en": "Now the whole city wakes up with one question: what are you saying today? Newspapers, radio, and the savings club copy your headlines word for word, typos included. Pak Hartono left town, Bu Sasmita teaches \"Surviving Gossip 101\", and Juragan Bramantyo is your newest subscriber. Nobody remembers what was true anymore, and strangely, nobody minds."
+    }
+  },
+  {
+    "id": "kalah",
+    "judul": {
+      "id": "Kota Mati Rasa",
+      "en": "The Numb City"
+    },
+    "epilog": {
+      "id": "Kota akhirnya berhenti percaya pada apa pun: rumor, berita, bahkan ramalan cuaca. Warga mengangguk sopan pada setiap kabar, lalu melupakannya sebelum sampai di ujung gang. Mesin tik-mu masih berbunyi, tapi yang mendengarkan tinggal kucing oren. Selamat, kamu menciptakan kota paling tenang sekaligus paling membosankan yang pernah ada.",
+      "en": "The city finally stopped believing anything: rumors, news, even the weather forecast. People nod politely at every story, then forget it before reaching the end of the alley. Your typewriter still clacks, but only the orange cat is listening. Congratulations: you built the calmest, most boring city that ever existed."
+    }
+  }
+]

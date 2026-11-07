@@ -27,13 +27,15 @@ static func akhir_rumor(skor: Dictionary, warga_percaya: int, heat: float, rng: 
 	if dibongkar:
 		return {
 			"dibongkar": true,
-			"kredibilitas": -(Balance.KRED_TURUN_DIBONGKAR + float(skor["heboh_total"])),
+			"kredibilitas": -(Balance.KRED_TURUN_DIBONGKAR + float(skor["heboh_total"]) * Balance.KRED_TURUN_PER_HEBOH),
 			"heat": Balance.HEAT_DIBONGKAR,
 			"pengikut": 0,
 		}
 	return {
 		"dibongkar": false,
-		"kredibilitas": Balance.KRED_NAIK if dipercaya >= Balance.KRED_NAIK_MIN_DIPERCAYA else 0.0,
+		# Dipercaya dasar (dari kartu), bukan akhir: rumor dari kartu kredibel memulihkan nama baik
+		# walau kredibilitas sedang rendah. Tanpa ini kredibilitas 0 tidak bisa naik lagi.
+		"kredibilitas": Balance.KRED_NAIK if float(skor["dipercaya"]) >= Balance.KRED_NAIK_MIN_DIPERCAYA else 0.0,
 		"heat": 0.0,
 		"pengikut": pengikut_dari_warga(warga_percaya),
 	}

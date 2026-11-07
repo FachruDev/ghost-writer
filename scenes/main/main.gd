@@ -7,6 +7,7 @@ const CITY := preload("res://scenes/city/city.tscn")
 const DESK := preload("res://scenes/desk/desk.tscn")
 const HAND := preload("res://scenes/hand/hand.tscn")
 const SHOP := preload("res://scenes/ui/shop.tscn")
+const ENDING := preload("res://scenes/ui/ending.tscn")
 
 const UKURAN_FONT := 24
 const RASIO := {"hud": 0.1, "city": 0.43, "desk": 0.27, "hand": 0.2}
@@ -44,6 +45,10 @@ func _ready() -> void:
 	kontrak.name = "CampaignController"
 	kontrak.sim = rumor.sim
 	add_child(kontrak)
+	var final := FinalController.new()
+	final.name = "FinalController"
+	final.sim = rumor.sim
+	add_child(final)
 	var misi := MissionController.new()
 	misi.name = "MissionController"
 	add_child(misi)
@@ -62,6 +67,16 @@ func _ready() -> void:
 	_tambah(tata, DESK.instantiate(), RASIO["desk"])
 	_tambah(tata, HAND.instantiate(), RASIO["hand"])
 	add_child(SHOP.instantiate())
+	add_child(ENDING.instantiate())
+	_umumkan_offline.call_deferred()
+
+
+## Uang yang dikumpulkan staf selama aplikasi tertutup tampil sekali di feed.
+func _umumkan_offline() -> void:
+	var uang := int(SaveSystem.offline.get("uang", 0))
+	if uang > 0:
+		Events.feed_baru.emit({"jenis": "offline", "uang": uang, "detik": float(SaveSystem.offline["detik"])})
+		SaveSystem.offline = {}
 
 
 func _tambah(induk: Control, anak: Control, rasio: float) -> Control:

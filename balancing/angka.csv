@@ -1,0 +1,55 @@
+kunci,nilai,catatan
+PENGALI_COCOK_SAMA,1.5,Emosi headline sama dengan emosi favorit distrik
+PENGALI_COCOK_NETRAL,1.0,Distrik atau kata netral
+PENGALI_COCOK_BEDA,0.9,Emosi berbeda tapi bukan lawan
+PENGALI_COCOK_LAWAN,0.6,"Emosi lawan (lucu-takut, marah-iri)"
+BATAS_HEBOH_AMAN,6,Total heboh di atas ini mulai mengurangi dipercaya
+PENALTI_PER_HEBOH,0.05,Dipercaya berkurang per poin heboh di atas batas aman
+DIPERCAYA_MIN,0.1,Batas bawah dipercaya
+DIPERCAYA_MAKS,1.0,Batas atas dipercaya
+KREDIBILITAS_AWAL,50,Kredibilitas saat mulai baru (0-100)
+PELUANG_TULAR_DASAR,0.025,Peluang dasar tiap tetangga tertular per tick
+TETANGGA_PER_WARGA,6,Jumlah tetangga terdekat tiap warga
+DURASI_MENULAR_DETIK,1.2,Lama warga yang baru percaya ikut bercerita
+RUMOR_MAKS_DETIK,25,Rumor paling lama berjalan
+RUMOR_DIAM_DETIK,3,Rumor selesai kalau tidak ada yang baru dengar selama ini
+PENGALI_PERCAYA_RAGU,0.5,Warga ragu lebih sulit percaya
+RAGU_PULIH_PER_DETIK,1/60,Peluang per detik warga ragu kembali belum dengar (±1 menit)
+DURASI_MENULAR_RAGU_DETIK,1.0,"Warga ragu tetap ikut bercerita (""eh, katanya sih..."")"
+KEBAL_PULIH_PER_DETIK,1/180,Peluang per detik warga kebal pulih (±3 menit); berhenti saat E12
+HEAT_FAKTOR_KIRIM,1.5,Heat per kiriman = heboh total x faktor ini x pengali saluran
+HEAT_TURUN_PER_DETIK,0.3,Heat turun sendiri
+HEAT_DIBONGKAR,10,Heat naik saat rumor dibongkar
+BONGKAR_DASAR,0.3,Bagian peluang dibongkar dari rumor yang kurang dipercaya
+BONGKAR_DARI_HEAT,0.7,Bagian peluang dibongkar dari heat
+KRED_TURUN_DIBONGKAR,5,Kredibilitas turun saat dibongkar = nilai ini + heboh total x KRED_TURUN_PER_HEBOH
+KRED_TURUN_PER_HEBOH,0.5,Tambahan penurunan kredibilitas per poin heboh saat dibongkar
+PERSEN_KEBAL_DIBONGKAR,0.5,Bagian pemercaya rumor yang jadi kebal saat dibongkar
+KRED_NAIK,1,Kredibilitas naik saat rumor sangat dipercaya tidak dibongkar
+KRED_NAIK_MIN_DIPERCAYA,0.7,Ambang dipercaya dasar (dari kartu) untuk kredibilitas naik
+KRED_PULIH_PER_DETIK,0.1,"Orang lupa: kredibilitas di bawah batas pulih sendiri (6 per menit)"
+KRED_PULIH_SAMPAI,50,Batas pemulihan kredibilitas otomatis
+WARGA_PER_PENGIKUT,12,Tiap kelipatan warga percaya dalam satu rumor = 1 pengikut
+PELUANG_MUTASI,0.02,Peluang mutasi tiap warga baru dengar
+PENGIKUT_PER_MUTASI,3,Pengikut tambahan tiap mutasi
+EVENT_CEK_DETIK,10,Event acak dicek tiap ... detik
+EVENT_JEDA_DETIK,180,Jeda minimal antar event acak
+ANCAMAN_JEDA_DETIK,120,Jeda minimal antar ancaman
+KONTRAK_JEDA_DETIK,240,Tawaran kontrak muncul tiap ... detik (Era 3)
+KONTRAK_DURASI_DETIK,180,Batas waktu kontrak
+KONTRAK_PERSEN,0.5,Bagian warga percaya yang harus dicapai di tiap distrik target
+KONTRAK_UANG,600,Hadiah uang kontrak berhasil
+KONTRAK_PENGIKUT,60,Hadiah pengikut kontrak berhasil
+KONTRAK_KRED_GAGAL,10,Kredibilitas turun kalau kontrak gagal
+FINAL_DURASI_DETIK,300,Batas waktu kampanye akhir
+FINAL_TULAR_KEBAL_DETIK,10,E12: kebal menular tiap ... detik
+FINAL_PELUANG_TULAR_KEBAL,0.5,E12: peluang tiap warga kebal menulari 1 tetangga (belum dengar/ragu) tiap putaran
+FINAL_BENIH_KEBAL,0.05,E12: bagian warga yang langsung kebal saat kampanye akhir dimulai
+FINAL_PENGALI_PERCAYA,0.75,E12: peluang warga percaya saat tertular dikali ini selama kampanye akhir
+FINAL_TARGET_PERCAYA,0.6,Menang: bagian warga kota yang percaya sekaligus
+FINAL_BATAS_KEBAL,0.5,Kalah: bagian warga kota yang kebal
+UANG_AWAL,0,Uang saat mulai baru
+UANG_PER_WARGA,2,Uang per warga yang percaya
+OFFLINE_MAKS_DETIK,28800,Penghasilan offline dihitung paling lama 8 jam
+OFFLINE_PENGALI,0.5,Penghasilan offline = laju staf x waktu x pengali ini
+OFFLINE_DIPERCAYA_RATA,0.6,Dipercaya rata-rata rumor staf untuk rumus offline

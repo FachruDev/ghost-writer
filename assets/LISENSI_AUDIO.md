@@ -19,3 +19,6 @@ Semua audio di `assets/sfx/` dan `assets/music/` saat ini adalah **placeholder C
 | sfx_era_up.ogg | https://opengameart.org/content/85-short-music-jingles (jingles_SAX10) | Kenney (kenney.nl) | CC0 |
 | mus_era4_server.mp3 | https://opengameart.org/content/calm-relax-1-synthwave-421k (lifewave.mp3) | cynicmusic | CC0 |
 | sfx_server_hum.wav | Dibuat prosedural untuk proyek ini (sinus 60/120/180 Hz + desis teredam) | Ghostwriter | milik proyek |
+| mus_ending.ogg | https://opengameart.org/content/4-music-box-tracks (musicbox3_sad_tune.ogg) | Aureolus_Omicron | CC0 |
+| mus_threat.ogg | https://opengameart.org/content/panic-mode (panic.ogg) | Bread | CC0 |
+| sfx_phone_ring.wav | Dibuat prosedural untuk proyek ini (dua lonceng 1,2/1,8 kHz, 25 pukulan per detik) | Ghostwriter | milik proyek |

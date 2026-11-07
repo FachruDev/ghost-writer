@@ -6,7 +6,7 @@
       "id": "Pak Hartono",
       "en": "Mayor Hartono"
     },
-    "reputasi": 100,
+    "reputasi": 1000,
     "pertahanan": {
       "tipe": "pengacara",
       "dipercaya_min": 0.6
@@ -27,7 +27,7 @@
       "id": "Bu Sasmita",
       "en": "Director Sasmita"
     },
-    "reputasi": 100,
+    "reputasi": 1000,
     "pertahanan": {
       "tipe": "humas",
       "heat_kali": 2.0
@@ -48,7 +48,7 @@
       "id": "Juragan Bramantyo",
       "en": "Mogul Bramantyo"
     },
-    "reputasi": 100,
+    "reputasi": 1000,
     "pertahanan": {
       "tipe": "media",
       "event": "e_rumor_tandingan"

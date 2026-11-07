@@ -1,6 +1,6 @@
 extends Node
 ## Satu-satunya tempat angka pemain disimpan; scene membaca dari sini.
-## ke_dict()/dari_dict() dipakai SaveSystem (ADR-0002). Konten selalu dirujuk lewat ID.
+## Serialisasi untuk SaveSystem ada di StateSerial (ADR-0002).
 
 var uang: int = 0
 var pengikut: int = 0
@@ -24,6 +24,10 @@ var distrik_status: Dictionary = {}
 var riwayat_rumor: Array = []
 var riwayat_event: Array = []
 var statistik: Dictionary = {}
+## Hasil kampanye akhir terakhir: "" (belum), "menang", atau "kalah". Disimpan.
+var hasil_akhir: String = ""
+## Kampanye akhir sedang berjalan (FinalController). Tidak disimpan, seperti kontrak (ADR-0003).
+var final_berjalan := false
 
 
 func _ready() -> void:
@@ -58,7 +62,9 @@ func mulai_baru() -> void:
 	distrik_status = {}
 	riwayat_rumor = []
 	riwayat_event = []
-	statistik = _statistik_kosong()
+	statistik = StateSerial.statistik_kosong()
+	hasil_akhir = ""
+	final_berjalan = false
 	_umumkan_semua()
 
 
@@ -198,6 +204,11 @@ func beli_template(id: String) -> bool:
 
 func catat_rumor(entri: Dictionary) -> void:
 	riwayat_rumor.append(entri)
+	var terbaik: Variant = statistik.get("rumor_terbaik")
+	var warga := int(entri.get("warga_percaya", 0))
+	if not entri.get("dibongkar", false) and (terbaik == null or warga > int(terbaik.get("warga_percaya", 0))):
+		statistik["rumor_terbaik"] = {"template_id": entri.get("template_id", ""),
+			"kata_ids": entri.get("kata_ids", {}), "warga_percaya": warga}
 	while riwayat_rumor.size() > Balance.BATAS_RIWAYAT:
 		riwayat_rumor.pop_front()
 
@@ -209,72 +220,13 @@ func catat_event(event_id: String) -> void:
 
 
 func ke_dict() -> Dictionary:
-	return {
-		"pemain": {
-			"uang": uang, "pengikut": pengikut, "kredibilitas": kredibilitas, "heat": heat,
-			"era": era, "waktu_main_detik": waktu_main_detik, "misi_idx": misi_idx,
-		},
-		"kartu_dimiliki": kartu_dimiliki.duplicate(),
-		"template_dimiliki": template_dimiliki.duplicate(),
-		"upgrade_dimiliki": upgrade_dimiliki.duplicate(),
-		"kartu_sementara": kartu_sementara.duplicate(),
-		"tokoh_reputasi": tokoh_reputasi.duplicate(),
-		"distrik_status": distrik_status.duplicate(true),
-		"riwayat_rumor": riwayat_rumor.duplicate(true),
-		"riwayat_event": riwayat_event.duplicate(true),
-		"statistik": statistik.duplicate(true),
-	}
+	return StateSerial.ke_dict(self)
 
 
-## Angka dari JSON terbaca sebagai float; semua bilangan bulat di-cast (ADR-0002).
-## ID yang tidak lagi ada di res://data/ diabaikan.
 func dari_dict(data: Dictionary) -> void:
-	var p: Dictionary = data.get("pemain", {})
-	uang = int(p.get("uang", 0))
-	pengikut = int(p.get("pengikut", 0))
-	kredibilitas = float(p.get("kredibilitas", Balance.KREDIBILITAS_AWAL))
-	heat = float(p.get("heat", 0.0))
-	era = int(p.get("era", 1))
-	waktu_main_detik = float(p.get("waktu_main_detik", 0.0))
-	misi_idx = int(p.get("misi_idx", 0))
-	kartu_dimiliki.clear()
-	for id in data.get("kartu_dimiliki", []):
-		if DataDB.words.has(str(id)):
-			kartu_dimiliki.append(str(id))
-	template_dimiliki.clear()
-	for id in data.get("template_dimiliki", []):
-		if DataDB.templates.has(str(id)):
-			template_dimiliki.append(str(id))
-	upgrade_dimiliki = {}
-	var upgrade: Dictionary = data.get("upgrade_dimiliki", {})
-	for id in upgrade:
-		if DataDB.upgrades.has(str(id)):
-			upgrade_dimiliki[str(id)] = int(upgrade[id])
-	kartu_sementara = {}
-	var sementara: Dictionary = data.get("kartu_sementara", {})
-	for id in sementara:
-		if DataDB.words.has(str(id)):
-			kartu_sementara[str(id)] = int(sementara[id])
-	saluran_terkunci = {}
-	tokoh_reputasi = {}
-	var rep: Dictionary = data.get("tokoh_reputasi", {})
-	for id in rep:
-		tokoh_reputasi[str(id)] = int(rep[id])
-	distrik_status = data.get("distrik_status", {})
-	riwayat_rumor = data.get("riwayat_rumor", [])
-	riwayat_event = data.get("riwayat_event", [])
-	statistik = _statistik_kosong()
-	statistik.merge(data.get("statistik", {}), true)
-	for k in ["total_rumor", "total_uang", "total_dibongkar", "kata_dibeli", "rekor_warga"]:
-		statistik[k] = int(statistik[k])
+	StateSerial.dari_dict(self, data)
+	final_berjalan = false
 	_umumkan_semua()
-
-
-func _statistik_kosong() -> Dictionary:
-	return {
-		"total_rumor": 0, "total_uang": 0, "total_dibongkar": 0, "kata_dibeli": 0,
-		"rekor_warga": 0, "emosi_distrik": [], "rumor_terbaik": null, "event_sekali": [],
-	}
 
 
 func _bayar(item: Dictionary) -> bool:

@@ -1,11 +1,14 @@
 extends PanelContainer
-## HUD: uang, pengikut, kredibilitas & heat, misi aktif, tombol bahasa dan toko.
+## HUD: uang, pengikut, kredibilitas & heat, tombol bahasa dan toko. Baris kedua menampilkan satu
+## hal terpenting: kampanye akhir, kontrak, tokoh, atau misi aktif.
 
 var _label_uang: Label
 var _label_pengikut: Label
 var _label_reputasi: Label
 var _label_misi: Label
+var _tombol_final: Button
 var _teks_kontrak := ""
+var _teks_final := ""
 
 
 func _ready() -> void:
@@ -23,7 +26,14 @@ func _ready() -> void:
 	tombol_bahasa.pressed.connect(func() -> void: Bahasa.atur("en" if Bahasa.kode() == "id" else "id"))
 	var tombol_toko := _tombol("UI_TOKO", baris)
 	tombol_toko.pressed.connect(func() -> void: Events.toko_diminta.emit(true))
-	_label_misi = _label(kotak)
+	var baris_2 := HBoxContainer.new()
+	kotak.add_child(baris_2)
+	_label_misi = _label(baris_2)
+	_label_misi.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_label_misi.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_tombol_final = _tombol("UI_FINAL_TOMBOL", baris_2)
+	Palet.gaya_tombol(_tombol_final, Palet.AKSEN)
+	_tombol_final.pressed.connect(func() -> void: Events.final_diminta.emit())
 	_label_misi.add_theme_font_size_override("font_size", 20)
 	_label_misi.add_theme_color_override("font_color", Palet.emosi("lucu"))
 	Events.money_changed.connect(func(_u: int) -> void: _segarkan())
@@ -34,6 +44,10 @@ func _ready() -> void:
 	Events.kontrak_berubah.connect(func(teks: String) -> void:
 		_teks_kontrak = teks
 		_segarkan())
+	Events.final_progres.connect(func(teks: String) -> void:
+		_teks_final = teks
+		_segarkan())
+	Events.final_berubah.connect(_segarkan)
 	Bahasa.bahasa_berubah.connect(func(_k: String) -> void: _segarkan())
 	_segarkan()
 
@@ -43,8 +57,18 @@ func _segarkan() -> void:
 	_label_pengikut.text = tr("UI_PENGIKUT") % Bahasa.angka(GameState.pengikut)
 	_label_reputasi.text = tr("UI_KRED_HEAT") % [roundi(GameState.kredibilitas), roundi(GameState.heat)]
 	_label_reputasi.add_theme_color_override("font_color", Palet.emosi("marah") if GameState.heat >= 70.0 else Palet.TEKS_REDUP)
+	_tombol_final.visible = FinalController.bisa_mulai()
+	if not _teks_final.is_empty():
+		_label_misi.text = _teks_final
+		return
 	if not _teks_kontrak.is_empty():
 		_label_misi.text = _teks_kontrak
+		return
+	if _tombol_final.visible:
+		_label_misi.text = tr("UI_FINAL_ULANG" if GameState.hasil_akhir == "kalah" else "UI_FINAL_SIAP")
+		return
+	if GameState.hasil_akhir == "menang":
+		_label_misi.text = tr("UI_FINAL_BEBAS")
 		return
 	if not GameState.tokoh_reputasi.is_empty() and not TokohController.semua_jatuh():
 		_label_misi.text = tr("UI_TOKOH") % TokohController.teks_progres()
