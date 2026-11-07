@@ -4,6 +4,8 @@ extends Control
 ## garis = tetangga (jalur tular), gugus distrik bercahaya warna emosi favoritnya.
 ## Posisi diambil dari SpreadSim lalu disusutkan ke pusat distrik supaya antar-gugus ada celah.
 ## Tap gugus -> Events.distrik_dipilih.
+## Digambar ulang hanya saat status warga berubah, pilihan/bahasa/ukuran berubah, atau selama ada
+## animasi (rumor menjalar, gelembung baru) — bukan setiap frame (hemat baterai HP kelas bawah).
 
 const SUSUT := 0.78
 const PAD := 16.0
@@ -11,13 +13,18 @@ const JARAK_GRID := 32.0
 const GARIS_PER_WARGA := 2
 const UMUR_GELEMBUNG := 2.5
 
-var dipilih := ""
+var dipilih := "":
+	set(v):
+		dipilih = v
+		queue_redraw()
 
 var _sim: SpreadSim
 var _waktu := 0.0
 var _cahaya: GradientTexture2D
 var _font: Font
 var _gaya_label: StyleBoxFlat
+var _jejak := 0  # hash status warga terakhir yang digambar
+var _animasi_sampai := 0.0  # detik (jam dinding) sampai animasi gelembung selesai
 
 
 func _ready() -> void:
@@ -35,16 +42,34 @@ func _ready() -> void:
 	_cahaya.fill_to = Vector2(1.0, 0.5)
 	_cahaya.width = 128
 	_cahaya.height = 128
+	Events.warga_berubah.connect(_on_warga_berubah)
+	Bahasa.bahasa_berubah.connect(func(_k: String) -> void: queue_redraw())
+	resized.connect(queue_redraw)
 
 
 func atur_sim(sim: SpreadSim) -> void:
 	_sim = sim
+	_jejak = 0
 	queue_redraw()
+
+
+## warga_berubah dipancarkan tiap tick; gambar ulang hanya kalau ada status yang benar-benar berubah.
+func _on_warga_berubah() -> void:
+	if _sim == null:
+		return
+	var h := hash(_sim.status)
+	if h != _jejak:
+		_jejak = h
+		_animasi_sampai = Time.get_ticks_msec() / 1000.0 + UMUR_GELEMBUNG
+		queue_redraw()
 
 
 func _process(delta: float) -> void:
-	_waktu += delta
-	queue_redraw()
+	if _sim == null:
+		return
+	if _sim.ada_rumor_aktif() or Time.get_ticks_msec() / 1000.0 < _animasi_sampai:
+		_waktu += delta
+		queue_redraw()
 
 
 ## Pusat gugus distrik dalam koordinat lokal (dipakai untuk uang melayang).

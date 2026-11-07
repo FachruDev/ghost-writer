@@ -65,9 +65,10 @@ func _ready() -> void:
 	var kolom := UiKit.kolom(null, 24)
 	kolom.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(kolom)
-	var m := UiKit.margin(kolom, 40, 220, 40, 0)
+	var inset := UiKit.inset_aman(self)
+	var m := UiKit.margin(kolom, 40, 200 + roundi(inset.x), 40, 0)
 	var atas := UiKit.kolom(m, 12)
-	var logo := UiKit.label(atas, 88, Color.WHITE, Tema.font_judul(), "GHOSTWRITER")
+	var logo := UiKit.label(atas, 88, Color.WHITE, Tema.font_judul(), tr("UI_JUDUL_GAME"))
 	logo.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	logo.add_theme_color_override("font_shadow_color", Palet.PINK)
 	logo.add_theme_constant_override("shadow_offset_x", 0)
@@ -90,7 +91,7 @@ func _ready() -> void:
 	hantu.set_anchor(SIDE_LEFT, 0.5)
 	hantu.set_anchor(SIDE_TOP, 0.5)
 	panggung.add_child(hantu)
-	var bawah := UiKit.margin(kolom, 40, 0, 40, 48)
+	var bawah := UiKit.margin(kolom, 40, 0, 40, 48 + roundi(inset.y))
 	var menu := UiKit.kolom(bawah, 24)
 	_lanjut = UiKit.tombol_utama(menu, "", Palet.PINK, Palet.PINK_GELAP, Color.WHITE, 124)
 	_lanjut.pressed.connect(func() -> void: get_tree().change_scene_to_file(MAIN))
@@ -106,9 +107,9 @@ func _ready() -> void:
 	_fiktif = UiKit.label(kaki, 22, Palet.TEKS_REDUP, Tema.font_ui(500))
 	_fiktif.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_fiktif.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_id = UiKit.tombol(kaki, "ID", Palet.PANEL, Palet.PANEL, 24, Tema.font_ui(700), 76)
+	_id = UiKit.tombol(kaki, tr("UI_KODE_ID"), Palet.PANEL, Palet.PANEL, 24, Tema.font_ui(700), 88)
 	_id.pressed.connect(func() -> void: Bahasa.atur("id"))
-	_en = UiKit.tombol(kaki, "EN", Palet.PANEL, Palet.PANEL, 24, Tema.font_ui(700), 76)
+	_en = UiKit.tombol(kaki, tr("UI_KODE_EN"), Palet.PANEL, Palet.PANEL, 24, Tema.font_ui(700), 88)
 	_en.pressed.connect(func() -> void: Bahasa.atur("en"))
 	add_child(PENGATURAN.new())
 	_ada_save = FileAccess.file_exists(SaveSystem.PATH) and int(GameState.statistik.get("total_rumor", 0)) > 0
@@ -137,3 +138,14 @@ func _on_baru() -> void:
 		return
 	SaveSystem.reset_progres()
 	get_tree().change_scene_to_file(MAIN)
+
+
+## Tombol Back Android: tutup Pengaturan kalau terbuka, selain itu keluar dari game.
+func _notification(what: int) -> void:
+	if what != NOTIFICATION_WM_GO_BACK_REQUEST:
+		return
+	for i in range(get_child_count() - 1, -1, -1):
+		var lapisan := get_child(i) as Lembar
+		if lapisan and lapisan.tangani_back():
+			return
+	get_tree().quit()

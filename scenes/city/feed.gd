@@ -45,7 +45,7 @@ func _gambar() -> void:
 	# Kabar terbaru di paling bawah, dekat jempol.
 	for k in range(jumlah - 1, -1, -1):
 		_baris(_entri[k], k == 0)
-	reset_size()
+	size = Vector2(size.x, 0.0)
 	if get_parent() is Control:
 		position.y = (get_parent() as Control).size.y - size.y - 56.0
 

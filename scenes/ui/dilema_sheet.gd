@@ -44,10 +44,14 @@ func _bangun_isi() -> void:
 	Events.event_mulai.connect(_on_event)
 	Events.event_tampil.connect(_on_event)
 	Events.event_selesai.connect(func(_id: String) -> void: tutup())
+	Events.money_changed.connect(func(_u: int) -> void:
+		if visible and not _kontrak():
+			_segarkan())
 
 
 func _on_event(info: Dictionary) -> void:
 	if info.get("pilihan", []).is_empty():
+		tutup()  # pengendali sudah lanjut ke event lain (mis. ancaman yang tertunda)
 		return
 	_info = info
 	buka()
@@ -94,16 +98,25 @@ func _isi_dilema() -> void:
 	var data := _event_data()
 	var opsi: Array = data.get("pilihan", [])
 	var label: Array = _info.get("pilihan", [])
+	var biaya: Array = _info.get("biaya", [])
 	for i in label.size():
 		var efek: Array = opsi[i].get("efek", []) if i < opsi.size() else []
-		_kartu_pilihan(i, Bahasa.teks(label[i]), efek)
+		var harga := int(biaya[i]) if i < biaya.size() else (EventController.biaya_pilihan(opsi[i]) if i < opsi.size() else 0)
+		_kartu_pilihan(i, Bahasa.teks(label[i]), efek, harga <= GameState.uang)
 
 
-func _kartu_pilihan(i: int, teks: String, efek: Array) -> void:
+## terjangkau = false: uang kurang untuk pilihan berbayar; tombol dimatikan (dilema tetap terbuka).
+func _kartu_pilihan(i: int, teks: String, efek: Array, terjangkau: bool) -> void:
 	var b := Button.new()
 	b.custom_minimum_size = Vector2(0, 210)
 	b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	Palet.gaya_tombol(b, Palet.MALAM, Color("120e26"), Palet.TEKS, 36)
+	b.disabled = not terjangkau
+	if not terjangkau:
+		var mati := Palet.kotak(Color.TRANSPARENT, Palet.GARIS, 36)
+		b.add_theme_stylebox_override("disabled", mati)
+		b.modulate.a = 0.55
+		b.tooltip_text = tr("UI_KURANG")
 	b.pressed.connect(_pilih.bind(i))
 	_pilihan.add_child(b)
 	var k := UiKit.kolom(null, 16)
@@ -194,6 +207,7 @@ func _event_data() -> Dictionary:
 	return {}
 
 
+## Lembar ditutup oleh event_selesai/event_tampil dari pengendali, bukan di sini: kalau pilihan
+## ditolak (uang kurang), dilema dan jeda tetap berjalan dan lembar harus tetap terbuka.
 func _pilih(i: int) -> void:
-	tutup()
 	Events.dilema_dipilih.emit(i)

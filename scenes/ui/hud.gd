@@ -29,6 +29,8 @@ var _staf_label: Label
 var _staf_cincin: Cincin
 var _strip: HudStrip
 var _kontrak: PanelContainer
+var _kontrak_tag: Label
+var _menu: Button
 var _kontrak_teks: Label
 var _kontrak_waktu: Label
 var _info_final: Dictionary = {}
@@ -65,6 +67,7 @@ func _ready() -> void:
 func _baris_atas(induk: Control) -> void:
 	var baris := UiKit.baris(induk, 12)
 	var menu := Button.new()
+	_menu = menu
 	menu.custom_minimum_size = Vector2(88, 88)
 	menu.tooltip_text = tr("UI_MENU")
 	Palet.gaya_tombol(menu, Palet.PANEL_2, Palet.PANEL)
@@ -109,7 +112,7 @@ func _pil_sumber(induk: Control, warna: Color, bayang: Color, ikon_nama: String)
 	(koin.get_theme_stylebox("panel") as StyleBoxFlat).set_content_margin_all(4)
 	isi.add_child(koin)
 	if ikon_nama.is_empty():
-		var r := UiKit.label(koin, 24, Palet.TINTA, Tema.font_ui(700), "R")
+		var r := UiKit.label(koin, 24, Palet.TINTA, Tema.font_ui(700), tr("UI_SIMBOL_UANG"))
 		r.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		r.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	else:
@@ -164,6 +167,7 @@ func _bangun_kontrak(induk: Control) -> void:
 	var isi := UiKit.baris(_kontrak, 12)
 	var tag := UiKit.pil(isi, tr("UI_KONTRAK_TAG"), Palet.CYAN)
 	tag.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	_kontrak_tag = tag.get_child(0)
 	_kontrak_teks = UiKit.label(isi, 24, Palet.TEKS, Tema.font_ui(600))
 	_kontrak_teks.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_kontrak_teks.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
@@ -172,6 +176,8 @@ func _bangun_kontrak(induk: Control) -> void:
 
 
 func _segarkan() -> void:
+	_menu.tooltip_text = tr("UI_MENU")
+	_kontrak_tag.text = tr("UI_KONTRAK_TAG")
 	_era.text = tr("UI_ERA_PENDEK") % GameState.era
 	_era_nama.text = tr("UI_ERA_NAMA_%d" % clampi(GameState.era, 1, 4))
 	_uang.text = Bahasa.angka(GameState.uang)

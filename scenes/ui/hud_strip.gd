@@ -12,7 +12,7 @@ var _panah: TextureRect
 
 
 func _ready() -> void:
-	custom_minimum_size = Vector2(0, 60)
+	custom_minimum_size = Vector2(0, 88)
 	for nama in ["normal", "hover", "pressed", "hover_pressed", "disabled", "focus"]:
 		var g := Palet.kotak(Palet.PANEL if nama != "pressed" else Palet.PANEL_2, Color.TRANSPARENT, 20)
 		g.set_content_margin_all(10)

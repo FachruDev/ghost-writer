@@ -5,6 +5,7 @@ extends Lembar
 const UPGRADE_ERA := {2: "kantor", 3: "gedung_media", 4: "menara_server"}
 
 var _era_dilihat := 0
+var _lencana: Label
 var _hantu: Hantu
 var _angka: Label
 var _nama: Label
@@ -19,28 +20,35 @@ func _init() -> void:
 
 
 func _bangun_isi() -> void:
-	isi.alignment = BoxContainer.ALIGNMENT_CENTER
-	var lencana := UiKit.pil(isi, "", Palet.KUNING, Palet.TINTA, 26)
+	# Isi digulir (layar 16:9, bahasa Inggris lebih panjang); tombol AYO KERJA! selalu terlihat di bawah.
+	var gulir := ScrollContainer.new()
+	gulir.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	gulir.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	isi.add_child(gulir)
+	var konten := UiKit.kolom(gulir, 18)
+	konten.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	var lencana := UiKit.pil(konten, "", Palet.KUNING, Palet.TINTA, 26)
 	lencana.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	_lencana = lencana.get_child(0)
 	_hantu = Hantu.new()
 	_hantu.suasana = Hantu.Suasana.GIRANG
-	_hantu.custom_minimum_size = Vector2(0, 260)
-	isi.add_child(_hantu)
-	_angka = UiKit.label(isi, 96, Palet.TEKS, Tema.font_judul())
+	_hantu.custom_minimum_size = Vector2(0, 180)
+	konten.add_child(_hantu)
+	_angka = UiKit.label(konten, 88, Palet.TEKS, Tema.font_judul())
 	_angka.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_angka.add_theme_color_override("font_shadow_color", Palet.PINK)
 	_angka.add_theme_constant_override("shadow_offset_y", 8)
 	_angka.add_theme_constant_override("shadow_offset_x", 0)
-	_nama = UiKit.label(isi, 34, Palet.TEKS, Tema.font_ui(600))
+	_nama = UiKit.label(konten, 34, Palet.TEKS, Tema.font_ui(600))
 	_nama.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	var kotak := UiKit.panel(isi, Palet.PANEL, 36, 24)
+	var kotak := UiKit.panel(konten, Palet.PANEL, 36, 24)
 	_daftar = UiKit.kolom(kotak, 14)
 	_jalur = HFlowContainer.new()
 	_jalur.alignment = FlowContainer.ALIGNMENT_CENTER
 	_jalur.add_theme_constant_override("h_separation", 10)
 	_jalur.add_theme_constant_override("v_separation", 10)
-	isi.add_child(_jalur)
-	_berikut = UiKit.label(isi, 22, Palet.TEKS_REDUP, Tema.font_ui(500))
+	konten.add_child(_jalur)
+	_berikut = UiKit.label(konten, 22, Palet.TEKS_REDUP, Tema.font_ui(500))
 	_berikut.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_berikut.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_ayo = UiKit.tombol_utama(isi, "")
@@ -61,7 +69,7 @@ func _on_era(era: int) -> void:
 
 func _segarkan() -> void:
 	var era := GameState.era
-	(isi.get_child(0).get_child(0) as Label).text = tr("UI_NAIK_ERA")
+	_lencana.text = tr("UI_NAIK_ERA")
 	_angka.text = tr("UI_ERA_PENDEK") % era
 	_nama.text = tr("UI_ERA_NAMA_%d" % clampi(era, 1, 4))
 	for anak in _daftar.get_children() + _jalur.get_children():
@@ -124,7 +132,7 @@ func _terbuka(era: int) -> Array[String]:
 		if int(DataDB.templates[id].get("era_min", 1)) == era:
 			template += 1
 	if kata > 0:
-		hasil.append(tr("UI_N_KATA") % kata)
+		hasil.append(tr("UI_N_KATA_1") if kata == 1 else tr("UI_N_KATA") % kata)
 	if template > 0:
-		hasil.append(tr("UI_N_TEMPLATE") % template)
+		hasil.append(tr("UI_N_TEMPLATE_1") if template == 1 else tr("UI_N_TEMPLATE") % template)
 	return hasil

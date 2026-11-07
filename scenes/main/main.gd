@@ -16,6 +16,7 @@ const LAPISAN := [
 	preload("res://scenes/ui/pengaturan_layar.gd"),
 ]
 const SHOP := preload("res://scenes/ui/shop.tscn")
+const JUDUL := "res://scenes/ui/judul.tscn"
 const ENDING := preload("res://scenes/ui/ending.tscn")
 
 ## Tepi kiri-kanan isi layar (12 px kanvas).
@@ -65,7 +66,7 @@ func _ready() -> void:
 	tata.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	tata.add_theme_constant_override("separation", 14)
 	add_child(tata)
-	var atas := UiKit.margin(tata, TEPI, 20, TEPI, 0)
+	var atas := UiKit.margin(tata, TEPI, 20 + roundi(UiKit.inset_aman(self).x), TEPI, 0)
 	atas.add_child(HUD.instantiate())
 	var bingkai_kota := UiKit.margin(tata, TEPI, 0, TEPI, 0)
 	bingkai_kota.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -88,3 +89,18 @@ func _umumkan_offline() -> void:
 		Events.feed_baru.emit({"jenis": "offline", "uang": uang, "detik": float(SaveSystem.offline["detik"])})
 		SaveSystem.offline = {}
 
+
+## Tombol Back Android (quit_on_go_back = false): tutup lapisan teratas dulu; kalau tidak ada,
+## simpan lalu kembali ke layar judul.
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_WM_GO_BACK_REQUEST:
+		_tombol_back()
+
+
+func _tombol_back() -> void:
+	for i in range(get_child_count() - 1, -1, -1):
+		var lapisan := get_child(i) as Lembar
+		if lapisan and lapisan.tangani_back():
+			return
+	SaveSystem.simpan()
+	get_tree().change_scene_to_file(JUDUL)

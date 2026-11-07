@@ -155,6 +155,20 @@ static func kolom(induk: Node, jarak: int = 16) -> VBoxContainer:
 	return v
 
 
+## Jarak aman notch (x = atas) dan bar gestur (y = bawah) dalam piksel viewport. Nol di desktop.
+static func inset_aman(n: Node) -> Vector2:
+	if not OS.has_feature("mobile") or n == null or not n.is_inside_tree():
+		return Vector2.ZERO
+	var aman := DisplayServer.get_display_safe_area()
+	var jendela := DisplayServer.window_get_size()
+	if aman.size.y <= 0 or jendela.y <= 0:
+		return Vector2.ZERO
+	var skala := n.get_viewport().get_visible_rect().size.y / float(jendela.y)
+	var atas := maxf(0.0, aman.position.y) * skala
+	var bawah := maxf(0.0, jendela.y - aman.end.y) * skala
+	return Vector2(atas, bawah)
+
+
 ## Lapisan gelap layar penuh di belakang lembar/modal; menelan klik.
 static func redup(induk: Node, alfa: float = 0.75) -> ColorRect:
 	var r := ColorRect.new()

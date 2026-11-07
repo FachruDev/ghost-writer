@@ -1,6 +1,8 @@
 extends Lembar
 ## Toko layar penuh (papan 05): tab Kata (filter slot, kartu 2 kolom), Template, dan Kantor & staf
 ## (naik era + rekrut staf, dengan syarat pengikut). Lapisan di atas layar utama.
+## Waktu permainan dijeda selama toko terbuka, jadi uang hanya berubah karena pembelian; daftar
+## dibangun ulang paling banyak sekali per frame supaya tombol tidak berganti saat sedang ditekan.
 
 const SLOT := ["", "subjek", "aksi", "tempat", "sumber"]
 
@@ -8,13 +10,15 @@ var _tab := "kata"
 var _filter := ""
 var _uang: Label
 var _tombol_tab: Dictionary = {}
-var _baris_filter: HBoxContainer
+var _baris_filter: HFlowContainer
 var _gulir: ScrollContainer
 var _konten: Container
+var _antre := false
 
 
 func _init() -> void:
 	penuh = true
+	jeda = &"toko"
 
 
 func _bangun_isi() -> void:
@@ -27,7 +31,7 @@ func _bangun_isi() -> void:
 	koin.custom_minimum_size = Vector2(52, 52)
 	koin.add_theme_stylebox_override("panel", Palet.tebal(Palet.KUNING, Palet.KUNING_GELAP, 999, 6))
 	h.add_child(koin)
-	var r := UiKit.label(koin, 24, Palet.TINTA, Tema.font_ui(700), "R")
+	var r := UiKit.label(koin, 24, Palet.TINTA, Tema.font_ui(700), tr("UI_SIMBOL_UANG"))
 	r.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_uang = UiKit.label(h, 30, Palet.TEKS, Tema.font_ui(700))
 	_uang.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
@@ -44,7 +48,10 @@ func _bangun_isi() -> void:
 			_tab = t[0]
 			_segarkan())
 		_tombol_tab[t[0]] = b
-	_baris_filter = UiKit.baris(isi, 12)
+	_baris_filter = HFlowContainer.new()
+	_baris_filter.add_theme_constant_override("h_separation", 12)
+	_baris_filter.add_theme_constant_override("v_separation", 12)
+	isi.add_child(_baris_filter)
 	_gulir = ScrollContainer.new()
 	_gulir.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	_gulir.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
@@ -61,6 +68,13 @@ func _bangun_isi() -> void:
 
 
 func _segarkan_jika_terbuka() -> void:
+	if visible and not _antre:
+		_antre = true
+		_segarkan_antre.call_deferred()
+
+
+func _segarkan_antre() -> void:
+	_antre = false
 	if visible:
 		_segarkan()
 
@@ -95,7 +109,7 @@ func _segarkan() -> void:
 func _isi_kata() -> void:
 	for s in SLOT:
 		var b := UiKit.tombol(_baris_filter, tr("UI_SEMUA") if s.is_empty() else HeadlineBuilder.nama_slot(s).capitalize(),
-			Palet.TEKS if s == _filter else Palet.MALAM, Palet.TEKS_REDUP if s == _filter else Palet.PANEL_2, 24, Tema.font_ui(600), 72)
+			Palet.TEKS if s == _filter else Palet.MALAM, Palet.TEKS_REDUP if s == _filter else Palet.PANEL_2, 24, Tema.font_ui(600), 88)
 		b.pressed.connect(func() -> void:
 			_filter = s
 			_segarkan())
@@ -160,7 +174,9 @@ func _kartu_toko(id: String, kata: Dictionary) -> Control:
 func _tombol_beli(induk: Control, harga: int) -> Button:
 	var cukup := GameState.uang >= harga
 	var b := UiKit.tombol(induk, "%s · %s" % [tr("UI_BELI") if cukup else tr("UI_KURANG"), Bahasa.angka(harga)],
-		Palet.PINK if cukup else Color("ece7f7"), Palet.PINK_GELAP if cukup else Color("d6d0f0"), 26, Tema.font_ui(700), 80)
+		Palet.PINK if cukup else Color("ece7f7"), Palet.PINK_GELAP if cukup else Color("d6d0f0"), 26, Tema.font_ui(700), 88)
+	# Di dalam ScrollContainer: PASS supaya seret jari tetap menggulir daftar.
+	b.mouse_filter = Control.MOUSE_FILTER_PASS
 	Palet.gaya_tombol(b, Palet.PINK if cukup else Color("ece7f7"), Palet.PINK_GELAP if cukup else Color("d6d0f0"),
 		Palet.TINTA if cukup else Palet.TEKS_KERTAS_REDUP, 24)
 	b.disabled = not cukup
@@ -193,73 +209,12 @@ func _isi_template() -> void:
 		_kosong(kolom)
 
 
-## Kantor & staf: urutan dari upgrades.json; dimiliki / bisa dibeli / kurang pengikut / terkunci era.
+## Kantor & staf: lihat TokoKantor.
 func _isi_kantor() -> void:
 	var kolom := UiKit.kolom(null, 18)
 	kolom.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_pasang(kolom)
-	var sebelumnya := ""
-	for id in DataDB.upgrades:
-		var u := DataDB.get_upgrade(id)
-		if str(u.get("jenis", "")) == "saluran":
-			continue
-		var milik := GameState.punya_upgrade(id)
-		var era_ok := GameState.era_terbuka(u)
-		var pengikut_min := int(u.get("pengikut_min", 0))
-		var kartu := UiKit.panel(kolom, Palet.PANEL if era_ok else Color.TRANSPARENT, 36, 22)
-		if not era_ok:
-			(kartu.get_theme_stylebox("panel") as StyleBoxFlat).border_color = Palet.GARIS
-			(kartu.get_theme_stylebox("panel") as StyleBoxFlat).set_border_width_all(4)
-			kartu.modulate.a = 0.75
-		elif not milik:
-			(kartu.get_theme_stylebox("panel") as StyleBoxFlat).border_color = Palet.KUNING
-			(kartu.get_theme_stylebox("panel") as StyleBoxFlat).set_border_width_all(4)
-		var h := UiKit.baris(kartu, 20)
-		var tile := PanelContainer.new()
-		tile.custom_minimum_size = Vector2(96, 96)
-		tile.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-		tile.add_theme_stylebox_override("panel", Palet.kotak(Palet.HIJAU if milik else (Palet.KUNING if era_ok else Palet.GARIS), Color.TRANSPARENT, 28))
-		h.add_child(tile)
-		UiKit.ikon(tile, _ikon_upgrade(id, u), 48, Palet.TINTA)
-		var k := UiKit.kolom(h, 6)
-		k.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		var atas := UiKit.baris(k, 10)
-		UiKit.label(atas, 30, Palet.TEKS, Tema.font_ui(700), Bahasa.teks(u.get("nama", "")))
-		if str(u.get("jenis", "")) == "era":
-			UiKit.pil(atas, tr("UI_ERA_PENDEK") % int(u.get("era", 1)), Palet.HIJAU if milik else Palet.PANEL_2,
-				Palet.TINTA if milik else Palet.KUNING, 18).size_flags_vertical = Control.SIZE_SHRINK_CENTER
-		var info := Bahasa.teks(u.get("info", ""))
-		if not era_ok and not sebelumnya.is_empty():
-			info = tr("UI_TERKUNCI_SETELAH") % sebelumnya
-		var l := UiKit.label(k, 22, Palet.TEKS_LEMBUT, Tema.font_ui(500), info)
-		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		if era_ok and not milik and GameState.pengikut < pengikut_min:
-			var syarat := UiKit.baris(k, 10)
-			var b := UiKit.bar(syarat, Palet.CYAN, 14, Palet.MALAM)
-			b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-			b.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-			b.max_value = pengikut_min
-			b.value = GameState.pengikut
-			UiKit.label(syarat, 20, Palet.TEKS_REDUP, Tema.font_ui(600),
-				tr("UI_SYARAT_PENGIKUT") % [Bahasa.angka(GameState.pengikut), Bahasa.angka(pengikut_min)])
-		var kanan := UiKit.kolom(h, 0)
-		kanan.alignment = BoxContainer.ALIGNMENT_CENTER
-		if milik:
-			UiKit.label(kanan, 24, Palet.HIJAU, Tema.font_ui(700), tr("UI_DIMILIKI"))
-		elif GameState.upgrade_tersedia(id):
-			var beli := _tombol_beli(kanan, int(u.get("harga", 0)))
-			beli.text = Bahasa.angka(int(u.get("harga", 0)))
-			beli.pressed.connect(func() -> void: GameState.beli_upgrade(id))
-		else:
-			UiKit.label(kanan, 24, Palet.TEKS_REDUP, Tema.font_ui(700), Bahasa.angka(int(u.get("harga", 0))))
-		if str(u.get("jenis", "")) == "era":
-			sebelumnya = Bahasa.teks(u.get("nama", ""))
-
-
-func _ikon_upgrade(id: String, u: Dictionary) -> String:
-	if str(u.get("jenis", "")) == "staf":
-		return "orang"
-	return {2: "kantor", 3: "gedung", 4: "menara"}.get(int(u.get("era", 0)), "kantor") if id != "" else "kantor"
+	TokoKantor.isi(kolom, _tombol_beli)
 
 
 func _pasang(c: Container) -> void:

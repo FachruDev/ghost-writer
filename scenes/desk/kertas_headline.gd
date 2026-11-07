@@ -8,6 +8,8 @@ signal template_digeser(arah: int)
 signal ketik_selesai
 
 const POLA_SLOT := "\\{(\\w+)\\}"
+## Area ketuk minimum (44 px kanvas = 88 px Godot).
+const TINGGI_KETUK := 88
 
 var _info: Label
 var _alir: HFlowContainer
@@ -17,6 +19,8 @@ var _emosi: PanelContainer
 var _emosi_ikon: TextureRect
 var _emosi_teks: Label
 var _bar_viral: ProgressBar
+var _judul_viral: Label
+var _judul_percaya: Label
 var _angka_viral: Label
 var _bar_percaya: ProgressBar
 var _angka_percaya: Label
@@ -39,7 +43,7 @@ func _ready() -> void:
 	var kolom := UiKit.kolom(self, 8)
 	var atas := UiKit.baris(kolom, 12)
 	var kiri := UiKit.tombol_ikon(atas, "kiri", tr("UI_TEMPLATE"), Color("ece7f7"), Color("d6d0f0"), Palet.TINTA)
-	kiri.custom_minimum_size = Vector2(64, 64)
+	kiri.custom_minimum_size = Vector2(TINGGI_KETUK, TINGGI_KETUK)
 	kiri.pressed.connect(func() -> void: template_digeser.emit(-1))
 	_info = UiKit.label(atas, 22, Palet.TEKS_KERTAS_REDUP, Tema.font_ui(700))
 	_info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -47,11 +51,11 @@ func _ready() -> void:
 	_info.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	_info.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	var kanan := UiKit.tombol_ikon(atas, "kanan", tr("UI_TEMPLATE"), Color("ece7f7"), Color("d6d0f0"), Palet.TINTA)
-	kanan.custom_minimum_size = Vector2(64, 64)
+	kanan.custom_minimum_size = Vector2(TINGGI_KETUK, TINGGI_KETUK)
 	kanan.pressed.connect(func() -> void: template_digeser.emit(1))
 	_alir = HFlowContainer.new()
 	_alir.add_theme_constant_override("h_separation", 12)
-	_alir.add_theme_constant_override("v_separation", 8)
+	_alir.add_theme_constant_override("v_separation", 0)
 	kolom.add_child(_alir)
 	_ketikan = UiKit.label(kolom, 30, Palet.TINTA, Tema.font_ketik())
 	_ketikan.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -70,9 +74,11 @@ func _bangun_skor(induk: Control) -> void:
 	var viral := _kolom_bar(_baris_skor, tr("UI_VIRAL"), Palet.ORANYE)
 	_bar_viral = viral[0]
 	_angka_viral = viral[1]
+	_judul_viral = viral[2]
 	var percaya := _kolom_bar(_baris_skor, tr("UI_DIPERCAYA"), Palet.CYAN_GELAP)
 	_bar_percaya = percaya[0]
 	_angka_percaya = percaya[1]
+	_judul_percaya = percaya[2]
 
 
 func _kolom_bar(induk: Control, judul: String, warna: Color) -> Array:
@@ -83,12 +89,14 @@ func _kolom_bar(induk: Control, judul: String, warna: Color) -> Array:
 	j.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	var angka := UiKit.label(atas, 22, Palet.TINTA, Tema.font_ui(700), "—")
 	var b := UiKit.bar(k, warna, 16, Color("ece7f7"))
-	return [b, angka]
+	return [b, angka, j]
 
 
 ## Bangun ulang kalimat: kata biasa + chip slot. isi = slot -> kata_id.
 func tampilkan(template_id: String, isi: Dictionary, slot_aktif: String, idx: int, total: int) -> void:
 	var template := DataDB.get_template(template_id)
+	_judul_viral.text = tr("UI_VIRAL")
+	_judul_percaya.text = tr("UI_DIPERCAYA")
 	_info.text = tr("UI_TEMPLATE_INFO") % [idx + 1, total, _angka_desimal(float(template.get("pengali_heboh", 1.0)))]
 	for anak in _alir.get_children():
 		_alir.remove_child(anak)
@@ -130,7 +138,8 @@ func _literal(teks: String, sebelumnya: HBoxContainer, ukuran: int, pertama: boo
 			w = w.substr(0, 1).to_upper() + w.substr(1)
 		if unit == null or k > 0:
 			unit = _unit()
-		UiKit.label(unit, ukuran, Palet.TINTA, Tema.font_ketik(), w)
+		var l := UiKit.label(unit, ukuran, Palet.TINTA, Tema.font_ketik(), w)
+		l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	return unit
 
 
@@ -141,17 +150,15 @@ func _unit() -> HBoxContainer:
 	return h
 
 
+## Chip slot: tombol transparan setinggi 88 px (area ketuk minimum) dengan pil berwarna yang lebih
+## ramping di tengahnya, supaya kalimat tetap rapat tapi mudah diketuk jempol.
 func _buat_chip(slot: String, kata_id: String, aktif: bool, ukuran: int, kapital: bool) -> Button:
 	var b := Button.new()
 	b.auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
-	b.custom_minimum_size = Vector2(0, ukuran + 22)
+	b.custom_minimum_size = Vector2(88, TINGGI_KETUK)
 	var gaya := StyleBoxFlat.new()
 	gaya.set_corner_radius_all(16)
 	gaya.anti_aliasing = true
-	gaya.content_margin_left = 12
-	gaya.content_margin_right = 12
-	gaya.content_margin_top = 4
-	gaya.content_margin_bottom = 4
 	if kata_id.is_empty():
 		b.text = tr("UI_SLOT_TAMBAH") % HeadlineBuilder.nama_slot(slot).capitalize()
 		b.add_theme_font_override("font", Tema.font_ui(600))
@@ -174,8 +181,22 @@ func _buat_chip(slot: String, kata_id: String, aktif: bool, ukuran: int, kapital
 		else:
 			gaya.border_width_bottom = 4
 		_warna_teks(b, Palet.TINTA)
+	var kosong := StyleBoxEmpty.new()
+	kosong.content_margin_left = 12
+	kosong.content_margin_right = 12
 	for nama in ["normal", "hover", "pressed", "hover_pressed"]:
-		b.add_theme_stylebox_override(nama, gaya)
+		b.add_theme_stylebox_override(nama, kosong)
+	var pil := Panel.new()
+	pil.show_behind_parent = true
+	pil.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	pil.add_theme_stylebox_override("panel", gaya)
+	pil.anchor_right = 1.0
+	pil.anchor_top = 0.5
+	pil.anchor_bottom = 0.5
+	var tinggi := float(ukuran + 18)
+	pil.offset_top = -tinggi / 2.0
+	pil.offset_bottom = tinggi / 2.0
+	b.add_child(pil)
 	var fokus := gaya.duplicate() as StyleBoxFlat
 	fokus.draw_center = false
 	fokus.border_color = Palet.KUNING

@@ -15,6 +15,7 @@ var _mengetik := false
 
 var _kertas: KertasHeadline
 var _judul_tangan: Label
+var _petunjuk: Label
 var _tangan: Control
 var _tombol_saluran: Button
 var _saluran_ikon: TextureRect
@@ -65,7 +66,7 @@ func _bangun_ui() -> void:
 	var baris := UiKit.baris(judul, 12)
 	_judul_tangan = UiKit.label(baris, 26, Palet.TEKS, Tema.font_ui(700))
 	_judul_tangan.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	UiKit.label(baris, 22, Palet.TEKS_REDUP, Tema.font_ui(500), tr("UI_KARTU_PETUNJUK") + " · ›")
+	_petunjuk = UiKit.label(baris, 22, Palet.TEKS_REDUP, Tema.font_ui(500))
 	_tangan = HAND.instantiate()
 	kolom.add_child(_tangan)
 	_bangun_kaki(kolom)
@@ -79,7 +80,7 @@ func _bangun_kaki(induk: Control) -> void:
 	gaya.content_margin_left = 24
 	gaya.content_margin_right = 24
 	gaya.content_margin_top = 16
-	gaya.content_margin_bottom = 24
+	gaya.content_margin_bottom = 24.0 + UiKit.inset_aman(self).y
 	kaki.add_theme_stylebox_override("panel", gaya)
 	induk.add_child(kaki)
 	var baris := UiKit.baris(kaki, 16)
@@ -213,7 +214,10 @@ func _segarkan() -> void:
 	if not _mengetik:
 		_kertas.tampilkan(_template_id(), _isi, _slot_aktif, _idx, _template_ids.size())
 	_segarkan_skor()
-	_judul_tangan.text = tr("UI_KARTU_SLOT") % HeadlineBuilder.nama_slot(_slot_aktif).to_lower()
+	var judul_tangan := tr("UI_KARTU_SLOT") % HeadlineBuilder.nama_slot(_slot_aktif).to_lower()
+	_judul_tangan.text = judul_tangan.substr(0, 1).to_upper() + judul_tangan.substr(1)
+	_petunjuk.text = tr("UI_KARTU_PETUNJUK") + " · ›"
+	_tombol_saluran.tooltip_text = tr("UI_PILIH_SALURAN")
 	_tangan.tampilkan(_slot_aktif, str(_isi.get(_slot_aktif, "")))
 	_segarkan_saluran()
 	_segarkan_tombol()

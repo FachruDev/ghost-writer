@@ -84,6 +84,10 @@ Berisi sisa 0.2.0 (MVP; masih kurang uji di HP dan uji dengan 3–5 teman) dan i
 
 ### Diperbaiki
 
+- UI (hasil audit): lembar bawah tidak lagi kosong atau setinggi layar saat pertama dibuka (tinggi mengikuti isi, maks. 90% layar lalu digulir); banner event dan feed tidak menyempit; banner baru tidak ikut tersembunyi oleh pudar banner lama dan tidak menghalangi ketukan ke peta; Naik Era bisa digulir sehingga tombol tidak terpotong; toko menjeda waktu dan membangun ulang daftar paling banyak sekali per frame; peta hanya digambar ulang saat status warga berubah atau ada animasi; label HUD, meja, kertas, dan offline ikut ganti bahasa; pilihan dilema yang uangnya kurang dinonaktifkan dan lembar hanya ditutup oleh pengendali event
+- Android: tombol Back menutup lapisan teratas lalu kembali ke layar judul (keluar dari judul), `quit_on_go_back=false`; jarak aman notch/bar gestur; area ketuk minimum 88 px (chip slot, panah template, strip HUD, toko, tombol bahasa); kartu tidak menahan geser tangan
+- Teks "R", judul game, ID/EN, dan nama bahasa pindah ke `ui.csv`; saklar Getar memakai ikon besar sendiri
+
 - Mulai Baru (ending) dan Hapus progres (pengaturan) membawa pemercaya lama ke game baru: pengendali scene lama sempat menulis ulang status distrik setelah reset. Reset kini diulang saat main baru dimulai (`SaveSystem.selesaikan_reset`)
 - Pilihan dilema berbayar bisa dipilih walau uang kurang, sehingga uang jadi minus; kini ditolak (`aksi_gagal`) dan biaya tiap pilihan ikut di info event (`biaya`)
 - Kartu kata membunyikan dua suara per ketuk (klik umum ikut terpasang karena grup `tanpa_klik` baru diisi di `_ready`)

@@ -59,4 +59,7 @@ func _segarkan() -> void:
 	var t := "%.1f" % jam
 	_jam.text = tr("UI_JAM_PERGI") % (t.replace(".", ",") if Bahasa.kode() == "id" else t)
 	_info.text = tr("UI_OFFLINE_INFO")
+	for v in [_uang, _jam]:
+		var l := (v as Label).get_parent().get_child(1) as Label
+		l.text = tr(str(l.get_meta("kunci", "")))
 	_ambil.text = tr("UI_AMBIL")

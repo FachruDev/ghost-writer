@@ -23,6 +23,8 @@ var _bawah: HBoxContainer
 func _ready() -> void:
 	custom_minimum_size = UKURAN
 	add_to_group(&"tanpa_klik")
+	# PASS: seret jari di atas kartu tetap menggulir tangan (ScrollContainer induk).
+	mouse_filter = Control.MOUSE_FILTER_PASS
 	auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
 	clip_contents = true
 	offset_transform_enabled = true

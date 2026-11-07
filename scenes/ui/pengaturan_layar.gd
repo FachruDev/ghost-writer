@@ -32,15 +32,23 @@ func _bangun_isi() -> void:
 	_getar = CheckButton.new()
 	_getar.custom_minimum_size = Vector2(120, 88)
 	_getar.toggled.connect(func(v: bool) -> void: Pengaturan.atur("getar", v))
+	var nyala := _tekstur_saklar(true)
+	var mati := _tekstur_saklar(false)
+	for nama in ["checked", "checked_mirrored"]:
+		_getar.add_theme_icon_override(nama, nyala)
+	for nama in ["unchecked", "unchecked_mirrored"]:
+		_getar.add_theme_icon_override(nama, mati)
+	for nama in ["normal", "hover", "pressed", "hover_pressed"]:
+		_getar.add_theme_stylebox_override(nama, StyleBoxEmpty.new())
 	baris_getar.add_child(_getar)
 	var bahasa := UiKit.panel(isi, Palet.PANEL, 36, 28)
 	var hb := UiKit.baris(bahasa, 16)
 	_label["UI_BAHASA_JUDUL"] = UiKit.label(hb, 30, Palet.TEKS, Tema.font_ui(600))
 	_label["UI_BAHASA_JUDUL"].size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_label["UI_BAHASA_JUDUL"].vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	_id = UiKit.tombol(hb, "Indonesia", Palet.PANEL_2, Palet.MALAM, 26, Tema.font_ui(700), 80)
+	_id = UiKit.tombol(hb, tr("UI_NAMA_ID"), Palet.PANEL_2, Palet.MALAM, 26, Tema.font_ui(700), 88)
 	_id.pressed.connect(func() -> void: Bahasa.atur("id"))
-	_en = UiKit.tombol(hb, "English", Palet.PANEL_2, Palet.MALAM, 26, Tema.font_ui(700), 80)
+	_en = UiKit.tombol(hb, tr("UI_NAMA_EN"), Palet.PANEL_2, Palet.MALAM, 26, Tema.font_ui(700), 88)
 	_en.pressed.connect(func() -> void: Bahasa.atur("en"))
 	var progres := _kartu("UI_PROGRES")
 	_label["UI_PROGRES_INFO"] = UiKit.label(progres, 24, Palet.TEKS_LEMBUT, Tema.font_ui(500))
@@ -51,7 +59,7 @@ func _bangun_isi() -> void:
 	jarak.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	isi.add_child(jarak)
 	var tentang := UiKit.kolom(isi, 4)
-	var nama := UiKit.label(tentang, 36, Palet.TEKS, Tema.font_judul(), "GHOSTWRITER")
+	var nama := UiKit.label(tentang, 36, Palet.TEKS, Tema.font_judul(), tr("UI_JUDUL_GAME"))
 	nama.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_label["UI_VERSI"] = UiKit.label(tentang, 22, Palet.TEKS_REDUP, Tema.font_ui(500))
 	_label["UI_VERSI"].horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -102,6 +110,29 @@ func _slider(induk: Control, kunci: String, nama: String) -> HSlider:
 	return s
 
 
+## Saklar besar (112×64): jalur bulat hijau/gelap + kenop putih, digambar ke Image.
+static func _tekstur_saklar(nyala: bool) -> ImageTexture:
+	var w := 112
+	var h := 64
+	var img := Image.create(w, h, false, Image.FORMAT_RGBA8)
+	var jalur := Palet.HIJAU if nyala else Palet.MALAM
+	var tepi := Palet.HIJAU_GELAP if nyala else Palet.GARIS
+	var r := h / 2.0
+	var kenop := Vector2(w - r if nyala else r, r)
+	for y in h:
+		for x in w:
+			var p := Vector2(x + 0.5, y + 0.5)
+			var cx := clampf(p.x, r, w - r)
+			var jarak := p.distance_to(Vector2(cx, r))
+			var warna := Color.TRANSPARENT
+			if jarak <= r:
+				warna = tepi if jarak > r - 4.0 else jalur
+			if p.distance_to(kenop) <= r - 9.0:
+				warna = Palet.TEKS
+			img.set_pixel(x, y, warna)
+	return ImageTexture.create_from_image(img)
+
+
 ## Ikon pegangan slider: lingkaran tebal digambar ke Image (tanpa file aset).
 static func _tekstur_bulat(d: int, warna: Color, bayang: Color) -> ImageTexture:
 	var img := Image.create(d, d, false, Image.FORMAT_RGBA8)
@@ -120,8 +151,7 @@ func _segarkan() -> void:
 	judul.text = tr("UI_PENGATURAN")
 	for kunci in _label:
 		if kunci == "UI_VERSI":
-			var versi := str(ProjectSettings.get_setting("application/config/version", ""))
-			_label[kunci].text = tr(kunci) % (versi if not versi.is_empty() else "0.6.0")
+			_label[kunci].text = tr(kunci) % str(ProjectSettings.get_setting("application/config/version"))
 		else:
 			_label[kunci].text = tr(kunci)
 	_musik.set_value_no_signal(float(Pengaturan.ambil("musik")))

@@ -37,8 +37,9 @@ res://
     hand/hand.tscn          # deretan kartu untuk slot aktif
     card/word_card.tscn     # kartu kata (pita emosi, varian tokoh/calon/sementara)
     ui/judul.tscn           # layar judul (main scene)
-    ui/hud.tscn             # menu hantu, era, uang, pengikut, toko, meter, strip misi/tokoh/kontrak
-    ui/shop.tscn            # toko layar penuh: Kata, Template, Kantor & staf
+    ui/hud.tscn             # menu hantu, era, uang, pengikut, toko, meter, strip kontrak
+    ui/hud_strip.gd         # strip utama HUD: misi / tokoh / kampanye akhir
+    ui/shop.tscn            # toko layar penuh: Kata, Template, Kantor & staf (toko_kantor.gd)
     ui/ending.tscn          # ending menang/kalah
     ui/lembar.gd            # dasar lembar bawah/layar penuh
     ui/dilema_sheet.gd, tokoh_sheet.gd, final_sheet.gd, naik_era.gd,

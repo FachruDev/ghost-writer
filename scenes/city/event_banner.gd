@@ -14,6 +14,7 @@ const DETIK_LIPAT := 4.0
 
 var _info: Dictionary = {}
 var _lipat: Tween
+var _pudar: Tween
 var _tile: PanelContainer
 var _ikon: TextureRect
 var _judul: Label
@@ -22,6 +23,8 @@ var _teks: Label
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
+	# Banner hanya informasi: seluruh isinya tembus sentuh supaya gugus peta di bawahnya tetap bisa diketuk.
+	mouse_behavior_recursive = Control.MOUSE_BEHAVIOR_DISABLED
 	var h := UiKit.baris(self, 16)
 	_tile = PanelContainer.new()
 	_tile.custom_minimum_size = Vector2(64, 64)
@@ -47,6 +50,9 @@ func _on_mulai(info: Dictionary) -> void:
 	if not info.get("pilihan", []).is_empty():
 		_tutup()
 		return
+	if _pudar:
+		_pudar.kill()
+		_pudar = null
 	_info = info.duplicate()
 	_info["sisa"] = float(info.get("durasi", 0.0))
 	var jenis := str(info.get("jenis", "modifier"))
@@ -68,7 +74,7 @@ func _on_mulai(info: Dictionary) -> void:
 	_lipat.tween_interval(DETIK_LIPAT)
 	_lipat.tween_callback(func() -> void:
 		_teks.visible = false
-		reset_size())
+		size = Vector2(size.x, 0.0))
 	visible = true
 	modulate.a = 0.0
 	scale = Vector2(1.0, 0.6)
@@ -92,6 +98,10 @@ func _tutup() -> void:
 		_info = {}
 		return
 	_info = {}
-	var t := create_tween()
-	t.tween_property(self, "modulate:a", 0.0, 0.3)
-	t.tween_callback(func() -> void: visible = false)
+	if _lipat:
+		_lipat.kill()
+	_pudar = create_tween()
+	_pudar.tween_property(self, "modulate:a", 0.0, 0.3)
+	_pudar.tween_callback(func() -> void:
+		visible = false
+		_pudar = null)
