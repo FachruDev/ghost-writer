@@ -84,6 +84,11 @@ Berisi sisa 0.2.0 (MVP; masih kurang uji di HP dan uji dengan 3–5 teman) dan i
 
 ### Diperbaiki
 
+- Mulai Baru (ending) dan Hapus progres (pengaturan) membawa pemercaya lama ke game baru: pengendali scene lama sempat menulis ulang status distrik setelah reset. Reset kini diulang saat main baru dimulai (`SaveSystem.selesaikan_reset`)
+- Pilihan dilema berbayar bisa dipilih walau uang kurang, sehingga uang jadi minus; kini ditolak (`aksi_gagal`) dan biaya tiap pilihan ikut di info event (`biaya`)
+- Kartu kata membunyikan dua suara per ketuk (klik umum ikut terpasang karena grup `tanpa_klik` baru diisi di `_ready`)
+- `final_data` dikirim tiap tick walau angkanya sama; kini hanya saat berubah
+- Versi game belum diisi di `project.godot`, sehingga save tercatat 0.2.0 dan Pengaturan memakai angka cadangan
 - Kredibilitas 0 tidak bisa naik lagi (syarat +1 mustahil saat dipercaya akhir tertahan ≤ 0,5)
 - Statistik rumor terbaik tidak pernah diisi
 - Bot balancing crash (antrean pesan penuh) saat menjalankan banyak sesi panjang dalam satu frame

@@ -23,6 +23,7 @@ const TEPI := 24
 
 
 func _ready() -> void:
+	SaveSystem.selesaikan_reset()
 	theme = Tema.buat()
 	var latar := ColorRect.new()
 	latar.color = Palet.LATAR

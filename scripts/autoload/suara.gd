@@ -206,9 +206,16 @@ func _hubungkan() -> void:
 
 
 ## Bunyi klik untuk semua tombol UI, kecuali kartu kata yang punya bunyinya sendiri.
+## Grup "tanpa_klik" dicek saat ditekan: node_added terpanggil sebelum _ready tombol, jadi tombol yang
+## masuk grup di _ready-nya sendiri (WordCard) belum terlihat di sini.
 func _on_node_added(node: Node) -> void:
-	if node is BaseButton and not node.is_in_group(&"tanpa_klik"):
-		(node as BaseButton).pressed.connect(putar.bind("click"))
+	if node is BaseButton:
+		(node as BaseButton).pressed.connect(_klik.bind(node))
+
+
+func _klik(tombol: BaseButton) -> void:
+	if not tombol.is_in_group(&"tanpa_klik"):
+		putar("click")
 
 
 ## Volume bus = dasar (VOLUME_*_DB) + slider pengaturan (0..1, linear). 0 = bisu.

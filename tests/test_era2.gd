@@ -118,6 +118,24 @@ func test_festival_semua_distrik_dan_uang() -> void:
 	assert_float(ec.pengali_rumor(IDS)["uang"]).is_equal_approx(1.5, 0.001)
 
 
+func test_pilihan_dilema_berbayar_ditolak_kalau_uang_kurang() -> void:
+	var ec := _main.get_node("EventController")
+	var info := {}
+	var simpan_info := func(i: Dictionary) -> void: info.merge(i, true)
+	Events.event_mulai.connect(simpan_info)
+	GameState.uang = 100
+	ec._mulai(DataDB.events[4])
+	Events.event_mulai.disconnect(simpan_info)
+	assert_array(info["biaya"]).contains_exactly([200, 0])
+	Events.dilema_dipilih.emit(0)
+	assert_bool(ec.sedang_dilema()).is_true()
+	assert_bool(GameClock.sedang_jeda()).is_true()
+	assert_int(GameState.uang).is_equal(100)
+	Events.dilema_dipilih.emit(1)
+	assert_bool(ec.sedang_dilema()).is_false()
+	assert_bool(GameClock.sedang_jeda()).is_false()
+
+
 func test_dilema_menjeda_waktu_dan_menerapkan_pilihan() -> void:
 	var ec := _main.get_node("EventController")
 	GameState.uang = 500

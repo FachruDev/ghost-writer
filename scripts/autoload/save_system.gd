@@ -18,6 +18,7 @@ var sumber_snapshot: Callable
 var offline: Dictionary = {}
 
 var _timer: Timer
+var _reset_tertunda := false
 
 
 func _ready() -> void:
@@ -77,12 +78,32 @@ func _hitung_offline(disimpan_unix: float) -> void:
 		GameState.tambah_uang(int(offline["uang"]))
 
 
+## Hapus progres (pengaturan tetap). Pemanggil biasanya lalu memuat ulang scene. Selama sisa frame
+## itu scene lama masih hidup: pengendalinya bisa menulis status warga lama, menyelesaikan rumor,
+## atau autosave ke state yang baru. Karena itu reset diulang di selesaikan_reset(), yang dipanggil
+## main sebelum pengendali baru dibuat.
 func reset_progres() -> void:
 	offline = {}
+	sumber_snapshot = Callable()
+	_hapus_file()
+	GameState.mulai_baru()
+	_reset_tertunda = true
+
+
+## Dipanggil main di awal _ready. Membuang apa pun yang ditulis scene lama setelah reset_progres().
+func selesaikan_reset() -> void:
+	if not _reset_tertunda:
+		return
+	_reset_tertunda = false
+	offline = {}
+	_hapus_file()
+	GameState.mulai_baru()
+
+
+func _hapus_file() -> void:
 	for path in [PATH, PATH_BAK, PATH_TMP]:
 		if FileAccess.file_exists(path):
 			DirAccess.remove_absolute(path)
-	GameState.mulai_baru()
 
 
 func _baca(path: String) -> Dictionary:

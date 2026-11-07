@@ -190,6 +190,9 @@ func _on_dilema_dipilih(indeks: int) -> void:
 	var pilihan: Array = _aktif.get("pilihan", [])
 	if indeks < 0 or indeks >= pilihan.size():
 		return
+	if biaya_pilihan(pilihan[indeks]) > GameState.uang:  # uang tidak boleh minus; dilema tetap terbuka
+		Events.aksi_gagal.emit()
+		return
 	var info := {}
 	for efek in pilihan[indeks].get("efek", []):
 		_efek_langsung(efek, info)
@@ -208,12 +211,24 @@ func _umumkan(e: Dictionary, durasi: float) -> void:
 	Events.feed_baru.emit({"jenis": "event", "teks": e.get("nama", ""), "info": info.get("hasil", "")})
 
 
+## "biaya" sejajar dengan "pilihan": uang yang dibutuhkan tiap opsi, supaya UI bisa menonaktifkannya.
 func _info(e: Dictionary, durasi: float) -> Dictionary:
 	var label: Array = []
+	var biaya: Array[int] = []
 	for p in e.get("pilihan", []):
 		label.append(p.get("label", ""))
+		biaya.append(biaya_pilihan(p))
 	return {"id": e["id"], "nama": e.get("nama", ""), "teks": e.get("teks", ""), "jenis": e.get("jenis", ""),
-		"durasi": durasi, "pilihan": label}
+		"durasi": durasi, "pilihan": label, "biaya": biaya}
+
+
+## Uang yang dikeluarkan satu opsi dilema (jumlah efek uang negatif); 0 kalau gratis.
+static func biaya_pilihan(p: Dictionary) -> int:
+	var biaya := 0
+	for efek in p.get("efek", []):
+		if str(efek.get("tipe", "")) == "uang":
+			biaya += maxi(0, -int(efek.get("nilai", 0)))
+	return biaya
 
 
 ## Saat satu jalur selesai: tampilkan lagi event yang masih berjalan, atau tutup banner.

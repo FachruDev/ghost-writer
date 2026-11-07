@@ -17,6 +17,7 @@ var sim: SpreadSim
 var _sisa := 0.0
 var _hitung_tular := 0.0
 var _teks_terakhir := ""
+var _data_terakhir := {}
 
 
 func _ready() -> void:
@@ -47,6 +48,7 @@ func mulai() -> void:
 	_sisa = Balance.FINAL_DURASI_DETIK
 	_hitung_tular = 0.0
 	_teks_terakhir = ""
+	_data_terakhir = {}
 	sim.kebal_bisa_pulih = false
 	_kota_tak_percaya()
 	Events.final_berubah.emit()
@@ -121,6 +123,7 @@ func _akhiri(hasil: String) -> void:
 		GameState.hasil_akhir = hasil
 	sim.kebal_bisa_pulih = true
 	_teks_terakhir = ""
+	_data_terakhir = {}
 	Events.event_selesai.emit(EVENT_ID)
 	Events.final_progres.emit("")
 	Events.final_data.emit({})
@@ -134,8 +137,10 @@ func _umumkan_progres() -> void:
 	if not GameState.final_berjalan:
 		return
 	var sisa := maxi(0, ceili(_sisa))
-	Events.final_data.emit({"percaya": persen(SpreadSim.Status.PERCAYA), "kebal": persen(SpreadSim.Status.KEBAL),
-		"sisa": sisa})
+	var data := {"percaya": persen(SpreadSim.Status.PERCAYA), "kebal": persen(SpreadSim.Status.KEBAL), "sisa": sisa}
+	if data != _data_terakhir:
+		_data_terakhir = data
+		Events.final_data.emit(data)
 	var teks := tr("UI_FINAL_JALAN") % [roundi(persen(SpreadSim.Status.PERCAYA) * 100.0),
 		roundi(Balance.FINAL_TARGET_PERCAYA * 100.0), roundi(persen(SpreadSim.Status.KEBAL) * 100.0),
 		roundi(Balance.FINAL_BATAS_KEBAL * 100.0), "%d:%02d" % [sisa / 60, sisa % 60]]

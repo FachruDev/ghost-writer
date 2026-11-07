@@ -142,3 +142,25 @@ func test_getar_bisa_dimatikan() -> void:
 	assert_bool(Getar.getar(30)).is_false()
 	Pengaturan.atur("getar", true)
 	assert_bool(Getar.getar(30)).is_true()
+
+
+## Mulai Baru dari ending (Era 4) memanggil reset_progres() selagi main lama masih hidup. Pengendali
+## lama sempat menulis status warga lama ke state baru; main baru harus membuangnya.
+func test_reset_saat_main_lama_hidup_tidak_membawa_warga_lama() -> void:
+	var lama: Node = load("res://scenes/main/main.tscn").instantiate()
+	add_child(lama)
+	GameState.tambah_pengikut(int(DataDB.get_upgrade("menara_server")["pengikut_min"]))
+	GameState.uang = 20000
+	for u in ["kantor", "gedung_media", "menara_server"]:
+		assert_bool(GameState.beli_upgrade(u)).is_true()
+	var sim: SpreadSim = lama.get_node("RumorController").sim
+	for i in 100:
+		sim.ubah_status(i, SpreadSim.Status.PERCAYA)
+	SaveSystem.reset_progres()
+	lama.free()
+	var baru: Node = auto_free(load("res://scenes/main/main.tscn").instantiate())
+	add_child(baru)
+	assert_int(GameState.era).is_equal(1)
+	assert_dict(GameState.distrik_status).is_empty()
+	assert_int(baru.get_node("RumorController").sim.status.count(SpreadSim.Status.PERCAYA)).is_equal(0)
+	assert_bool(FileAccess.file_exists(SaveSystem.PATH)).is_false()
