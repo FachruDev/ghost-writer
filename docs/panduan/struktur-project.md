@@ -14,6 +14,7 @@ res://
     missions.json     # misi berurutan
     tokoh.json        # tokoh fiktif target besar (era 4)
     endings.json      # dua ending: judul + epilog
+    kredit.json       # kredit font, musik, efek suara (layar Tentang); tiap file aset tercatat
     balance.json      # dibuat dari balancing/angka.csv; jangan diedit langsung
     events.json       # event (lihat EVENT.md)
   localization/

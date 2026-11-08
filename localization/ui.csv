@@ -219,3 +219,8 @@ UI_TIP_KREDIBILITAS,"Kredibilitas turun kalau rumormu dibongkar, dan rumor berik
 UI_TIP_SALURAN,Saluran baru terbuka: %s. Ketuk tombol saluran di meja untuk memakainya.,New channel unlocked: %s. Tap the channel button on your desk to use it.
 UI_TIP_STAF,Stafmu kini mengirim rumor kecil sendiri tiap %d detik. Cincin di HUD menghitung mundur.,Your staff now sends a small rumor every %d seconds. The ring on the HUD counts down.
 UI_TIP_OKE,Oke,Got it
+UI_KREDIT,Kredit,Credits
+UI_KREDIT_FONT,Huruf,Fonts
+UI_KREDIT_MUSIK,Musik,Music
+UI_KREDIT_SUARA,Efek suara,Sound effects
+UI_KREDIT_OLEH,oleh %s,by %s

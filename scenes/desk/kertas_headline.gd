@@ -10,6 +10,9 @@ signal ketik_selesai
 const POLA_SLOT := "\\{(\\w+)\\}"
 ## Area ketuk minimum (44 px kanvas = 88 px Godot).
 const TINGGI_KETUK := 88
+## Tinggi chip dalam tata letak kalimat. Lebih pendek dari area ketuk supaya kertas tidak menggencet
+## peta di layar 16:9; area ketuknya diperluas lewat ChipSlot._has_point().
+const TINGGI_CHIP := 60
 
 var _info: Label
 var _alir: HFlowContainer
@@ -26,6 +29,16 @@ var _bar_percaya: ProgressBar
 var _angka_percaya: Label
 var _chip: Dictionary = {}  # slot -> Button
 var _regex := RegEx.new()
+
+
+## Tombol chip: setinggi TINGGI_CHIP di tata letak, tapi menerima ketukan setinggi TINGGI_KETUK
+## (melebar ke atas dan bawah, ke jarak antarbaris kalimat).
+class ChipSlot extends Button:
+	const KETUK := 88.0
+
+	func _has_point(titik: Vector2) -> bool:
+		var lebih := maxf(0.0, (KETUK - size.y) / 2.0)
+		return Rect2(0.0, -lebih, size.x, size.y + lebih * 2.0).has_point(titik)
 
 
 func _ready() -> void:
@@ -103,7 +116,7 @@ func tampilkan(template_id: String, isi: Dictionary, slot_aktif: String, idx: in
 		anak.queue_free()
 	_chip.clear()
 	var pola := Bahasa.teks(template.get("pola", ""))
-	var ukuran := 30 if pola.length() <= 60 else (26 if pola.length() <= 85 else 23)
+	var ukuran := _ukuran_huruf(pola, isi)
 	var unit_terakhir: HBoxContainer = null
 	var pos := 0
 	var pertama := true
@@ -117,6 +130,20 @@ func tampilkan(template_id: String, isi: Dictionary, slot_aktif: String, idx: in
 		pertama = false
 		pos = m.get_end()
 	_literal(pola.substr(pos), unit_terakhir, ukuran, pertama)
+
+
+## Ukuran huruf dari panjang kalimat seperti yang tampil (kata terisi atau label "+ Slot"), bukan
+## hanya pola: kata panjang di template panjang mengecil supaya barisnya tidak menggencet peta.
+func _ukuran_huruf(pola: String, isi: Dictionary) -> int:
+	var panjang := pola.length()
+	for m in _regex.search_all(pola):
+		var slot := m.get_string(1)
+		var kata := str(isi.get(slot, ""))
+		var tampil := tr("UI_SLOT_TAMBAH") % HeadlineBuilder.nama_slot(slot)
+		if not kata.is_empty():
+			tampil = Bahasa.teks(DataDB.get_word(kata).get("text", ""))
+		panjang += tampil.length() - m.get_string().length()
+	return 30 if panjang <= 60 else (26 if panjang <= 85 else (23 if panjang <= 110 else 21))
 
 
 func chip(slot: String) -> Control:
@@ -150,12 +177,12 @@ func _unit() -> HBoxContainer:
 	return h
 
 
-## Chip slot: tombol transparan setinggi 88 px (area ketuk minimum) dengan pil berwarna yang lebih
-## ramping di tengahnya, supaya kalimat tetap rapat tapi mudah diketuk jempol.
+## Chip slot: tombol transparan setinggi TINGGI_CHIP dengan pil berwarna di tengahnya; area ketuknya
+## tetap 88 px (ChipSlot), jadi kalimat rapat tapi mudah diketuk jempol.
 func _buat_chip(slot: String, kata_id: String, aktif: bool, ukuran: int, kapital: bool) -> Button:
-	var b := Button.new()
+	var b := ChipSlot.new()
 	b.auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
-	b.custom_minimum_size = Vector2(88, TINGGI_KETUK)
+	b.custom_minimum_size = Vector2(88, TINGGI_CHIP)
 	var gaya := StyleBoxFlat.new()
 	gaya.set_corner_radius_all(16)
 	gaya.anti_aliasing = true

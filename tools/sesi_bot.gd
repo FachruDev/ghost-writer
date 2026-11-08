@@ -34,6 +34,9 @@ func _process(_d: float) -> bool:
 
 func _jalankan_semua() -> void:
 	R = get_root()
+	# Bot memajukan waktu sendiri lewat jalankan_tick. Tanpa ini GameClock._process menambah tick dari
+	# waktu nyata di sela await process_frame, sehingga hasil seed yang sama berbeda tiap run.
+	a("GameClock").process_mode = Node.PROCESS_MODE_DISABLED
 	var ringkas: Array = []
 	for s in SEEDS:
 		ringkas.append(await _sesi(s))

@@ -116,10 +116,12 @@ Saat rumor selesai menyebar:
   Kalau tidak dibongkar dan dipercaya (dasar, dari kartu) ≥ 0.7:
     kredibilitas += 1
 Setiap detik simulasi, kalau kredibilitas < 50:
-  kredibilitas += 0,1   ("orang lupa", ±6 per menit)
+  kredibilitas += 0,2   ("orang lupa", ±12 per menit)
 ```
 
 **Disetel di 0.6.0.** Dengan aturan lama (+1 hanya kalau `dipercaya_akhir` ≥ 0,7, dibongkar −5 − heboh_total), kredibilitas yang sudah 0 tidak bisa naik lagi: `dipercaya_akhir` tertahan di ≤ 0,5 sehingga syarat +1 mustahil, sementara pembongkaran terus memotong. Bot balancing terjebak di kredibilitas 0 sejak menit 10–15 di separuh sesi. Sekarang +1 dihitung dari dipercaya dasar (rumor dari kartu kredibel memulihkan nama baik), hukuman heboh dikali 0,5, dan kredibilitas di bawah 50 pulih pelan sendiri.
+
+**Disetel ulang 2026-11-08.** Dengan pemulihan 0,1 per detik, 8 dari 32 sesi bot terjebak lebih dari 10 menit di kredibilitas < 30, biasanya di Era 2–3: dibongkar membuat rumor berikutnya kurang dipercaya dan makin sering dibongkar (E09 Razia Hoaks juga terpicu di bawah 30), sehingga pengikut tertahan dan Era 4 tidak tercapai di 5 dari 32 sesi. Pemulihan 0,2 per detik menghilangkan jebakan itu (0 dari 32 sesi; Era 4 di 31 dari 32 sesi) tanpa menggeser ritme (kampanye akhir tetap ±menit 46). Satu kali dibongkar kini "dilupakan" dalam ±45 detik, dan di atas 50 kredibilitas tetap tidak pulih sendiri.
 
 Heat dan kredibilitas berada di 0–100; kredibilitas mulai di 50. Ambang event: E05 Wartawan di heat ≥ 40, E03 Pembongkar Fakta di heat ≥ 70, E09 Razia Hoaks di kredibilitas < 30 (lihat [EVENT.md](../versi/1.0.0/event/EVENT.md)).
 

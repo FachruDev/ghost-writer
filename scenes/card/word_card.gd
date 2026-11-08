@@ -78,7 +78,8 @@ func _segarkan() -> void:
 	var emosi := str(kata.get("emosi", "netral"))
 	var tag := str(kata.get("tag", ""))
 	_nama.text = Bahasa.teks(kata.get("text", ""))
-	_nama.add_theme_font_size_override("font_size", 25 if _nama.text.length() <= 18 else 21)
+	# > 16 huruf ("the community hall") jadi 3 baris di ukuran 25 dan melebihi kartu.
+	_nama.add_theme_font_size_override("font_size", 25 if _nama.text.length() <= 16 else 21)
 	var gaya_pita := StyleBoxFlat.new()
 	gaya_pita.corner_radius_top_left = 26
 	gaya_pita.corner_radius_top_right = 26

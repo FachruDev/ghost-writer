@@ -9,6 +9,7 @@ const PATH_MISSIONS := "res://data/missions.json"
 const PATH_EVENTS := "res://data/events.json"
 const PATH_TOKOH := "res://data/tokoh.json"
 const PATH_ENDINGS := "res://data/endings.json"
+const PATH_KREDIT := "res://data/kredit.json"
 
 var words: Dictionary = {}
 var templates: Dictionary = {}
@@ -23,6 +24,9 @@ var events: Array[Dictionary] = []
 var tokoh: Array[Dictionary] = []
 ## Dua ending kampanye akhir, per id ("menang", "kalah").
 var endings: Dictionary = {}
+## Kredit aset pihak ketiga untuk layar Tentang: jenis font/musik/suara; "proyek" = buatan sendiri
+## (tidak perlu ditampilkan). Tiap file di assets/fonts, music, sfx tercatat (tes test_kredit.gd).
+var kredit: Array[Dictionary] = []
 
 
 func _ready() -> void:
@@ -34,6 +38,7 @@ func _ready() -> void:
 	events.assign(_muat(PATH_EVENTS))
 	tokoh.assign(_muat(PATH_TOKOH))
 	endings = _index(_muat(PATH_ENDINGS))
+	kredit.assign(_muat(PATH_KREDIT))
 	atur_era(1)
 	Events.era_berubah.connect(atur_era)
 

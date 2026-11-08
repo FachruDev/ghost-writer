@@ -27,7 +27,7 @@ KRED_TURUN_PER_HEBOH,0.5,Tambahan penurunan kredibilitas per poin heboh saat dib
 PERSEN_KEBAL_DIBONGKAR,0.5,Bagian pemercaya rumor yang jadi kebal saat dibongkar
 KRED_NAIK,1,Kredibilitas naik saat rumor sangat dipercaya tidak dibongkar
 KRED_NAIK_MIN_DIPERCAYA,0.7,Ambang dipercaya dasar (dari kartu) untuk kredibilitas naik
-KRED_PULIH_PER_DETIK,0.1,"Orang lupa: kredibilitas di bawah batas pulih sendiri (6 per menit)"
+KRED_PULIH_PER_DETIK,0.2,"Orang lupa: kredibilitas di bawah batas pulih sendiri (12 per menit; 0.1 membuat 1 dari 4 sesi bot terjebak di bawah 30)"
 KRED_PULIH_SAMPAI,50,Batas pemulihan kredibilitas otomatis
 WARGA_PER_PENGIKUT,12,Tiap kelipatan warga percaya dalam satu rumor = 1 pengikut
 PELUANG_MUTASI,0.02,Peluang mutasi tiap warga baru dengar

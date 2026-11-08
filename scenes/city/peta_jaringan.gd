@@ -120,6 +120,8 @@ func _draw() -> void:
 		return
 	var n := _sim.posisi.size()
 	var d := _dalam()
+	if d.size.x <= 0.0 or d.size.y <= 0.0:
+		return  # peta lebih kecil dari tepinya: sqrt di bawah akan NaN
 	var r := clampf(sqrt(d.size.x * d.size.y * SUSUT * SUSUT / n) * 0.27, 6.0, 17.0)
 	for i in DataDB.districts.size():
 		_gambar_cahaya(i)

@@ -64,6 +64,7 @@ Berisi sisa 0.2.0 (MVP; masih kurang uji di HP dan uji dengan 3–5 teman) dan i
 - Konten jadi 40 kata (10 per slot)
 - Export preset Android dan APK debug (`build/ghostwriter-debug.apk`)
 - Uji tutup paksa saat autosave (`tools/uji_tutup_paksa.gd`): proses anak dibunuh di titik acak selagi menyimpan, dan tiap putaran harus memuat save yang utuh tanpa uang mundur. Save pemain dicadangkan lalu dikembalikan. Di desktop lolos 30 kali; save yang ditulis tanpa `.tmp` gagal di uji ini
+- Data kredit aset untuk layar Tentang (`data/kredit.json`, dibaca `DataDB.kredit`): 3 font OFL, 7 musik dan 19 efek suara CC0 dengan pembuat dan sumbernya, plus kunci teks `UI_KREDIT_*`. Tes memastikan setiap file di `assets/fonts`, `assets/music`, dan `assets/sfx` tercatat. Teks lisensi OFL (`assets/fonts/OFL-*.txt`) kini ikut diekspor ke APK, sesuai syarat SIL OFL 1.1
 - Logika petunjuk singkat saat sistem baru terbuka (`scenes/main/petunjuk_controller.gd`): kredibilitas & panas setelah rumor pertama selesai, tiap saluran baru (Koran, Radio, Medsos, Server), dan staf. Diumumkan satu per satu lewat `petunjuk_tampil` setelah tutorial selesai, saat waktu tidak dijeda, dan 3 detik setelah pemicu atau petunjuk sebelumnya ditutup (`petunjuk_ditutup`). Tiap petunjuk tampil sekali per progres (`statistik.petunjuk`)
 - Lapisan petunjuk (`scenes/ui/petunjuk_lapisan.gd` + `petunjuk_kartu.gd`): kartu bergaris cyan (beda dari tutorial yang kuning) dengan ubin ikon sistem, teks, dan tombol Oke, plus ekor dan cincin sorot cyan ke sasarannya: bar kredibilitas & panas, tombol saluran di meja, atau cincin staf. Kartu diletakkan di sisi sasaran yang lebih lega dan menunggu sampai lembar yang terbuka (Naik Era, lembar saluran) ditutup. Oke memancarkan `petunjuk_ditutup`. Teks ikut ganti bahasa; lapisan yang dibuat belakangan membaca petunjuk yang sedang aktif. Grup baru di HUD: `petunjuk_kredibilitas` dan `petunjuk_staf`
 - Musik menu `mus_menu` di layar judul (placeholder CC0: Lofi again, omfgdude). `Suara` mengganti musik mengikuti root scene yang masuk: judul → musik menu, permainan → musik era tanpa stinger naik era (juga setelah reset progres)
@@ -72,6 +73,7 @@ Berisi sisa 0.2.0 (MVP; masih kurang uji di HP dan uji dengan 3–5 teman) dan i
 
 ### Diubah
 
+- Kredibilitas di bawah 50 pulih 0,2 per detik (sebelumnya 0,1; ±12 per menit). Bot deterministik 32 sesi × 70 menit: sesi yang terjebak kredibilitas < 30 lebih dari 10 menit turun dari 8 ke 0, Era 4 tercapai di 31/32 sesi (sebelumnya 27/32, median menit 32), kampanye akhir di 22/32 (median menit 47; sebelumnya 24/32, median 45, selisih masih dalam batas acak). Tokoh ternyata bukan penghambat: sekali Era 4 tercapai dengan kredibilitas sehat, ketiganya jatuh dalam 3–9 menit
 - Tes ending memeriksa 6 kotak statistik + kartu rumor terbaik (sebelumnya 12 label)
 - `Balance.X` dibaca dari `data/balance.json` (static var); konstanta teknis tetap `const`
 - Serialisasi save dipindah dari `game_state.gd` ke `scripts/systems/state_serial.gd` (game_state.gd 297 → ±250 baris); save menyimpan hasil kampanye akhir
@@ -90,6 +92,10 @@ Berisi sisa 0.2.0 (MVP; masih kurang uji di HP dan uji dengan 3–5 teman) dan i
 
 ### Diperbaiki
 
+- Bot balancing (`tools/sesi_bot.gd`) kini deterministik: `GameClock._process` dimatikan selama bot berjalan, karena di sela `await process_frame` ia menambah sampai 5 tick dari waktu nyata dan membuat seed yang sama memberi hasil berbeda tiap run. Hasil bot sebelum perbaikan ini bervariasi antar-run
+- Layar 16:9: kertas headline tidak lagi menggencet peta. Chip slot kembali ramping (60 px) dengan area ketuk tetap 88 px (`ChipSlot._has_point`), dan ukuran huruf kalimat mengikuti panjang kalimat yang tampil (kata terisi), bukan hanya pola. Peta tersisa di 720×1280 dengan template dan kata terpanjang: 19 px → 176 px (ID dan EN)
+- Peta tidak menggambar warga saat tingginya di bawah tepi (dulu `sqrt` negatif → NaN dan ratusan peringatan "Vector2 cannot be normalized")
+- Kartu kata: nama lebih dari 16 huruf memakai huruf kecil, jadi "the community hall" muat; semua 312 kartu ID + EN muat (`test_tata_letak.gd`)
 - Save: kalau aplikasi mati di antara dua ganti nama saat autosave, `save.tmp` yang utuh (paling baru) kini dimuat lebih dulu daripada `save.bak`, jadi autosave terakhir tidak hilang. `save.tmp` yang terpotong dilewati tanpa disalin ke `save.rusak` ([ADR-0002](docs/architecture/adr-0002-backend-save.md), amandemen 2026-11-07)
 - UI (hasil audit): lembar bawah tidak lagi kosong atau setinggi layar saat pertama dibuka (tinggi mengikuti isi, maks. 90% layar lalu digulir); banner event dan feed tidak menyempit; banner baru tidak ikut tersembunyi oleh pudar banner lama dan tidak menghalangi ketukan ke peta; Naik Era bisa digulir sehingga tombol tidak terpotong; toko menjeda waktu dan membangun ulang daftar paling banyak sekali per frame; peta hanya digambar ulang saat status warga berubah atau ada animasi; label HUD, meja, kertas, dan offline ikut ganti bahasa; pilihan dilema yang uangnya kurang dinonaktifkan dan lembar hanya ditutup oleh pengendali event
 - Android: tombol Back menutup lapisan teratas lalu kembali ke layar judul (keluar dari judul), `quit_on_go_back=false`; jarak aman notch/bar gestur; area ketuk minimum 88 px (chip slot, panah template, strip HUD, toko, tombol bahasa); kartu tidak menahan geser tangan

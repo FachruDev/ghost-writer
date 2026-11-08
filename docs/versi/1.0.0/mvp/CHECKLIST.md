@@ -157,9 +157,9 @@ Semua pakai kotak abu-abu dan teks polos. **Jangan sentuh art.**
 - [x] Event E12 Kota Tak Percaya Lagi
 - [x] Penghasilan offline ringan (staf, maks 8 jam × 0,5)
 - [x] Semua harga dan pengali dipindah ke spreadsheet (`balancing/*.csv`), diekspor ke JSON (`tools/terapkan_balancing.gd`)
-- [ ] Ritme unlock: hal baru tiap 3–5 menit di awal, 10–15 menit di akhir
+- [ ] Ritme unlock: hal baru tiap 3–5 menit di awal, 10–15 menit di akhir — bot 2026-11-08 (32 sesi, median): 5 misi selesai menit 7, Era 2 menit 10, staf 12, Era 3 19, Era 4 31, kampanye akhir 45. Jarak awal 2–3 menit, akhir 12–14 menit; perlu dirasakan saat playtest
 - [ ] Musik ending (placeholder CC0, selesai), animasi ending, art ending (menunggu desain UI)
-- [ ] Satu perjalanan penuh kamar → ending dimainkan tanpa macet
+- [ ] Satu perjalanan penuh kamar → ending dimainkan tanpa macet — bot 2026-11-08 (32 sesi × 70 menit, deterministik, dengan tutorial dan petunjuk di main): tanpa crash/macet teknis; Era 4 27/32 sesi (median menit 31), kampanye akhir 24/32 (median menit 45, 19 menang). Tokoh bukan penghambat: sekali Era 4 tercapai dengan kredibilitas sehat, ketiganya jatuh dalam 3–9 menit. Yang menghambat: 8/32 sesi terjebak kredibilitas < 30 lebih dari 10 menit (dibongkar → kurang dipercaya → makin sering dibongkar), biasanya di Era 2–3. Setelah `KRED_PULIH_PER_DETIK` 0,1 → 0,2: 0/32 sesi terjebak, Era 4 31/32 (median menit 32), kampanye akhir 22/32 (median menit 47). Perlu dimainkan manusia
 
 ## 0.9.0 — Beta & polish
 
@@ -182,7 +182,7 @@ Save dasar sudah dibuat di 0.2.0 ([ADR-0002](../../../architecture/adr-0002-back
 
 - [ ] Angka uang melayang dari titik warga
 - [x] Getar ringan (haptic) saat headline dikirim (dan lebih kuat saat HOAKS; izin VIBRATE di preset Android)
-- [ ] Musik menu (`mus_menu`) dan kredit musik di layar Tentang — musik menu selesai (placeholder CC0, diputar di layar judul); layar Tentang belum ada
+- [ ] Musik menu (`mus_menu`) dan kredit musik di layar Tentang — musik menu selesai (placeholder CC0, diputar di layar judul); data kredit siap (`data/kredit.json` → `DataDB.kredit`, tes `test_kredit.gd`); layar Tentang belum ada
 - [ ] Rapikan semua art: satu palet, font utama + font mesin tik
 - [ ] Ikon aplikasi final (adaptive + monochrome), layar judul, splash
 
@@ -192,7 +192,7 @@ Save dasar sudah dibuat di 0.2.0 ([ADR-0002](../../../architecture/adr-0002-back
 - [ ] Batasi jumlah titik warga yang digambar; pakai `_draw()` satu node per distrik, bukan satu node per warga, jika mulai lag
 - [x] Pengaturan: suara, musik, getar, bahasa (Indonesia, Inggris)
 - [x] Semua teks EN lengkap: tes headless tidak menemukan field `en` kosong ([ADR-0004](../../../architecture/adr-0004-lokalisasi.md))
-- [ ] Kata EN terpanjang muat di kartu; uji UI dengan pseudolokalisasi — 311 dari 312 kartu (id + en) muat; "the community hall" lebih tinggi 7 px dari kartu
+- [ ] Kata EN terpanjang muat di kartu; uji UI dengan pseudolokalisasi — 312 dari 312 kartu (id + en) muat (`test_tata_letak.gd`); pseudolokalisasi belum
 - [x] Safe area untuk notch: beri margin atas di HUD (`UiKit.inset_aman`, juga tepi bawah lembar dan meja; belum diuji di HP bernotch)
 
 ## 1.0.0 — Rilis
