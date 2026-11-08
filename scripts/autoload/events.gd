@@ -113,3 +113,11 @@ signal tutorial_langkah(info: Dictionary)
 ## Pemain menekan Lewati di lapisan tutorial.
 @warning_ignore("unused_signal")
 signal tutorial_dilewati
+
+# --- Petunjuk sistem baru (0.9.0) ---
+## Petunjuk singkat yang perlu ditampilkan UI: {"id", "kunci", "sasaran", "nilai"} (lihat PetunjukController).
+@warning_ignore("unused_signal")
+signal petunjuk_tampil(info: Dictionary)
+## UI menutup petunjuk (ditekan atau hilang sendiri); petunjuk berikut boleh muncul.
+@warning_ignore("unused_signal")
+signal petunjuk_ditutup

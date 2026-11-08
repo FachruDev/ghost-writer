@@ -13,7 +13,7 @@ static func statistik_kosong() -> Dictionary:
 	return {
 		"total_rumor": 0, "total_uang": 0, "total_dibongkar": 0, "kata_dibeli": 0,
 		"rekor_warga": 0, "emosi_distrik": [], "rumor_terbaik": null, "event_sekali": [],
-		"tutorial_lewat": false,
+		"tutorial_lewat": false, "petunjuk": [],
 	}
 
 

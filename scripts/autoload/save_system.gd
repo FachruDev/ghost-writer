@@ -58,9 +58,12 @@ func simpan() -> Error:
 
 
 ## Mengembalikan false kalau tidak ada save valid (game baru).
+## save.tmp hanya tertinggal kalau proses mati di tengah simpan(). Kalau isinya utuh, ia sudah ditulis
+## penuh sebelum ganti nama, jadi selalu yang terbaru: dicoba lebih dulu. Tmp yang terpotong memang
+## wajar setelah tutup paksa, jadi dilewati tanpa disalin ke save.rusak.
 func muat() -> bool:
-	for path in [PATH, PATH_BAK, PATH_TMP]:
-		var data := _baca(path)
+	for path in [PATH_TMP, PATH, PATH_BAK]:
+		var data := _baca(path, path != PATH_TMP)
 		if data.is_empty():
 			continue
 		GameState.dari_dict(_migrasi(data))
@@ -106,12 +109,14 @@ func _hapus_file() -> void:
 			DirAccess.remove_absolute(path)
 
 
-func _baca(path: String) -> Dictionary:
+func _baca(path: String, catat_rusak := true) -> Dictionary:
 	if not FileAccess.file_exists(path):
 		return {}
 	var json := JSON.new()
 	if json.parse(FileAccess.get_file_as_string(path)) == OK and json.data is Dictionary and json.data.has("pemain"):
 		return json.data
+	if not catat_rusak:
+		return {}
 	push_warning("SaveSystem: %s rusak, disalin ke %s" % [path, PATH_RUSAK])
 	DirAccess.copy_absolute(path, PATH_RUSAK)
 	return {}

@@ -176,13 +176,13 @@ Save dasar sudah dibuat di 0.2.0 ([ADR-0002](../../../architecture/adr-0002-back
 **Onboarding**
 
 - [x] Tutorial 3 langkah yang dimainkan, bukan dibaca: isi slot → kirim → beli kata — logika `TutorialController` (tes `test_tutorial.gd`) + lapisan UI tangan penunjuk, teks, dan Lewati (`tutorial_lapisan.gd`, tes `test_tutorial_lapisan.gd`); belum diuji di HP
-- [ ] Tooltip singkat saat sistem baru terbuka (kredibilitas, saluran, staf)
+- [x] Tooltip singkat saat sistem baru terbuka (kredibilitas, saluran, staf) — logika `PetunjukController` (tes `test_petunjuk.gd`) + kartu petunjuk berekor dengan tombol Oke (`petunjuk_lapisan.gd`, tes `test_petunjuk_lapisan.gd`); belum diuji di HP
 
 **Juice & aset**
 
 - [ ] Angka uang melayang dari titik warga
 - [x] Getar ringan (haptic) saat headline dikirim (dan lebih kuat saat HOAKS; izin VIBRATE di preset Android)
-- [ ] Musik menu (`mus_menu`) dan kredit musik di layar Tentang
+- [ ] Musik menu (`mus_menu`) dan kredit musik di layar Tentang — musik menu selesai (placeholder CC0, diputar di layar judul); layar Tentang belum ada
 - [ ] Rapikan semua art: satu palet, font utama + font mesin tik
 - [ ] Ikon aplikasi final (adaptive + monochrome), layar judul, splash
 

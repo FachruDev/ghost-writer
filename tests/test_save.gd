@@ -37,6 +37,37 @@ func test_save_rusak_dimuat_dari_cadangan() -> void:
 	assert_bool(FileAccess.file_exists(SaveSystem.PATH_RUSAK)).is_true()
 
 
+## Mati di antara dua ganti nama: save.json → save.bak sudah, save.tmp → save.json belum.
+func test_mati_di_antara_ganti_nama_memuat_tmp_terbaru() -> void:
+	_simpan_dengan_uang(222)
+	_simpan_dengan_uang(333)
+	DirAccess.rename_absolute(SaveSystem.PATH, SaveSystem.PATH_TMP)  # tmp 333, bak 222, json tidak ada
+	GameState.mulai_baru()
+	assert_bool(SaveSystem.muat()).is_true()
+	assert_int(GameState.uang).is_equal(333)
+
+
+## Mati setelah save.tmp ditulis penuh, sebelum ganti nama pertama: tmp lebih baru dari json.
+func test_mati_sebelum_ganti_nama_memuat_tmp_terbaru() -> void:
+	_simpan_dengan_uang(222)
+	_simpan_dengan_uang(333)  # json 333, bak 222
+	DirAccess.rename_absolute(SaveSystem.PATH, SaveSystem.PATH_TMP)
+	DirAccess.copy_absolute(SaveSystem.PATH_BAK, SaveSystem.PATH)  # tmp 333, json 222
+	GameState.mulai_baru()
+	assert_bool(SaveSystem.muat()).is_true()
+	assert_int(GameState.uang).is_equal(333)
+
+
+## Mati saat menulis save.tmp: tmp terpotong dilewati diam-diam, json tetap dipakai.
+func test_tmp_terpotong_dilewati_tanpa_save_rusak() -> void:
+	_simpan_dengan_uang(222)
+	_rusak(SaveSystem.PATH_TMP)
+	GameState.mulai_baru()
+	assert_bool(SaveSystem.muat()).is_true()
+	assert_int(GameState.uang).is_equal(222)
+	assert_bool(FileAccess.file_exists(SaveSystem.PATH_RUSAK)).is_false()
+
+
 func test_semua_save_rusak_berarti_game_baru_tanpa_crash() -> void:
 	_simpan_dengan_uang(111)
 	_simpan_dengan_uang(222)

@@ -19,6 +19,7 @@ const SHOP := preload("res://scenes/ui/shop.tscn")
 const JUDUL := "res://scenes/ui/judul.tscn"
 const ENDING := preload("res://scenes/ui/ending.tscn")
 const TUTORIAL := preload("res://scenes/ui/tutorial_lapisan.gd")
+const PETUNJUK := preload("res://scenes/ui/petunjuk_lapisan.gd")
 
 ## Tepi kiri-kanan isi layar (12 px kanvas).
 const TEPI := 24
@@ -65,6 +66,9 @@ func _ready() -> void:
 	var tutorial := TutorialController.new()
 	tutorial.name = "TutorialController"
 	add_child(tutorial)
+	var petunjuk := PetunjukController.new()
+	petunjuk.name = "PetunjukController"
+	add_child(petunjuk)
 	SaveSystem.sumber_snapshot = rumor.snapshot_untuk_save
 	var tata := VBoxContainer.new()
 	tata.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -84,6 +88,7 @@ func _ready() -> void:
 	add_child(SHOP.instantiate())
 	add_child(ENDING.instantiate())
 	add_child(TUTORIAL.new())  # CanvasLayer: selalu di atas lembar, termasuk toko
+	add_child(PETUNJUK.new())  # CanvasLayer di bawah tutorial; menunggu lembar ditutup
 	_umumkan_offline.call_deferred()
 
 

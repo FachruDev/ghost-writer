@@ -32,6 +32,10 @@ const MUSIK_ERA := {
 }
 ## Layar ending: diputar sekali (tidak loop), lalu kembali ke musik era saat lanjut bermain.
 const MUSIK_ENDING := preload("res://assets/music/mus_ending.ogg")
+## Layar judul; loop diatur di .import. Ganti musik mengikuti root scene yang masuk ke tree.
+const MUSIK_MENU := preload("res://assets/music/mus_menu.ogg")
+const SCENE_JUDUL := "res://scenes/ui/judul.tscn"
+const SCENE_MAIN := "res://scenes/main/main.tscn"
 ## Lapisan tegang di atas musik era selama ancaman (termasuk E12); loop diatur di .import.
 const MUSIK_ANCAMAN := preload("res://assets/music/mus_threat.ogg")
 const VOLUME_ANCAMAN_DB := -4.0
@@ -113,6 +117,17 @@ func putar_musik_era(era: int) -> void:
 		_dengung.play()
 	elif era < 4:
 		_dengung.stop()
+
+
+## Layar judul: musik menu tanpa dengung server dan lapisan ancaman.
+func putar_musik_menu() -> void:
+	atur_lapisan_ancaman(false)
+	_dengung.stop()
+	_era_musik = 0  # kembali ke permainan memutar musik era tanpa stinger naik era
+	if _musik.stream == MUSIK_MENU and _musik.playing:
+		return
+	_musik.stream = MUSIK_MENU
+	_musik.play()
 
 
 func putar(nama: String, variasi_pitch: float = 0.0) -> void:
@@ -209,6 +224,11 @@ func _hubungkan() -> void:
 ## Grup "tanpa_klik" dicek saat ditekan: node_added terpanggil sebelum _ready tombol, jadi tombol yang
 ## masuk grup di _ready-nya sendiri (WordCard) belum terlihat di sini.
 func _on_node_added(node: Node) -> void:
+	match node.scene_file_path:
+		SCENE_JUDUL:
+			putar_musik_menu()
+		SCENE_MAIN:
+			putar_musik_era(GameState.era)
 	if node is BaseButton:
 		(node as BaseButton).pressed.connect(_klik.bind(node))
 

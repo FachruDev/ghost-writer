@@ -215,3 +215,7 @@ UI_TUT_BELI,Beli satu kata untuk menambah pilihan rumor,Buy a word to get more r
 UI_TUT_LANGKAH,LANGKAH %d/%d,STEP %d/%d
 UI_TUT_LEWATI,Lewati,Skip
 UI_TUT_SELESAI,Mantap! Sekarang kota ini milikmu.,Nice! This town is yours now.
+UI_TIP_KREDIBILITAS,"Kredibilitas turun kalau rumormu dibongkar, dan rumor berikutnya jadi sulit dipercaya. Panas naik tiap kirim; makin panas, makin mudah dibongkar.","Credibility drops when a rumor gets debunked, making the next ones harder to believe. Heat rises with every send; the hotter it gets, the easier you get debunked."
+UI_TIP_SALURAN,Saluran baru terbuka: %s. Ketuk tombol saluran di meja untuk memakainya.,New channel unlocked: %s. Tap the channel button on your desk to use it.
+UI_TIP_STAF,Stafmu kini mengirim rumor kecil sendiri tiap %d detik. Cincin di HUD menghitung mundur.,Your staff now sends a small rumor every %d seconds. The ring on the HUD counts down.
+UI_TIP_OKE,Oke,Got it

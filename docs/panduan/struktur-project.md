@@ -28,6 +28,7 @@ res://
     main/tokoh_controller.gd    # tokoh target dan pertahanannya (era 4)
     main/final_controller.gd    # kampanye akhir + E12
     main/tutorial_controller.gd # tutorial 3 langkah: sasaran yang ditunjuk UI
+    main/petunjuk_controller.gd # petunjuk singkat saat sistem baru terbuka
     city/city.tscn          # peta: feed, banner, stempel HOAKS, uang melayang
     city/peta_jaringan.gd   # warga = wajah, tetangga = garis (Konsep A "Jaringan Gosip")
     city/feed.tscn          # feed kabar satu baris, ketuk untuk 5 terakhir
@@ -48,6 +49,7 @@ res://
     ui/hantu.gd             # maskot Si Hantu Penulis (digambar, 4 suasana)
     ui/tutorial_lapisan.gd  # lapisan tutorial (CanvasLayer): tangan_tunjuk.gd, tutorial_gelembung.gd,
     ui/tutorial_sasaran.gd  #   dan pencari node sasaran lewat grup
+    ui/petunjuk_lapisan.gd  # kartu petunjuk sistem baru (petunjuk_kartu.gd) + ekor ke sasaran
   scripts/
     autoload/game_state.gd   # uang, pengikut, kredibilitas, kartu dimiliki
     autoload/data_db.gd      # memuat semua JSON saat start
@@ -178,7 +180,7 @@ Detail lengkap ada di [ADR-0002](../architecture/adr-0002-backend-save.md); ring
 | Pengaturan (bahasa, suara, musik, getar) | `user://settings.cfg` (`ConfigFile`) | Tetap ada walaupun progres di-reset |
 
 - Save hanya menyimpan **ID** konten (`pak_rt`, `t_dasar`), bukan isinya. Riwayat menyimpan `template_id` + `kata_ids`, dan headline disusun saat ditampilkan, jadi riwayat ikut berganti bahasa.
-- Tulis atomik: tulis ke `save.tmp`, file lama jadi `save.bak`, lalu `save.tmp` di-rename jadi `save.json`. Saat memuat dicoba berurutan `save.json` → `save.bak` → `save.tmp`.
+- Tulis atomik: tulis ke `save.tmp`, file lama jadi `save.bak`, lalu `save.tmp` di-rename jadi `save.json`. Saat memuat dicoba berurutan `save.tmp` (hanya ada kalau proses mati di tengah simpan; kalau utuh, itu yang terbaru) → `save.json` → `save.bak`.
 - `versi_skema` di file; setiap perubahan skema = satu fungsi migrasi baru, migrasi lama tidak pernah diubah.
 - Angka dari JSON terbaca sebagai float; cast `int()` saat memuat.
 - Autosave tiap 30 detik (waktu nyata) dan saat `NOTIFICATION_APPLICATION_PAUSED`; di desktop juga saat `NOTIFICATION_WM_CLOSE_REQUEST`.

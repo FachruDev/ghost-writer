@@ -133,6 +133,7 @@ func _baris_meter(induk: Control) -> void:
 	_bar_panas = panas[0]
 	_angka_panas = panas[1]
 	_staf = UiKit.panel(baris, Palet.PANEL, 999, 0)
+	_staf.add_to_group(PetunjukLapisan.STAF)
 	var gaya := _staf.get_theme_stylebox("panel") as StyleBoxFlat
 	gaya.content_margin_left = 6
 	gaya.content_margin_right = 16
@@ -147,6 +148,7 @@ func _baris_meter(induk: Control) -> void:
 func _meter(induk: Control, ikon_nama: String, warna: Color) -> Array:
 	var baris := UiKit.baris(induk, 10)
 	baris.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	baris.add_to_group(PetunjukLapisan.KREDIBILITAS)  # petunjuk menunjuk kedua meter sekaligus
 	UiKit.ikon(baris, ikon_nama, 30, warna)
 	var b := UiKit.bar(baris, warna, 18)
 	b.size_flags_horizontal = Control.SIZE_EXPAND_FILL

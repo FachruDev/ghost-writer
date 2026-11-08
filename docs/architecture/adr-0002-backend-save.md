@@ -88,11 +88,13 @@ simpan():
   rename save.tmp → save.json
 
 muat():
-  coba save.json ──gagal──► coba save.bak ──gagal──► coba save.tmp ──gagal──► game baru
-       │ berhasil                                          (file rusak disalin ke save.rusak)
+  coba save.tmp ──gagal──► coba save.json ──gagal──► coba save.bak ──gagal──► game baru
+       │ berhasil     (tmp terpotong dilewati diam-diam; json/bak rusak disalin ke save.rusak)
        ▼
   migrasi(versi_skema → terbaru) ──► GameState.dari_dict()
 ```
+
+Amandemen 2026-11-07: urutan muat semula `save.json → save.bak → save.tmp`. `save.tmp` hanya tertinggal kalau proses mati di tengah `simpan()`, dan kalau isinya JSON utuh berarti sudah ditulis penuh sebelum ganti nama, jadi selalu data terbaru. Dengan urutan lama, mati di antara dua ganti nama (sering terjadi di Windows saat `tools/uji_tutup_paksa.gd`) memuat `save.bak` dan satu autosave hilang. Tes: `test_save.gd` (`test_mati_*`, `test_tmp_terpotong_*`).
 
 ### Key Interfaces
 
