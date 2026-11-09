@@ -189,7 +189,7 @@ Save dasar sudah dibuat di 0.2.0 ([ADR-0002](../../../architecture/adr-0002-back
 **Teknis**
 
 - [ ] Uji di minimal 2 HP berbeda (satu kelas bawah)
-- [ ] Batasi jumlah titik warga yang digambar; pakai `_draw()` satu node per distrik, bukan satu node per warga, jika mulai lag
+- [x] Batasi jumlah titik warga yang digambar; pakai `_draw()` satu node per distrik, bukan satu node per warga, jika mulai lag — 2026-11-09: peta dulu digambar ulang penuh tiap frame selama rumor menjalar (Era 4: 32 ms/frame di desktop Intel UHD). Kini tiga lapisan (latar statis, wajah saat status berubah, animasi tiap frame) dan wajah dari atlas tekstur: Era 4 median 3,7 ms, p95 5,6 ms, draw call 2.615 → 470. Belum diukur di HP kelas bawah
 - [x] Pengaturan: suara, musik, getar, bahasa (Indonesia, Inggris)
 - [x] Semua teks EN lengkap: tes headless tidak menemukan field `en` kosong ([ADR-0004](../../../architecture/adr-0004-lokalisasi.md))
 - [x] Kata EN terpanjang muat di kartu; uji UI dengan pseudolokalisasi — 312 dari 312 kartu (id + en) muat (`test_tata_letak.gd`). Pseudolokalisasi 2026-11-09 (teks UI +30%, ID dan EN, 15 layar di 720×1280): tidak ada teks UI yang di-hardcode; yang baru meluber hanya dengan +30%: judul GHOSTWRITER di layar judul dan Tentang, teks KIRIM "Ketuk distrik di peta" (+8 px), baris hadiah di lembar Tokoh EN (+6 px), dan grid statistik ending ID (+22 px). Dengan teks dan angka asli semuanya muat

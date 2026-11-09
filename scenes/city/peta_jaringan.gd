@@ -4,27 +4,39 @@ extends Control
 ## garis = tetangga (jalur tular), gugus distrik bercahaya warna emosi favoritnya.
 ## Posisi diambil dari SpreadSim lalu disusutkan ke pusat distrik supaya antar-gugus ada celah.
 ## Tap gugus -> Events.distrik_dipilih.
-## Digambar ulang hanya saat status warga berubah, pilihan/bahasa/ukuran berubah, atau selama ada
-## animasi (rumor menjalar, gelembung baru) — bukan setiap frame (hemat baterai HP kelas bawah).
+## Tiga lapisan supaya peta tidak digambar ulang penuh tiap frame (Era 4 dulu ±30 ms/frame di desktop):
+##   PetaLatar (di belakang): kotak, grid, cahaya distrik; hanya saat ukuran/susunan distrik berubah.
+##   node ini: garis tetangga, wajah warga, label distrik; hanya saat status warga, pilihan, bahasa,
+##     atau ukuran berubah.
+##   PetaAnimasi (di depan): denyut, gelembung, cincin TARGET; tiap frame selama ada animasi.
 
 const SUSUT := 0.78
 const PAD := 16.0
 const JARAK_GRID := 32.0
 const GARIS_PER_WARGA := 2
-const UMUR_GELEMBUNG := 2.5
+const UMUR_GELEMBUNG := PetaAnimasi.UMUR_GELEMBUNG
 
 var dipilih := "":
 	set(v):
 		dipilih = v
 		queue_redraw()
+		if _animasi:
+			_animasi.queue_redraw()
 
 var _sim: SpreadSim
 var _waktu := 0.0
-var _cahaya: GradientTexture2D
 var _font: Font
 var _gaya_label: StyleBoxFlat
 var _jejak := 0  # hash status warga terakhir yang digambar
 var _animasi_sampai := 0.0  # detik (jam dinding) sampai animasi gelembung selesai
+var _beranimasi := false
+var _latar: PetaLatar
+var _animasi: PetaAnimasi
+var _atlas: AtlasWajah
+## Posisi layar tiap warga dan jari-jari wajah; dihitung ulang saat ukuran atau simulasi berganti.
+var _posisi := PackedVector2Array()
+var _ukuran_posisi := Vector2.ZERO
+var _r := 10.0
 
 
 func _ready() -> void:
@@ -32,26 +44,66 @@ func _ready() -> void:
 	add_to_group(TutorialSasaran.PETA)
 	_font = Tema.font_ui(700)
 	_gaya_label = Palet.kotak(Color(Palet.MALAM, 0.88), Color.TRANSPARENT, 999)
-	var g := Gradient.new()
-	g.set_color(0, Color(1, 1, 1, 0.5))
-	g.set_color(1, Color(1, 1, 1, 0.0))
-	g.add_point(0.6, Color(1, 1, 1, 0.16))
-	_cahaya = GradientTexture2D.new()
-	_cahaya.gradient = g
-	_cahaya.fill = GradientTexture2D.FILL_RADIAL
-	_cahaya.fill_from = Vector2(0.5, 0.5)
-	_cahaya.fill_to = Vector2(1.0, 0.5)
-	_cahaya.width = 128
-	_cahaya.height = 128
+	_latar = PetaLatar.new()
+	_latar.peta = self
+	add_child(_latar)
+	_animasi = PetaAnimasi.new()
+	_animasi.peta = self
+	add_child(_animasi)
+	_atlas = AtlasWajah.new()
+	_atlas.siap.connect(queue_redraw)
+	add_child(_atlas)
 	Events.warga_berubah.connect(_on_warga_berubah)
 	Bahasa.bahasa_berubah.connect(func(_k: String) -> void: queue_redraw())
-	resized.connect(queue_redraw)
+	resized.connect(_gambar_ulang_semua)
 
 
 func atur_sim(sim: SpreadSim) -> void:
 	_sim = sim
 	_jejak = 0
+	_posisi.clear()
+	_gambar_ulang_semua()
+
+
+func _gambar_ulang_semua() -> void:
 	queue_redraw()
+	if _latar:
+		_latar.queue_redraw()
+		_animasi.queue_redraw()
+
+
+## Data untuk lapisan PetaLatar dan PetaAnimasi.
+func sim() -> SpreadSim:
+	return _sim
+
+
+func posisi() -> PackedVector2Array:
+	return _posisi
+
+
+func jari() -> float:
+	return _r
+
+
+func waktu() -> float:
+	return _waktu
+
+
+## Posisi layar warga siap dipakai (simulasi ada dan peta cukup besar untuk digambar).
+func siap() -> bool:
+	if _sim == null or _sim.posisi.is_empty():
+		return false
+	var d := _dalam()
+	if d.size.x <= 0.0 or d.size.y <= 0.0:
+		return false  # peta lebih kecil dari tepinya: sqrt di bawah akan NaN
+	var n := _sim.posisi.size()
+	if _posisi.size() != n or _ukuran_posisi != size:
+		_ukuran_posisi = size
+		_r = clampf(sqrt(d.size.x * d.size.y * SUSUT * SUSUT / n) * 0.27, 6.0, 17.0)
+		_posisi.resize(n)
+		for i in n:
+			_posisi[i] = _layar(_sim.posisi[i], _sim.distrik_warga[i])
+	return true
 
 
 ## warga_berubah dipancarkan tiap tick; gambar ulang hanya kalau ada status yang benar-benar berubah.
@@ -68,9 +120,13 @@ func _on_warga_berubah() -> void:
 func _process(delta: float) -> void:
 	if _sim == null:
 		return
-	if _sim.ada_rumor_aktif() or Time.get_ticks_msec() / 1000.0 < _animasi_sampai:
+	var aktif := _sim.ada_rumor_aktif() or Time.get_ticks_msec() / 1000.0 < _animasi_sampai
+	if aktif:
 		_waktu += delta
-		queue_redraw()
+	# Satu gambar ulang lagi setelah animasi selesai supaya gelembung terakhir hilang.
+	if aktif or _beranimasi:
+		_animasi.queue_redraw()
+	_beranimasi = aktif
 
 
 ## Pusat gugus distrik dalam koordinat lokal (dipakai untuk uang melayang).
@@ -108,42 +164,30 @@ func _rect_gugus(i: int) -> Rect2:
 
 
 func _draw() -> void:
-	draw_style_box(Palet.kotak(Palet.PETA, Color.TRANSPARENT, 40), Rect2(Vector2.ZERO, size))
-	var y := JARAK_GRID / 2.0
-	while y < size.y:
-		var x := JARAK_GRID / 2.0
-		while x < size.x:
-			draw_circle(Vector2(x, y), 2.0, Palet.PANEL_2)
-			x += JARAK_GRID
-		y += JARAK_GRID
-	if _sim == null or _sim.posisi.is_empty():
+	if not siap():
 		return
-	var n := _sim.posisi.size()
-	var d := _dalam()
-	if d.size.x <= 0.0 or d.size.y <= 0.0:
-		return  # peta lebih kecil dari tepinya: sqrt di bawah akan NaN
-	var r := clampf(sqrt(d.size.x * d.size.y * SUSUT * SUSUT / n) * 0.27, 6.0, 17.0)
-	for i in DataDB.districts.size():
-		_gambar_cahaya(i)
-	var layar := PackedVector2Array()
-	layar.resize(n)
-	for i in n:
-		layar[i] = _layar(_sim.posisi[i], _sim.distrik_warga[i])
-	_gambar_garis(layar, r)
-	_gambar_denyut(layar, r)
-	for i in n:
-		GambarWajah.gambar(self, layar[i], r, _sim.status[i], i)
-	_gambar_gelembung(layar, r)
+	_gambar_garis(_posisi, _r)
+	_gambar_wajah()
 	for i in DataDB.districts.size():
 		_gambar_label(i)
 
 
-func _gambar_cahaya(i: int) -> void:
-	var rg := _rect_gugus(i).grow(minf(size.x, size.y) * 0.08)
-	var warna: Color = Palet.EMOSI_PETA.get(str(DataDB.districts[i].get("emosi_favorit", "netral")), Palet.GARIS)
-	draw_texture_rect(_cahaya, rg, false, warna)
-	if str(DataDB.districts[i].get("id", "")) == dipilih:
-		_elips_putus(_rect_gugus(i).grow(r_cincin()), Palet.PINK)
+## Wajah dari atlas tekstur (satu potongan per warga); sebelum atlas siap, digambar langsung.
+func _gambar_wajah() -> void:
+	_atlas.siapkan(_r)
+	if not _atlas.cocok(_r):
+		for i in _posisi.size():
+			GambarWajah.gambar(self, _posisi[i], _r, _sim.status[i], i)
+		return
+	var t := _atlas.tekstur
+	var ukuran := Vector2(_atlas.sel(), _atlas.sel())
+	var cahaya := _atlas.region_cahaya()
+	var warna_cahaya := Color(Palet.PINK, 0.16)
+	for i in _posisi.size():
+		if _sim.status[i] == SpreadSim.Status.PERCAYA:
+			draw_texture_rect_region(t, Rect2((_posisi[i] - ukuran / 2.0).round(), ukuran), cahaya, warna_cahaya)
+	for i in _posisi.size():
+		draw_texture_rect_region(t, Rect2((_posisi[i] - ukuran / 2.0).round(), ukuran), _atlas.region(_sim.status[i], i))
 
 
 func r_cincin() -> float:
@@ -165,37 +209,6 @@ func _gambar_garis(layar: PackedVector2Array, r: float) -> void:
 				draw_dashed_line(layar[i], layar[j], Color(Palet.PINK, 0.5) if tular else Color(Palet.TEKS_REDUP, 0.45), tebal, 8.0)
 			else:
 				draw_line(layar[i], layar[j], Color(Palet.PINK, 0.55) if tular else Color(Palet.GARIS, 0.55), tebal)
-
-
-## Titik pink merambat dari warga yang sedang menular ke tetangganya.
-func _gambar_denyut(layar: PackedVector2Array, r: float) -> void:
-	for i in layar.size():
-		if not _sim.sedang_menular(i):
-			continue
-		var t := _sim.tetangga(i)
-		for k in mini(3, t.size()):
-			var j := t[k]
-			if _sim.status[j] == SpreadSim.Status.KEBAL:
-				continue
-			var f := fmod(_waktu * 1.6 + i * 0.137 + k * 0.33, 1.0)
-			var p := layar[i].lerp(layar[j], f)
-			draw_circle(p, r * 0.75, Color(Palet.PINK, 0.25))
-			draw_circle(p, r * 0.38, Palet.PINK)
-		var umur := _sim.jam - _sim.terakhir_berubah[i]
-		if umur < Balance.DURASI_DENYUT_DETIK:
-			var u := umur / Balance.DURASI_DENYUT_DETIK
-			draw_arc(layar[i], r + 4.0 + u * r * 1.6, 0.0, TAU, 24, Color(Palet.STATUS[_sim.status[i]], 1.0 - u), 3.0)
-
-
-## Gelembung "!"/"?" hanya untuk warga yang baru berubah, supaya peta tidak penuh.
-func _gambar_gelembung(layar: PackedVector2Array, r: float) -> void:
-	for i in layar.size():
-		var s := _sim.status[i]
-		if s != SpreadSim.Status.PERCAYA and s != SpreadSim.Status.RAGU:
-			continue
-		if _sim.jam - _sim.terakhir_berubah[i] > UMUR_GELEMBUNG:
-			continue
-		GambarWajah.gelembung(self, layar[i], r, s, _font, absf(sin(_waktu * 5.0 + i)) * r * 0.25)
 
 
 func _gambar_label(i: int) -> void:
@@ -230,19 +243,6 @@ func _pin_target(p: Vector2) -> void:
 	var kotak := Rect2(p + Vector2(-lebar + 6.0, -14.0), Vector2(lebar, 26.0))
 	draw_style_box(Palet.tebal(Palet.PINK, Palet.PINK_GELAP, 999, 4), kotak)
 	draw_string(_font, kotak.position + Vector2(10, 19), teks, HORIZONTAL_ALIGNMENT_LEFT, -1, ukuran, Palet.TINTA)
-
-
-func _elips_putus(rg: Rect2, warna: Color) -> void:
-	var c := rg.get_center()
-	var rx := rg.size.x / 2.0
-	var ry := rg.size.y / 2.0
-	var langkah := 40
-	for k in langkah:
-		if k % 2 == 1:
-			continue
-		var a0 := TAU * k / langkah + _waktu * 0.3
-		var a1 := TAU * (k + 1) / langkah + _waktu * 0.3
-		draw_line(c + Vector2(cos(a0) * rx, sin(a0) * ry), c + Vector2(cos(a1) * rx, sin(a1) * ry), warna, 4.0)
 
 
 func _ikut(s: int) -> bool:

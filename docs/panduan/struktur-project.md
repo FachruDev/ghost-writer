@@ -32,6 +32,8 @@ res://
     main/petunjuk_controller.gd # petunjuk singkat saat sistem baru terbuka
     city/city.tscn          # peta: feed, banner, stempel HOAKS, uang melayang
     city/peta_jaringan.gd   # warga = wajah, tetangga = garis (Konsep A "Jaringan Gosip")
+    city/peta_latar.gd      # lapisan latar statis peta (kotak, grid, cahaya distrik)
+    city/peta_animasi.gd    # lapisan animasi peta (denyut, gelembung, cincin TARGET)
     city/feed.tscn          # feed kabar satu baris, ketuk untuk 5 terakhir
     city/event_banner.tscn  # banner modifier/peluang/ancaman
     desk/desk.tscn          # meja: kertas headline, tangan, saluran + KIRIM
@@ -74,6 +76,7 @@ res://
     ui/tema.gd               # Theme global + font (Lilita One, Fredoka, Courier Prime)
     ui/ui_kit.gd             # pembuat label, tombol, pil, bar, ikon
     ui/gambar_wajah.gd       # menggambar wajah warga per status
+    ui/atlas_wajah.gd        # atlas tekstur wajah (status × variasi) untuk peta
     systems/headline_builder.gd  # susun headline dari template_id + kata_ids
   tests/                     # tes gdUnit4
   tools/sesi_bot.gd          # bot balancing: simulasi sesi headless
