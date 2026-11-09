@@ -9,6 +9,9 @@ const LAPIS := 20
 const JARAK := 24.0  # jarak gelembung dari zona sasaran
 const TEPI := 24.0
 const LAMA_SELESAI := 3.0
+## Sasaran selebar ini atau lebih dianggap tombol berlabel; ujung jari digeser GESER_JARI x lebar dari tengah.
+const LEBAR_LUAS := 200.0
+const GESER_JARI := 0.32
 
 var _info: Dictionary = {}
 var _sasaran: Dictionary = {}
@@ -81,7 +84,7 @@ func _process(delta: float) -> void:
 		var di_bawah := r.get_center().y > _kanvas.size.y - 220.0
 		_tangan.miring = TanganTunjuk.MIRING_BAWAH if di_bawah else TanganTunjuk.MIRING
 		# Dekat tepi bawah: ujung jari sedikit di atas tengah supaya badan tangan tidak terpotong layar.
-		_tangan.position = Vector2(r.get_center().x, r.position.y + r.size.y * (0.35 if di_bawah else 0.5))
+		_tangan.position = Vector2(_x_jari(r), r.position.y + r.size.y * (0.35 if di_bawah else 0.5))
 		var batas := _tangan.batas()
 		batas.position += _tangan.position
 		zona = (_sasaran["zona"] as Rect2).merge(batas)
@@ -91,6 +94,14 @@ func _process(delta: float) -> void:
 		_gulir_sekali(node)
 	_letakkan_gelembung(zona)
 	_kanvas.queue_redraw()
+
+
+## Sasaran lebar (KIRIM!, "Beli · 40"): ujung jari digeser ke sisi tempat badan tangan menjulur, supaya
+## tangan menutupi tepi tombol, bukan labelnya di tengah. Sasaran sempit (kartu, ikon) tetap di tengah.
+func _x_jari(r: Rect2) -> float:
+	if r.size.x < LEBAR_LUAS:
+		return r.get_center().x
+	return r.get_center().x + r.size.x * GESER_JARI * (-1.0 if _tangan.cermin else 1.0)
 
 
 ## Lembar yang terbuka paling depan (Lembar.buka() memindahkannya ke anak terakhir main).

@@ -169,6 +169,22 @@ static func inset_aman(n: Node) -> Vector2:
 	return Vector2(atas, bawah)
 
 
+## Angka ringkas untuk HUD: di bawah 100.000 ditulis utuh, lalu "995 rb"/"995K" dan "1,2 jt"/"1.2M".
+## Dibulatkan ke bawah supaya tidak terlihat lebih banyak dari yang dimiliki.
+static func angka_ringkas(n: int) -> String:
+	var mutlak := absi(n)
+	var tanda := "-" if n < 0 else ""
+	if mutlak < 100000:
+		return Bahasa.angka(n)
+	if mutlak < 1000000:
+		return tanda + TranslationServer.translate("UI_ANGKA_RIBU") % Bahasa.angka(mutlak / 1000)
+	var persepuluh := mutlak / 100000  # dalam 0,1 juta
+	var s := Bahasa.angka(persepuluh / 10)
+	if persepuluh < 1000:  # di bawah 100 juta: satu angka desimal
+		s += ("," if Bahasa.kode() == "id" else ".") + str(persepuluh % 10)
+	return tanda + TranslationServer.translate("UI_ANGKA_JUTA") % s
+
+
 ## Lapisan gelap layar penuh di belakang lembar/modal; menelan klik.
 static func redup(induk: Node, alfa: float = 0.75) -> ColorRect:
 	var r := ColorRect.new()

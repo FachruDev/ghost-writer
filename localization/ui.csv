@@ -232,3 +232,5 @@ UI_KREDIT_GODOT_KET,godotengine.org · Lisensi MIT,godotengine.org · MIT Licens
 UI_KREDIT_LISENSI,Lihat lisensi,View license
 UI_KREDIT_SEMBUNYI,Sembunyikan lisensi,Hide license
 UI_KREDIT_PIHAK_KETIGA,Komponen pihak ketiga di dalam Godot Engine:,Third-party components in Godot Engine:
+UI_ANGKA_RIBU,%s rb,%sK
+UI_ANGKA_JUTA,%s jt,%sM

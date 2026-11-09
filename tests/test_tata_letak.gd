@@ -1,8 +1,10 @@
 extends GdUnitTestSuite
 ## Tata letak meja di layar 16:9 (feedback UI): chip slot ramping dengan area ketuk 88 px, ukuran
-## huruf kertas mengikuti kalimat yang tampil, dan semua nama kata muat di kartunya (ID + EN).
+## huruf kertas mengikuti kalimat yang tampil, semua nama kata muat di kartunya (ID + EN), dan nama era
+## di HUD tidak terpotong walau angka uang/pengikut besar (angka diringkas).
 
 const WORD_CARD := preload("res://scenes/card/word_card.tscn")
+const HUD := preload("res://scenes/ui/hud.tscn")
 
 var _kode_awal := ""
 
@@ -66,3 +68,39 @@ func test_nama_kata_muat_di_kartu_id_dan_en() -> void:
 			if isi.get_combined_minimum_size().y > kartu.size.y:
 				tidak_muat.append("%s:%s" % [kode, id])
 	assert_array(tidak_muat).is_empty()
+
+
+func test_angka_hud_diringkas_mulai_100_ribu() -> void:
+	var kasus := {99999: ["99.999", "99,999"], 100000: ["100 rb", "100K"], 995400: ["995 rb", "995K"],
+		1250000: ["1,2 jt", "1.2M"], 123456789: ["123 jt", "123M"], -250000: ["-250 rb", "-250K"]}
+	for i in 2:
+		var kode: String = ["id", "en"][i]
+		Bahasa._kode = kode
+		TranslationServer.set_locale(kode)
+		for n in kasus:
+			assert_str(UiKit.angka_ringkas(n)).is_equal(kasus[n][i])
+
+
+func test_nama_era_hud_tidak_terpotong_dengan_angka_besar() -> void:
+	var lama := [GameState.era, GameState.uang, GameState.pengikut]
+	var wadah: VBoxContainer = auto_free(VBoxContainer.new())
+	wadah.size = Vector2(672, 400)  # lebar HUD di layar 720 (tepi 24 kiri-kanan)
+	add_child(wadah)
+	var hud: Control = HUD.instantiate()
+	wadah.add_child(hud)
+	GameState.era = 4
+	GameState.uang = 995400
+	GameState.pengikut = 20050
+	for kode in ["id", "en"]:
+		Bahasa._kode = kode
+		TranslationServer.set_locale(kode)
+		hud._segarkan()
+		await _bingkai(3)
+		var nama: Label = hud._era_nama
+		var ukuran := nama.get_theme_font_size("font_size")
+		var lebar := nama.get_theme_font("font").get_string_size(nama.text, HORIZONTAL_ALIGNMENT_LEFT, -1, ukuran).x
+		assert_float(lebar).override_failure_message("%s: %s (%d px) lebih lebar dari %d px" % [kode, nama.text, ukuran,
+			roundi(nama.size.x)]).is_less_equal(nama.size.x)
+	GameState.era = lama[0]
+	GameState.uang = lama[1]
+	GameState.pengikut = lama[2]

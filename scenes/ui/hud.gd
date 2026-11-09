@@ -2,6 +2,9 @@ extends PanelContainer
 ## HUD (kanvas papan 02/09): tombol hantu (menu), era, uang & pengikut, toko; bar kredibilitas
 ## dan panas, cincin staf; strip utama (HudStrip: misi, tokoh, atau kampanye akhir) dan strip kontrak.
 
+## Ukuran huruf nama era yang dicoba berurutan sampai muat (lihat _pas_nama_era).
+const UKURAN_NAMA_ERA: Array[int] = [22, 20, 18, 16]
+
 
 ## Cincin hitung mundur staf, digambar sendiri.
 class Cincin extends Control:
@@ -91,8 +94,9 @@ func _baris_atas(induk: Control) -> void:
 	era.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	era.alignment = BoxContainer.ALIGNMENT_CENTER
 	_era = UiKit.label(era, 32, Palet.TEKS, Tema.font_judul())
-	_era_nama = UiKit.label(era, 22, Palet.TEKS_REDUP, Tema.font_ui(600))
-	_era_nama.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	_era_nama = UiKit.label(era, UKURAN_NAMA_ERA[0], Palet.TEKS_REDUP, Tema.font_ui(600))
+	_era_nama.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS  # cadangan kalau 16 px pun tidak muat
+	_era_nama.resized.connect(_pas_nama_era)
 	_uang = _pil_sumber(baris, Palet.KUNING, Palet.KUNING_GELAP, "")
 	_pengikut = _pil_sumber(baris, Palet.CYAN, Palet.CYAN_GELAP, "orang")
 	var toko := UiKit.tombol_ikon(baris, "toko", tr("UI_TOKO"), Palet.PINK, Palet.PINK_GELAP, Palet.TINTA)
@@ -184,8 +188,9 @@ func _segarkan() -> void:
 	_kontrak_tag.text = tr("UI_KONTRAK_TAG")
 	_era.text = tr("UI_ERA_PENDEK") % GameState.era
 	_era_nama.text = tr("UI_ERA_NAMA_%d" % clampi(GameState.era, 1, 4))
-	_uang.text = Bahasa.angka(GameState.uang)
-	_pengikut.text = Bahasa.angka(GameState.pengikut)
+	_uang.text = UiKit.angka_ringkas(GameState.uang)
+	_pengikut.text = UiKit.angka_ringkas(GameState.pengikut)
+	_pas_nama_era.call_deferred()  # lebar sisa baru diketahui setelah pil angka diukur ulang
 	_bar_kred.value = GameState.kredibilitas
 	_angka_kred.text = str(roundi(GameState.kredibilitas))
 	_bar_panas.value = GameState.heat
@@ -193,6 +198,22 @@ func _segarkan() -> void:
 	_angka_panas.add_theme_color_override("font_color", Palet.ORANYE if GameState.heat >= 70.0 else Palet.TEKS)
 	_segarkan_strip()
 	_segarkan_kontrak()
+
+
+## Nama era ("Menara Server") berbagi baris dengan pil uang & pengikut: kalau ruangnya sempit, hurufnya
+## mengecil dulu (22 -> 16 px) sebelum dipotong elipsis.
+func _pas_nama_era() -> void:
+	var lebar := _era_nama.size.x
+	if lebar <= 0.0:
+		return
+	var font := _era_nama.get_theme_font("font")
+	var pilih: int = UKURAN_NAMA_ERA[-1]
+	for ukuran in UKURAN_NAMA_ERA:
+		if font.get_string_size(_era_nama.text, HORIZONTAL_ALIGNMENT_LEFT, -1, ukuran).x <= lebar:
+			pilih = ukuran
+			break
+	if _era_nama.get_theme_font_size("font_size") != pilih:
+		_era_nama.add_theme_font_size_override("font_size", pilih)
 
 
 func _segarkan_strip() -> void:

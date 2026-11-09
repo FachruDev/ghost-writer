@@ -118,3 +118,24 @@ func test_selesai_dirayakan_lalu_hilang() -> void:
 	assert_bool(l._tangan.visible).is_false()
 	assert_str(l._gelembung._teks.text).is_equal(tr("UI_TUT_SELESAI"))
 	assert_bool(l._gelembung._lewati.visible).is_false()
+
+
+## Feedback UI: tangan menutupi label tombol lebar ("Beli · 40", KIRIM!). Sasaran sempit tetap di tengah.
+func test_ujung_jari_di_tepi_tombol_lebar_bukan_di_labelnya() -> void:
+	await _bingkai()
+	var l = _lapisan()
+	var kartu: Rect2 = l._sasaran["rect"]
+	assert_float(kartu.size.x).is_less(LAPISAN.LEBAR_LUAS)
+	assert_float(l._tangan.position.x).is_equal_approx(kartu.get_center().x, 0.5)
+	GameState.statistik["total_rumor"] = 1
+	GameState.uang = 60
+	Events.money_changed.emit(60)
+	Events.toko_diminta.emit(true)
+	await _bingkai()
+	var tombol := _sasaran() as Button
+	var beli: Rect2 = l._sasaran["rect"]
+	assert_float(beli.size.x).is_greater_equal(LAPISAN.LEBAR_LUAS)
+	var label := tombol.get_theme_font("font").get_string_size(tombol.text, HORIZONTAL_ALIGNMENT_LEFT, -1,
+		tombol.get_theme_font_size("font_size")).x
+	assert_float(absf(l._tangan.position.x - beli.get_center().x)).is_greater(label / 2.0)
+	assert_bool(beli.has_point(Vector2(l._tangan.position.x, beli.get_center().y))).is_true()
