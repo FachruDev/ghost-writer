@@ -78,9 +78,11 @@ res://
   tests/                     # tes gdUnit4
   tools/sesi_bot.gd          # bot balancing: simulasi sesi headless
   tools/uji_tutup_paksa.gd   # uji tutup paksa saat autosave (desktop)
+  tools/buat_ikon_splash.gd  # render PNG ikon aplikasi + boot splash (jalankan dengan jendela)
   addons/gdUnit4/            # framework tes (tidak ikut diekspor)
   assets/
     fonts/  sfx/  music/  ui/ikon/   # font OFL + lisensi, ikon SVG garis
+    ikon_app/                 # ikon aplikasi (SVG sumber + PNG Android/Play Store) dan boot splash
 ```
 
 Nama file dan scene memakai `snake_case`; nama class dan autoload tetap `PascalCase`. Satu tanggung jawab per script, dengan batas lunak ±300 baris; kalau lewat, pecah ke file baru (lihat [konvensi](konvensi.md)).

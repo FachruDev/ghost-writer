@@ -33,7 +33,7 @@ Isi nama palet dan font di sini setelah dipilih.
 | art_district_7..8 | Distrik akhir | sesuai peta | 0.5.0 | | Belum |
 | art_ending | Ilustrasi layar ending | 720×1280 | 0.6.0 | | Belum |
 | art_title | Layar judul / menu | 720×1280 | 0.9.0 | | Belum |
-| art_splash | Splash screen | 720×1280 | 0.9.0 | | Belum |
+| art_splash | Boot splash: logo + Si Hantu di tengah, latar malam polos (`assets/ikon_app/splash.png`, 1080×1920, dibuat `tools/buat_ikon_splash.gd`; kanvas papan 22) | 720×1280 | 0.9.0 | | Selesai |
 
 ## Aset Play Store (1.0.0)
 

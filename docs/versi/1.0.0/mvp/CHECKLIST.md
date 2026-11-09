@@ -184,7 +184,7 @@ Save dasar sudah dibuat di 0.2.0 ([ADR-0002](../../../architecture/adr-0002-back
 - [x] Getar ringan (haptic) saat headline dikirim (dan lebih kuat saat HOAKS; izin VIBRATE di preset Android)
 - [x] Musik menu (`mus_menu`) dan kredit musik di layar Tentang — musik menu (placeholder CC0, diputar di layar judul); layar Tentang & kredit dari Pengaturan (`tentang_layar.gd`, data `data/kredit.json`, tes `test_kredit.gd` dan `test_tentang.gd`), termasuk lisensi OFL dan Godot Engine
 - [ ] Rapikan semua art: satu palet, font utama + font mesin tik
-- [ ] Ikon aplikasi final (adaptive + monochrome), layar judul, splash
+- [x] Ikon aplikasi final (adaptive + monochrome), layar judul, splash — ikon Si Hantu Penulis (kanvas papan 21) dan boot splash (papan 22) dari `assets/ikon_app/`; ikon di APK debug sudah dicek. Belum dilihat di HP: warna latar splash sistem Android 12+ baru bisa diatur setelah Gradle build aktif
 
 **Teknis**
 
