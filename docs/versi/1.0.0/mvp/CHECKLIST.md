@@ -112,8 +112,8 @@ Semua pakai kotak abu-abu dan teks polos. **Jangan sentuh art.**
 
 **Definisi selesai 0.2.0**
 
-- [ ] Satu sesi 15 menit bisa dimainkan dari awal sampai misi terakhir
-- [ ] Minimal 2 event muncul dalam satu sesi
+- [ ] Satu sesi 15 menit bisa dimainkan dari awal sampai misi terakhir — bot 2026-11-09 (32 sesi): misi ke-5 selesai di menit 4–10 (median ±7) di semua sesi; belum dimainkan manusia
+- [ ] Minimal 2 event muncul dalam satu sesi — bot 2026-11-09 (32 sesi): 4–5 event dalam 15 menit pertama di semua sesi. Catatan: dulu Hari Pasar dan Ronda Malam bisa muncul sampai 3 kali dalam 15 menit; setelah E13 Arisan Kompleks dan E14 Mati Lampu ditambah, sesi dengan pengulangan 3 kali turun dari 10 ke 5 dari 32
 - [ ] Tidak ada crash di HP sendiri
 - [ ] Semua perubahan tercatat di `CHANGELOG.md` bagian `[0.2.0]`
 
@@ -159,7 +159,7 @@ Semua pakai kotak abu-abu dan teks polos. **Jangan sentuh art.**
 - [x] Semua harga dan pengali dipindah ke spreadsheet (`balancing/*.csv`), diekspor ke JSON (`tools/terapkan_balancing.gd`)
 - [ ] Ritme unlock: hal baru tiap 3–5 menit di awal, 10–15 menit di akhir — bot 2026-11-08 (32 sesi, median): 5 misi selesai menit 7, Era 2 menit 10, staf 12, Era 3 19, Era 4 31, kampanye akhir 45. Jarak awal 2–3 menit, akhir 12–14 menit; perlu dirasakan saat playtest
 - [ ] Musik ending (placeholder CC0, selesai), animasi ending, art ending (menunggu desain UI)
-- [ ] Satu perjalanan penuh kamar → ending dimainkan tanpa macet — bot 2026-11-08 (32 sesi × 70 menit, deterministik, dengan tutorial dan petunjuk di main): tanpa crash/macet teknis; Era 4 27/32 sesi (median menit 31), kampanye akhir 24/32 (median menit 45, 19 menang). Tokoh bukan penghambat: sekali Era 4 tercapai dengan kredibilitas sehat, ketiganya jatuh dalam 3–9 menit. Yang menghambat: 8/32 sesi terjebak kredibilitas < 30 lebih dari 10 menit (dibongkar → kurang dipercaya → makin sering dibongkar), biasanya di Era 2–3. Setelah `KRED_PULIH_PER_DETIK` 0,1 → 0,2: 0/32 sesi terjebak, Era 4 31/32 (median menit 32), kampanye akhir 22/32 (median menit 47). Perlu dimainkan manusia
+- [ ] Satu perjalanan penuh kamar → ending dimainkan tanpa macet — bot 2026-11-08 (32 sesi × 70 menit, deterministik, dengan tutorial dan petunjuk di main): tanpa crash/macet teknis; Era 4 27/32 sesi (median menit 31), kampanye akhir 24/32 (median menit 45, 19 menang). Tokoh bukan penghambat: sekali Era 4 tercapai dengan kredibilitas sehat, ketiganya jatuh dalam 3–9 menit. Yang menghambat: 8/32 sesi terjebak kredibilitas < 30 lebih dari 10 menit (dibongkar → kurang dipercaya → makin sering dibongkar), biasanya di Era 2–3. Setelah `KRED_PULIH_PER_DETIK` 0,1 → 0,2: 0/32 sesi terjebak, Era 4 31/32 (median menit 32), kampanye akhir 22/32 (median menit 47). Balapan akhir (2026-11-09): kebal menular tiap 20 detik (sebelumnya 10, hampir mustahil untuk pemain yang berpikir 10–20 detik per rumor); 16 dari 21 sesi kini menang di percobaan pertama. Perlu dimainkan manusia
 
 ## 0.9.0 — Beta & polish
 
@@ -192,7 +192,7 @@ Save dasar sudah dibuat di 0.2.0 ([ADR-0002](../../../architecture/adr-0002-back
 - [ ] Batasi jumlah titik warga yang digambar; pakai `_draw()` satu node per distrik, bukan satu node per warga, jika mulai lag
 - [x] Pengaturan: suara, musik, getar, bahasa (Indonesia, Inggris)
 - [x] Semua teks EN lengkap: tes headless tidak menemukan field `en` kosong ([ADR-0004](../../../architecture/adr-0004-lokalisasi.md))
-- [ ] Kata EN terpanjang muat di kartu; uji UI dengan pseudolokalisasi — 312 dari 312 kartu (id + en) muat (`test_tata_letak.gd`); pseudolokalisasi belum
+- [x] Kata EN terpanjang muat di kartu; uji UI dengan pseudolokalisasi — 312 dari 312 kartu (id + en) muat (`test_tata_letak.gd`). Pseudolokalisasi 2026-11-09 (teks UI +30%, ID dan EN, 15 layar di 720×1280): tidak ada teks UI yang di-hardcode; yang baru meluber hanya dengan +30%: judul GHOSTWRITER di layar judul dan Tentang, teks KIRIM "Ketuk distrik di peta" (+8 px), baris hadiah di lembar Tokoh EN (+6 px), dan grid statistik ending ID (+22 px). Dengan teks dan angka asli semuanya muat
 - [x] Safe area untuk notch: beri margin atas di HUD (`UiKit.inset_aman`, juga tepi bawah lembar dan meja; belum diuji di HP bernotch)
 
 ## 1.0.0 — Rilis

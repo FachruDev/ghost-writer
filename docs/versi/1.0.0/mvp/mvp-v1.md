@@ -11,7 +11,7 @@ Roadmap ini menjawab *apa urutannya* dan *kapan lanjut*. Desain game ada di [kon
 | 0. Setup | — | 0 | Project kosong jalan di PC dan HP | Build debug terpasang di HP |
 | 1. Prototipe | 0.1.0 | 1 | Racik headline + rumor menyebar di peta | Seru dimainkan 10 menit tanpa art? |
 | 2. MVP | 0.2.0 | 2–4 | Core loop lengkap ±15 menit main, 3 event, suara & animasi dasar | 3–5 teman main sampai habis tanpa dijelaskan |
-| 3. Konten & progresi | 0.3.0–0.6.0 | 5–8 | 4 era, ±150 kata, saluran lengkap, 12 event, ending | Satu sesi progresi penuh terasa tidak membosankan |
+| 3. Konten & progresi | 0.3.0–0.6.0 | 5–8 | 4 era, ±150 kata, saluran lengkap, 14 event, ending | Satu sesi progresi penuh terasa tidak membosankan |
 | 4. Save & polish | 0.9.0 | 9–10 | Save, tutorial, art & ikon final, opsi suara | Tidak ada bug fatal di 2+ HP berbeda |
 | 5. Rilis v1 | 1.0.0 | 11–12+ | AAB di Play Store | Lolos closed testing & review |
 

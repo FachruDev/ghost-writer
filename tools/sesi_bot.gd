@@ -145,11 +145,15 @@ func _siapkan_final(st, db, ev, rumor) -> void:
 	st.uang = 100000
 	for u in ["kantor", "staf_1", "gedung_media", "menara_server"]:
 		st.beli_upgrade(u)
+	# Langsung ke daftar milik lalu satu sinyal: beli_kata satu per satu memancarkan kepemilikan_berubah
+	# ±150 kali dalam satu frame, meja dibangun ulang tiap kali, dan antrean pesan Godot meluap (crash).
 	for id in db.words:
-		if db.words[id].get("toko", true):
-			st.beli_kata(id)
+		if db.words[id].get("toko", true) and not st.punya_kata(id):
+			st.kartu_dimiliki.append(id)
 	for t in db.templates:
-		st.beli_template(t)
+		if not st.punya_template(t):
+			st.template_dimiliki.append(t)
+	ev.kepemilikan_berubah.emit()
 	for t in db.tokoh:
 		st.tokoh_reputasi[t["id"]] = 0
 	ev.tokoh_berubah.emit()

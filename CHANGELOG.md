@@ -17,6 +17,7 @@ Berisi sisa 0.2.0 (MVP; masih kurang uji di HP dan uji dengan 3–5 teman) dan i
 
 ### Ditambah
 
+- Dua event acak Era 1 (EVENT.md E13–E14, hanya data): **Arisan Kompleks** (rumor *iri* ×1,5 dan kerentanan ×1,2 di Kompleks Hijau, distrik Era 1 yang belum punya event) dan **Mati Lampu** (semua distrik kerentanan ×1,25 tapi uang per warga ×0,5, event pertama dengan untung-rugi). Sebelumnya Era 1 hanya punya Hari Pasar dan Ronda Malam, sehingga event yang sama bisa muncul 3 kali dalam 15 menit pertama. Bot 32 sesi: sesi dengan satu event muncul 3 kali turun dari 10 ke 5, tetap 4–5 event per 15 menit; perjalanan penuh tetap dalam target (Era 4 median menit 33, kampanye akhir median menit 54). Tes `test_event_era1.gd`
 - Desain UI "Kota Gosip Malam" (kanvas desain, papan 01–20): tema gelap, tombol tebal, font OFL Lilita One, Fredoka, Courier Prime di `assets/fonts/`, ikon SVG garis di `assets/ui/ikon/`
 - Peta "Jaringan Gosip": tiap warga digambar sebagai wajah (ekspresi + cincin status + gelembung !/?), garis tetangga, titik pink merambat saat menular, gugus distrik bercahaya warna emosi, label persen percaya, cincin TARGET
 - Maskot Si Hantu Penulis (4 suasana) di HUD, judul, naik era, kampanye akhir, ending
@@ -75,6 +76,7 @@ Berisi sisa 0.2.0 (MVP; masih kurang uji di HP dan uji dengan 3–5 teman) dan i
 
 ### Diubah
 
+- Balapan kampanye akhir (E12): kebal menular tiap 20 detik (sebelumnya 10). Dengan 10 detik balapan hanya bisa dimenangkan pemain yang sangat cepat: bot yang berpikir 3 / 10 / 20 detik per rumor menang 41% / 3% / 0% di percobaan pertama, dan yang kalah tertahan 5 menit di 55–59% pemercaya. Sekarang 91% / 69% / 41%, kemenangan terlama 3,4 menit. Perjalanan penuh (32 sesi): kampanye akhir mulai di 24/32 sesi (median menit 46), 16 dari 21 sesi menang di percobaan pertama
 - Kredibilitas di bawah 50 pulih 0,2 per detik (sebelumnya 0,1; ±12 per menit). Bot deterministik 32 sesi × 70 menit: sesi yang terjebak kredibilitas < 30 lebih dari 10 menit turun dari 8 ke 0, Era 4 tercapai di 31/32 sesi (sebelumnya 27/32, median menit 32), kampanye akhir di 22/32 (median menit 47; sebelumnya 24/32, median 45, selisih masih dalam batas acak). Tokoh ternyata bukan penghambat: sekali Era 4 tercapai dengan kredibilitas sehat, ketiganya jatuh dalam 3–9 menit
 - Tes ending memeriksa 6 kotak statistik + kartu rumor terbaik (sebelumnya 12 label)
 - `Balance.X` dibaca dari `data/balance.json` (static var); konstanta teknis tetap `const`
@@ -94,13 +96,14 @@ Berisi sisa 0.2.0 (MVP; masih kurang uji di HP dan uji dengan 3–5 teman) dan i
 
 ### Diperbaiki
 
+- Bot balancing mode `-- final` bisa crash (signal 11): persiapannya membeli ±150 kata satu per satu dalam satu frame, tiap pembelian membangun ulang meja, dan antrean pesan Godot meluap. Kartu dan template kini dimasukkan langsung dengan satu sinyal `kepemilikan_berubah`. Di permainan biasa pembelian terjadi satu per ketukan, jadi tidak terdampak
 - Bot balancing (`tools/sesi_bot.gd`) kini deterministik: `GameClock._process` dimatikan selama bot berjalan, karena di sela `await process_frame` ia menambah sampai 5 tick dari waktu nyata dan membuat seed yang sama memberi hasil berbeda tiap run. Hasil bot sebelum perbaikan ini bervariasi antar-run
 - Pengaturan bisa digulir kalau layar terlalu pendek (jarak aman notch dan bar gestur), jadi tombol Tentang & kredit dan baris versi tidak terpotong; di 720×1280 tanpa notch tampilannya tetap sama
-- Layar 16:9: kertas headline tidak lagi menggencet peta. Chip slot kembali ramping (60 px) dengan area ketuk tetap 88 px (`ChipSlot._has_point`), dan ukuran huruf kalimat mengikuti panjang kalimat yang tampil (kata terisi), bukan hanya pola. Peta tersisa di 720×1280 dengan template dan kata terpanjang: 19 px → 176 px (ID dan EN)
-- Peta tidak menggambar warga saat tingginya di bawah tepi (dulu `sqrt` negatif → NaN dan ratusan peringatan "Vector2 cannot be normalized")
 - HUD: nama era ("Menara Server", "Server Tower") tidak lagi terpotong elipsis di samping pil uang & pengikut. Angka di atas 100.000 diringkas ("995 rb"/"995K", "1,2 jt"/"1.2M", dibulatkan ke bawah, `UiKit.angka_ringkas`) dan huruf nama era mengecil 22 → 16 px kalau ruangnya sempit
 - Tangan tutorial tidak lagi menutupi label tombol lebar (KIRIM!, "Beli · 40"): untuk sasaran selebar 200 px atau lebih, ujung jari digeser ke sisi tempat badan tangan menjulur; kartu dan ikon tetap ditunjuk di tengah
 - Versi aplikasi Android mengikuti `application/config/version` (`version/name` di preset dikosongkan; sebelumnya tertinggal 0.2.0 sementara game 0.6.0). Tes `test_preset_android.gd` juga memastikan semua ikon dan boot splash menunjuk ke file yang ada
+- Layar 16:9: kertas headline tidak lagi menggencet peta. Chip slot kembali ramping (60 px) dengan area ketuk tetap 88 px (`ChipSlot._has_point`), dan ukuran huruf kalimat mengikuti panjang kalimat yang tampil (kata terisi), bukan hanya pola. Peta tersisa di 720×1280 dengan template dan kata terpanjang: 19 px → 176 px (ID dan EN)
+- Peta tidak menggambar warga saat tingginya di bawah tepi (dulu `sqrt` negatif → NaN dan ratusan peringatan "Vector2 cannot be normalized")
 - Kartu kata: nama lebih dari 16 huruf memakai huruf kecil, jadi "the community hall" muat; semua 312 kartu ID + EN muat (`test_tata_letak.gd`)
 - Save: kalau aplikasi mati di antara dua ganti nama saat autosave, `save.tmp` yang utuh (paling baru) kini dimuat lebih dulu daripada `save.bak`, jadi autosave terakhir tidak hilang. `save.tmp` yang terpotong dilewati tanpa disalin ke `save.rusak` ([ADR-0002](docs/architecture/adr-0002-backend-save.md), amandemen 2026-11-07)
 - UI (hasil audit): lembar bawah tidak lagi kosong atau setinggi layar saat pertama dibuka (tinggi mengikuti isi, maks. 90% layar lalu digulir); banner event dan feed tidak menyempit; banner baru tidak ikut tersembunyi oleh pudar banner lama dan tidak menghalangi ketukan ke peta; Naik Era bisa digulir sehingga tombol tidak terpotong; toko menjeda waktu dan membangun ulang daftar paling banyak sekali per frame; peta hanya digambar ulang saat status warga berubah atau ada animasi; label HUD, meja, kertas, dan offline ikut ganti bahasa; pilihan dilema yang uangnya kurang dinonaktifkan dan lembar hanya ditutup oleh pengendali event

@@ -388,5 +388,67 @@
     },
     "efek": [],
     "pilihan": []
+  },
+  {
+    "id": "e_arisan",
+    "nama": {
+      "id": "Arisan Kompleks",
+      "en": "Savings Club Meetup"
+    },
+    "jenis": "modifier",
+    "era_min": 1,
+    "pemicu": {
+      "tipe": "acak",
+      "peluang": 0.15
+    },
+    "durasi": 60,
+    "teks": {
+      "id": "Arisan bulanan di Kompleks Hijau. Siapa yang baru beli mobil jadi bahan obrolan utama.",
+      "en": "It's savings club day in Green Estate. Who just bought a new car is the only topic."
+    },
+    "efek": [
+      {
+        "tipe": "emosi_distrik",
+        "distrik": "kompleks_hijau",
+        "emosi": "iri",
+        "kali": 1.5
+      },
+      {
+        "tipe": "kerentanan_distrik",
+        "distrik": "kompleks_hijau",
+        "kali": 1.2
+      }
+    ],
+    "pilihan": []
+  },
+  {
+    "id": "e_mati_lampu",
+    "nama": {
+      "id": "Mati Lampu",
+      "en": "Blackout"
+    },
+    "jenis": "modifier",
+    "era_min": 1,
+    "pemicu": {
+      "tipe": "acak",
+      "peluang": 0.12
+    },
+    "durasi": 60,
+    "teks": {
+      "id": "Listrik padam sekampung. Warga mengobrol di teras, jadi gosip cepat menyebar, tapi warung tutup.",
+      "en": "The whole village loses power. Everyone's chatting on the porch, so gossip travels fast, but the shops are closed."
+    },
+    "efek": [
+      {
+        "tipe": "kerentanan_distrik",
+        "distrik": "*",
+        "kali": 1.25
+      },
+      {
+        "tipe": "uang_per_warga",
+        "kali": 0.5
+      }
+    ],
+    "pilihan": []
   }
 ]

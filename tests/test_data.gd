@@ -21,7 +21,7 @@ func test_jumlah_konten() -> void:
 	assert_int(DataDB.saluran().size()).is_equal(5)
 	assert_int(DataDB.tokoh.size()).is_equal(3)
 	assert_int(DataDB.missions.size()).is_equal(5)
-	assert_int(DataDB.events.size()).is_equal(12)
+	assert_int(DataDB.events.size()).is_equal(14)
 	assert_int(DataDB.endings.size()).is_equal(2)
 
 

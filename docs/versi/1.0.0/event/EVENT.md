@@ -1,6 +1,6 @@
 # Event — Ghostwriter v1.0.0
 
-Event membuat setiap sesi terasa berbeda: kota tidak diam menunggu rumor pemain, tetapi punya kejadiannya sendiri. Versi 1.0.0 menargetkan **12 event**, dengan **3 event sudah masuk di MVP (0.2.0)**.
+Event membuat setiap sesi terasa berbeda: kota tidak diam menunggu rumor pemain, tetapi punya kejadiannya sendiri. Versi 1.0.0 menargetkan **14 event**, dengan **3 event sudah masuk di MVP (0.2.0)**.
 
 ## Cara kerja
 
@@ -74,10 +74,13 @@ Contoh event dilema (`pilihan` diisi):
 | E09 | Razia Hoaks | Ancaman | 3 | Kredibilitas < 30 | Saluran medsos dikunci 90 dtk, pengikut −5% | 0.4.0 | Selesai |
 | E10 | Rumor Tandingan | Ancaman | 3 | Acak | Media saingan menyebar rumor yang membuat warga "ragu" | 0.5.0 | Selesai |
 | E11 | Server Down | Dilema | 4 | Acak | Bayar perbaikan cepat atau kehilangan staf otomatis 120 dtk | 0.5.0 | Selesai |
-| E12 | Kota Tak Percaya Lagi | Ancaman (final) | 4 | Pemain memulai kampanye akhir | Semua warga jadi ragu dan lebih sulit percaya; kebal tidak pulih dan menular ke tetangga tiap 10 dtk. Menang 60% percaya, kalah 50% kebal atau 5 menit habis | 0.6.0 | Selesai |
+| E12 | Kota Tak Percaya Lagi | Ancaman (final) | 4 | Pemain memulai kampanye akhir | Semua warga jadi ragu dan lebih sulit percaya; kebal tidak pulih dan menular ke tetangga tiap 20 dtk. Menang 60% percaya, kalah 50% kebal atau 5 menit habis | 0.6.0 | Selesai |
+| E13 | Arisan Kompleks | Modifier | 1 | Acak | Rumor emosi *iri* ×1,5 dan kerentanan ×1,2 di Kompleks Hijau selama 60 dtk | 0.9.0 | Selesai |
+| E14 | Mati Lampu | Modifier | 1 | Acak | Semua distrik kerentanan ×1,25, tapi uang per warga ×0,5 selama 60 dtk (warung tutup) | 0.9.0 | Selesai |
 
 ## Catatan desain
 
 - Semua nama tokoh, partai, dan kandidat di event **fiktif**.
 - Event ancaman adalah sumber ketegangan utama; jangan dibuat terlalu jarang.
 - Saat balancing, catat seberapa sering tiap event muncul per sesi 15 menit (target: 2–4 event).
+- E13 dan E14 ditambah di 0.9.0 karena Era 1 hanya punya dua event acak (E01, E02): bot mencatat event yang sama muncul sampai 3 kali dalam 15 menit pertama. Event acak dicek berurutan sesuai `events.json`, jadi event di awal daftar sedikit lebih sering muncul.

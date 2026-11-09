@@ -177,7 +177,7 @@ Peluang "per detik simulasi" dihitung per tick sebagai `peluang × SIM_TICK` ([A
 | Sistem | Aturan |
 | --- | --- |
 | Syarat | Setelah ketiga tokoh jatuh, tombol **Kampanye Akhir** muncul di HUD. Pemain sendiri yang menekannya (tidak bisa saat waktu dijeda) |
-| E12 Kota Tak Percaya Lagi | Saat mulai, kota diseragamkan: semua warga jadi ragu, lalu 5% warga acak langsung kebal. Jadi tiap balapan mulai dari kondisi yang sama, berapa pun pemercaya sebelumnya (kalau hanya pemercaya yang jadi ragu, pemain yang sudah meyakinkan banyak warga justru dapat balapan lebih sulit). Selama balapan peluang percaya dikali 0,75, kebal tidak pulih, dan tiap 10 detik tiap warga kebal menulari satu tetangga acak (peluang 50%) yang belum dengar atau ragu; pemercaya tidak bisa ditulari |
+| E12 Kota Tak Percaya Lagi | Saat mulai, kota diseragamkan: semua warga jadi ragu, lalu 5% warga acak langsung kebal. Jadi tiap balapan mulai dari kondisi yang sama, berapa pun pemercaya sebelumnya (kalau hanya pemercaya yang jadi ragu, pemain yang sudah meyakinkan banyak warga justru dapat balapan lebih sulit). Selama balapan peluang percaya dikali 0,75, kebal tidak pulih, dan tiap 20 detik tiap warga kebal menulari satu tetangga acak (peluang 50%; 10 detik di 0.6.0) yang belum dengar atau ragu; pemercaya tidak bisa ditulari |
 | Menang / kalah | Menang: 60% warga kota percaya sekaligus. Kalah: 5 menit habis, atau 50% warga kebal |
 | Selama balapan | Event acak, ancaman, dan kontrak berhenti; kontrak yang berjalan batal. Staf tetap bekerja. Progres di HUD: percaya %, kebal %, sisa waktu |
 | Ending | Menang: **Imperium Kabar Burung**. Kalah: **Kota Mati Rasa**. Layar berisi epilog satir (`data/endings.json`) dan statistik (rumor, uang, tokoh jatuh, dibongkar, waktu main, rumor terbaik), lalu [Mulai Baru] (tekan dua kali; menghapus progres) atau [Lanjut Bermain]. Waktu dijeda selama layar tampil |
@@ -199,6 +199,8 @@ Dengan staf awal (8 warga, 40 detik) lajunya ±0,24 uang/detik: pergi 1 jam memb
 ### Ritme dan spreadsheet balancing (0.6.0)
 
 Target satu perjalanan penuh ±60 menit: Era 2 ±menit 8, Era 3 ±18, Era 4 ±30, kampanye akhir ±50–60. Ritme diukur dengan bot `tools/sesi_bot.gd` (8 sesi × 70 menit waktu simulasi); hasil terakhir dicatat di CHANGELOG.
+
+**Balapan kampanye akhir disetel ulang 2026-11-09.** Dengan kebal menular tiap 10 detik, balapan hanya bisa dimenangkan pemain yang sangat cepat: bot yang berpikir 3 detik per rumor menang 41% di percobaan pertama, 10 detik 3%, 20 detik 0%. Semua kemenangan terjadi dalam 2,5 menit; yang kalah tertahan di 55–59% pemercaya karena pemercaya + kebal tidak bisa lebih dari 100%. Dengan tiap 20 detik: 91% (3 detik), 69% (10 detik), 41% (20 detik), kemenangan terlama ±3,4 menit, jadi batas 5 menit tetap aman.
 
 Semua angka balancing ada di `balancing/angka.csv` (kunci, nilai, catatan; pecahan seperti `1/60` boleh) dan harga di `balancing/harga.csv` (id, jenis, harga, pengikut_min, catatan). Kolom harga berarti harga beli untuk kata, template, dan upgrade, biaya kirim untuk saluran, dan reputasi awal untuk tokoh. Alurnya:
 

@@ -42,7 +42,7 @@ KONTRAK_UANG,600,Hadiah uang kontrak berhasil
 KONTRAK_PENGIKUT,60,Hadiah pengikut kontrak berhasil
 KONTRAK_KRED_GAGAL,10,Kredibilitas turun kalau kontrak gagal
 FINAL_DURASI_DETIK,300,Batas waktu kampanye akhir
-FINAL_TULAR_KEBAL_DETIK,10,E12: kebal menular tiap ... detik
+FINAL_TULAR_KEBAL_DETIK,20,"E12: kebal menular tiap ... detik (10 terlalu cepat: bot yang berpikir 10 detik per rumor hanya menang 3%)"
 FINAL_PELUANG_TULAR_KEBAL,0.5,E12: peluang tiap warga kebal menulari 1 tetangga (belum dengar/ragu) tiap putaran
 FINAL_BENIH_KEBAL,0.05,E12: bagian warga yang langsung kebal saat kampanye akhir dimulai
 FINAL_PENGALI_PERCAYA,0.75,E12: peluang warga percaya saat tertular dikali ini selama kampanye akhir
