@@ -224,3 +224,11 @@ UI_KREDIT_FONT,Huruf,Fonts
 UI_KREDIT_MUSIK,Musik,Music
 UI_KREDIT_SUARA,Efek suara,Sound effects
 UI_KREDIT_OLEH,oleh %s,by %s
+UI_TENTANG,TENTANG,ABOUT
+UI_TENTANG_TOMBOL,Tentang & kredit,About & credits
+UI_TENTANG_ISI,"Game satir tentang meracik rumor dari kartu kata, melihatnya menjalar di kota fiktif, lalu tumbuh dari mesin tik tua menjadi imperium media.","A satirical game about crafting rumors from word cards, watching them spread through a fictional town, and growing from an old typewriter into a media empire."
+UI_KREDIT_MESIN,Mesin game,Game engine
+UI_KREDIT_GODOT_KET,godotengine.org · Lisensi MIT,godotengine.org · MIT License
+UI_KREDIT_LISENSI,Lihat lisensi,View license
+UI_KREDIT_SEMBUNYI,Sembunyikan lisensi,Hide license
+UI_KREDIT_PIHAK_KETIGA,Komponen pihak ketiga di dalam Godot Engine:,Third-party components in Godot Engine:

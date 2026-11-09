@@ -51,6 +51,7 @@ res://
     ui/tutorial_lapisan.gd  # lapisan tutorial (CanvasLayer): tangan_tunjuk.gd, tutorial_gelembung.gd,
     ui/tutorial_sasaran.gd  #   dan pencari node sasaran lewat grup
     ui/petunjuk_lapisan.gd  # kartu petunjuk sistem baru (petunjuk_kartu.gd) + ekor ke sasaran
+    ui/tentang_layar.gd     # layar Tentang & kredit (dari Pengaturan); baris + teks lisensi: kredit_baris.gd
   scripts/
     autoload/game_state.gd   # uang, pengikut, kredibilitas, kartu dimiliki
     autoload/data_db.gd      # memuat semua JSON saat start

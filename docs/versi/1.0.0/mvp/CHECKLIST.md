@@ -182,7 +182,7 @@ Save dasar sudah dibuat di 0.2.0 ([ADR-0002](../../../architecture/adr-0002-back
 
 - [ ] Angka uang melayang dari titik warga
 - [x] Getar ringan (haptic) saat headline dikirim (dan lebih kuat saat HOAKS; izin VIBRATE di preset Android)
-- [ ] Musik menu (`mus_menu`) dan kredit musik di layar Tentang — musik menu selesai (placeholder CC0, diputar di layar judul); data kredit siap (`data/kredit.json` → `DataDB.kredit`, tes `test_kredit.gd`); layar Tentang belum ada
+- [x] Musik menu (`mus_menu`) dan kredit musik di layar Tentang — musik menu (placeholder CC0, diputar di layar judul); layar Tentang & kredit dari Pengaturan (`tentang_layar.gd`, data `data/kredit.json`, tes `test_kredit.gd` dan `test_tentang.gd`), termasuk lisensi OFL dan Godot Engine
 - [ ] Rapikan semua art: satu palet, font utama + font mesin tik
 - [ ] Ikon aplikasi final (adaptive + monochrome), layar judul, splash
 

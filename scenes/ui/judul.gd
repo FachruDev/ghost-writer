@@ -4,6 +4,7 @@ extends Control
 
 const MAIN := "res://scenes/main/main.tscn"
 const PENGATURAN := preload("res://scenes/ui/pengaturan_layar.gd")
+const TENTANG := preload("res://scenes/ui/tentang_layar.gd")
 
 
 ## Warga di sekeliling hantu, dihubungkan garis gosip putus-putus.
@@ -112,6 +113,7 @@ func _ready() -> void:
 	_en = UiKit.tombol(kaki, tr("UI_KODE_EN"), Palet.PANEL, Palet.PANEL, 24, Tema.font_ui(700), 88)
 	_en.pressed.connect(func() -> void: Bahasa.atur("en"))
 	add_child(PENGATURAN.new())
+	add_child(TENTANG.new())
 	_ada_save = FileAccess.file_exists(SaveSystem.PATH) and int(GameState.statistik.get("total_rumor", 0)) > 0
 	Bahasa.bahasa_berubah.connect(func(_k: String) -> void: _segarkan())
 	_segarkan()

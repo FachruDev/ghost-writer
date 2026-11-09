@@ -1,6 +1,7 @@
 extends Lembar
 ## Layar Pengaturan (papan 19): volume musik & efek suara, getar, bahasa, hapus progres (tekan dua kali),
-## versi. Nilai disimpan autoload Pengaturan di user://settings.cfg (tidak ikut terhapus saat reset).
+## tombol ke layar Tentang & kredit, versi. Nilai disimpan autoload Pengaturan di user://settings.cfg
+## (tidak ikut terhapus saat reset). Isi digulir kalau layar terlalu pendek (notch, 16:9).
 
 var _musik: HSlider
 var _sfx: HSlider
@@ -10,6 +11,8 @@ var _getar: CheckButton
 var _id: Button
 var _en: Button
 var _hapus: Button
+var _tentang: Button
+var _wadah: VBoxContainer
 var _yakin := false
 var _label: Dictionary = {}  # kunci teks -> Label
 
@@ -19,6 +22,14 @@ func _init() -> void:
 
 
 func _bangun_isi() -> void:
+	var gulir := ScrollContainer.new()
+	gulir.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	gulir.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	isi.add_child(gulir)
+	_wadah = UiKit.kolom(gulir, 20)
+	_wadah.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	# Setinggi area gulir supaya pengisi mendorong Tentang & versi ke bawah; kalau isi lebih tinggi, digulir.
+	gulir.resized.connect(func() -> void: _wadah.custom_minimum_size.y = gulir.size.y)
 	var suara := _kartu("UI_SUARA")
 	_musik = _slider(suara, "UI_MUSIK", "musik")
 	_angka_musik = _musik.get_meta("angka")
@@ -41,7 +52,7 @@ func _bangun_isi() -> void:
 	for nama in ["normal", "hover", "pressed", "hover_pressed"]:
 		_getar.add_theme_stylebox_override(nama, StyleBoxEmpty.new())
 	baris_getar.add_child(_getar)
-	var bahasa := UiKit.panel(isi, Palet.PANEL, 36, 28)
+	var bahasa := UiKit.panel(_wadah, Palet.PANEL, 36, 28)
 	var hb := UiKit.baris(bahasa, 16)
 	_label["UI_BAHASA_JUDUL"] = UiKit.label(hb, 30, Palet.TEKS, Tema.font_ui(600))
 	_label["UI_BAHASA_JUDUL"].size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -57,10 +68,10 @@ func _bangun_isi() -> void:
 	_hapus.pressed.connect(_on_hapus)
 	var jarak := Control.new()
 	jarak.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	isi.add_child(jarak)
-	var tentang := UiKit.kolom(isi, 4)
-	var nama := UiKit.label(tentang, 36, Palet.TEKS, Tema.font_judul(), tr("UI_JUDUL_GAME"))
-	nama.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_wadah.add_child(jarak)
+	var tentang := UiKit.kolom(_wadah, 12)
+	_tentang = UiKit.tombol(tentang, "", Palet.PANEL_2, Palet.PANEL, 28, Tema.font_ui(700), 96)
+	_tentang.pressed.connect(func() -> void: Events.layar_diminta.emit("tentang"))
 	_label["UI_VERSI"] = UiKit.label(tentang, 22, Palet.TEKS_REDUP, Tema.font_ui(500))
 	_label["UI_VERSI"].horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_label["UI_VERSI"].autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -73,7 +84,7 @@ func _bangun_isi() -> void:
 
 
 func _kartu(kunci: String) -> VBoxContainer:
-	var p := UiKit.panel(isi, Palet.PANEL, 36, 28)
+	var p := UiKit.panel(_wadah, Palet.PANEL, 36, 28)
 	var k := UiKit.kolom(p, 18)
 	_label[kunci] = UiKit.label(k, 24, Palet.TEKS_REDUP, Tema.font_ui(700))
 	return k
@@ -149,6 +160,7 @@ static func _tekstur_bulat(d: int, warna: Color, bayang: Color) -> ImageTexture:
 
 func _segarkan() -> void:
 	judul.text = tr("UI_PENGATURAN")
+	_tentang.text = tr("UI_TENTANG_TOMBOL")
 	for kunci in _label:
 		if kunci == "UI_VERSI":
 			_label[kunci].text = tr(kunci) % str(ProjectSettings.get_setting("application/config/version"))

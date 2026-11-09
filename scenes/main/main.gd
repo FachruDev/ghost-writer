@@ -14,6 +14,7 @@ const LAPISAN := [
 	preload("res://scenes/ui/naik_era.gd"),
 	preload("res://scenes/ui/offline_sheet.gd"),
 	preload("res://scenes/ui/pengaturan_layar.gd"),
+	preload("res://scenes/ui/tentang_layar.gd"),
 ]
 const SHOP := preload("res://scenes/ui/shop.tscn")
 const JUDUL := "res://scenes/ui/judul.tscn"
