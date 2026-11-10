@@ -1,13 +1,15 @@
 extends Lembar
 ## Layar ending kampanye akhir (papan 17/18): maskot, judul, epilog satir (data/endings.json),
 ## 6 kotak statistik, rumor terbaik, lalu [Mulai Baru] (tekan dua kali) atau [LANJUT MAIN].
-## Waktu permainan dijeda selama layar tampil.
+## Waktu permainan dijeda selama layar tampil. anim_ending: layar terbuka transparan (menahan ketukan)
+## selama kota memudar titik demi titik (KotaMemudar), lalu muncul; judul memantul dan kotak
+## statistik muncul satu per satu.
 
 const JEDA := &"ending"
 
 var _hasil := ""
 var _judul: Label
-var _hantu: Hantu
+var _ilustrasi: IlustrasiEnding
 var _lencana: PanelContainer
 var _epilog: Label
 var _statistik: GridContainer
@@ -33,9 +35,8 @@ func _bangun_isi() -> void:
 	isi.add_child(gulir)
 	var k := UiKit.kolom(gulir, 16)
 	k.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_hantu = Hantu.new()
-	_hantu.custom_minimum_size = Vector2(0, 240)
-	k.add_child(_hantu)
+	_ilustrasi = IlustrasiEnding.new()  # papan 17/18: hantu bermahkota + koran, atau hantu kelabu + kucing
+	k.add_child(_ilustrasi)
 	_lencana = UiKit.pil(k, "", Palet.KUNING, Palet.TINTA, 22)
 	_lencana.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	_judul = UiKit.label(k, 60, Palet.TEKS, Tema.font_judul())
@@ -77,7 +78,25 @@ func tampilkan(hasil: String) -> void:
 	_yakin = false
 	buka()
 	modulate.a = 0.0
-	create_tween().tween_property(self, "modulate:a", 1.0, 0.6)
+	var t := create_tween()
+	t.tween_interval(KotaMemudar.LAMA)
+	t.tween_property(self, "modulate:a", 1.0, 0.8)
+	t.tween_callback(_masuk)
+
+
+## Judul memantul, lalu kotak statistik muncul satu per satu.
+func _masuk() -> void:
+	_judul.pivot_offset = _judul.size / 2.0
+	_judul.scale = Vector2(0.7, 0.7)
+	var t := create_tween()
+	t.tween_property(_judul, "scale", Vector2.ONE, 0.35).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	var n := 0
+	for kotak in _statistik.get_children():
+		(kotak as Control).modulate.a = 0.0
+		var s := create_tween()
+		s.tween_interval(0.25 + n * 0.08)
+		s.tween_property(kotak, "modulate:a", 1.0, 0.2)
+		n += 1
 
 
 func _segarkan() -> void:
@@ -89,9 +108,7 @@ func _isi() -> void:
 	_redup.color = Color("2a1f4a") if menang else Color("1d1c26")
 	(_panel.get_theme_stylebox("panel") as StyleBoxFlat).bg_color = Color("2a1f4a") if menang else Color("1d1c26")
 	var aksen := Palet.KUNING if menang else Color("c3cad8")
-	_hantu.bermahkota = menang
-	_hantu.suasana = Hantu.Suasana.GIRANG if menang else Hantu.Suasana.DIAM
-	_hantu.modulate = Color.WHITE if menang else Color(0.8, 0.82, 0.88)
+	_ilustrasi.menang = menang
 	(_lencana.get_child(0) as Label).text = tr("UI_ENDING")
 	(_lencana.get_theme_stylebox("panel") as StyleBoxFlat).bg_color = aksen
 	var data: Dictionary = DataDB.endings.get(_hasil, {})

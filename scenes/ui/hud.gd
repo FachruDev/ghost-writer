@@ -6,19 +6,6 @@ extends PanelContainer
 const UKURAN_NAMA_ERA: Array[int] = [22, 20, 18, 16]
 
 
-## Cincin hitung mundur staf, digambar sendiri.
-class Cincin extends Control:
-	var nilai := 0.0
-	var warna := Palet.HIJAU
-
-	func _draw() -> void:
-		var c := size / 2.0
-		var r := minf(size.x, size.y) / 2.0 - 3.0
-		draw_arc(c, r, 0.0, TAU, 32, Palet.PANEL_2, 6.0)
-		if nilai > 0.0:
-			draw_arc(c, r, -PI / 2.0, -PI / 2.0 + TAU * nilai, 32, warna, 6.0)
-
-
 var _era: Label
 var _era_nama: Label
 var _uang: Label
@@ -29,7 +16,7 @@ var _bar_panas: ProgressBar
 var _angka_panas: Label
 var _staf: PanelContainer
 var _staf_label: Label
-var _staf_cincin: Cincin
+var _staf_cincin: CincinStaf
 var _strip: HudStrip
 var _kontrak: PanelContainer
 var _kontrak_tag: Label
@@ -62,6 +49,9 @@ func _ready() -> void:
 		_info_kontrak = info
 		_segarkan_kontrak())
 	Events.staf_hitung.connect(_on_staf)
+	Events.feed_baru.connect(func(e: Dictionary) -> void:
+		if e.get("jenis", "") == "staf":
+			_staf_cincin.kirim())
 	Events.kepemilikan_berubah.connect(func() -> void: _staf.visible = GameState.punya_upgrade(StaffController.UPGRADE_ID))
 	Bahasa.bahasa_berubah.connect(func(_k: String) -> void: _segarkan())
 	_staf.visible = GameState.punya_upgrade(StaffController.UPGRADE_ID)
@@ -142,7 +132,7 @@ func _baris_meter(induk: Control) -> void:
 	gaya.content_margin_left = 6
 	gaya.content_margin_right = 16
 	var isi := UiKit.baris(_staf, 8)
-	_staf_cincin = Cincin.new()
+	_staf_cincin = CincinStaf.new()
 	_staf_cincin.custom_minimum_size = Vector2(40, 40)
 	isi.add_child(_staf_cincin)
 	_staf_label = UiKit.label(isi, 22, Palet.TEKS, Tema.font_ui(700))
@@ -238,8 +228,10 @@ func _on_staf(sisa: float, jeda: float) -> void:
 		_staf_label.text = tr("UI_STAF_MATI")
 		_staf_cincin.warna = Palet.PINK
 		_staf_cincin.nilai = 1.0
+		_staf_cincin.mengetik = false
 	else:
 		_staf_label.text = tr("UI_STAF_HITUNG") % ceili(sisa)
 		_staf_cincin.warna = Palet.HIJAU
 		_staf_cincin.nilai = 1.0 - sisa / maxf(jeda, 0.001)
+		_staf_cincin.mengetik = true
 	_staf_cincin.queue_redraw()

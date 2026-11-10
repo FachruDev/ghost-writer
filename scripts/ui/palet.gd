@@ -61,8 +61,8 @@ const RAMBUT := [Color("2b1b12"), Color("5a3a22"), Color("120e26"), Color("7c4de
 
 ## Warna aksen per era untuk lencana HUD dan layar naik era.
 const ERA := {1: KUNING, 2: CYAN, 3: PINK, 4: HIJAU}
-## Latar panel meja per era.
-const MEJA_ERA := {1: PANEL, 2: PANEL, 3: PANEL, 4: PANEL}
+## Latar kaki meja per era (MejaEra: kayu, kantor, studio, server).
+const MEJA_ERA := {1: Color("251a30"), 2: Color("1a1f3c"), 3: Color("1f1236"), 4: Color("0e1124")}
 
 
 static func emosi(nama: String) -> Color:

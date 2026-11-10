@@ -9,6 +9,9 @@ signal ditutup
 
 ## Bagian layar maksimum untuk lembar bawah; isi yang lebih tinggi digulir.
 const TINGGI_MAKS := 0.9
+## Layar penuh meluncur naik sejauh ini saat dibuka (anim_shop_open).
+const GESER_BUKA := 96.0
+const LAMA_BUKA := 0.25
 
 ## Warna garis atas panel (pink = aksi, kuning = dilema, cyan = kontrak).
 var aksen := Color.TRANSPARENT
@@ -55,6 +58,7 @@ func _ready() -> void:
 	add_child(_panel)
 	if penuh:
 		_panel.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		_panel.offset_transform_enabled = true
 		_gaya.set_corner_radius_all(0)
 		_gaya.content_margin_top = 32
 	else:
@@ -139,7 +143,15 @@ func buka() -> void:
 	move_to_front()
 	_redup.modulate.a = 0.0
 	create_tween().tween_property(_redup, "modulate:a", 1.0, 0.2)
-	if not penuh:
+	if penuh:
+		# anim_shop_open: layar penuh (toko, pengaturan, ...) meluncur naik sambil muncul.
+		_panel.offset_transform_position = Vector2(0.0, GESER_BUKA)
+		_panel.modulate.a = 0.0
+		var t := create_tween().set_parallel()
+		t.tween_property(_panel, "offset_transform_position", Vector2.ZERO, LAMA_BUKA) \
+			.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+		t.tween_property(_panel, "modulate:a", 1.0, LAMA_BUKA * 0.6)
+	else:
 		if _gulir_isi:
 			_gulir_isi.scroll_vertical = 0
 		_sesuaikan_tinggi()

@@ -127,8 +127,8 @@ Semua pakai kotak abu-abu dan teks polos. **Jangan sentuh art.**
 - [x] Event E04 Pemilihan Ketua RT, E05 Wartawan Penasaran, E06 Festival Kampung
 - [x] SFX: carriage return, pengikut naik, beli, error, pilih dilema (placeholder CC0); telepon dibuat prosedural
 - [x] Musik era 2 (placeholder CC0)
-- [ ] Animasi: kirim kertas, mutasi headline, buka toko, umpan balik tombol (menunggu desain UI)
-- [ ] Art pertama: kartu, slot, kertas, meja era 1–2, peta, distrik 1–3, panel UI, stempel HOAKS (menunggu desain UI)
+- [x] Animasi: kirim kertas, mutasi headline, buka toko, umpan balik tombol — kertas terbang dari meja ke distrik benih (`kertas_terbang.gd`), baris feed mutasi berkedip lalu berganti, layar penuh meluncur naik (`Lembar`), semua tombol mengecil saat ditekan (`UmpanTekan`); kanvas papan 24
+- [x] Art pertama: kartu, slot, kertas, meja era 1–2, peta, distrik 1–3, panel UI, stempel HOAKS — digambar kode dengan tema "Kota Gosip Malam" (kanvas papan 01–20); meja era 1–2 lewat `MejaEra` (papan 23)
 - [x] Ikon radio dan staf
 
 ## 0.4.0 — Era gedung media
@@ -138,8 +138,8 @@ Semua pakai kotak abu-abu dan teks polos. **Jangan sentuh art.**
 - [x] Distrik 4–6 (peta 2×3, warga ±200), ±120 kata (123), 9 template
 - [x] Event E07 Dokumen Bocor, E08 Viral Challenge, E09 Razia Hoaks
 - [x] SFX notifikasi medsos dan musik era 3 (placeholder CC0); lapisan musik ancaman (Panic mode, CC0, 372 KB)
-- [ ] Animasi staf bekerja (menunggu desain UI)
-- [ ] Art meja era 3, distrik 4–6, ikon medsos (menunggu desain UI)
+- [x] Animasi staf bekerja — titik mengetik di cincin staf (`cincin_staf.gd`); saat staf mengirim, cincin memantul dan kertas hijau terbang ke distrik
+- [x] Art meja era 3, distrik 4–6, ikon medsos — meja studio (neon pink, meter suara bergerak), distrik di peta jaringan, `assets/ui/ikon/medsos.svg`
 
 ## 0.5.0 — Era server
 
@@ -148,8 +148,8 @@ Semua pakai kotak abu-abu dan teks polos. **Jangan sentuh art.**
 - [x] Distrik 7–8 (peta 2×4, warga ±260), ±150 kata (156), 12 template
 - [x] Event E10 Rumor Tandingan, E11 Server Down
 - [x] Ambience server (dibuat prosedural), stinger naik era, musik era 4 (placeholder CC0)
-- [ ] Animasi transisi era (menunggu desain UI)
-- [ ] Art meja era 4, distrik 7–8, ikon server (menunggu desain UI)
+- [x] Animasi transisi era — meja lama memudar ke meja baru sambil pita cahaya warna era naik (1,4 dtk), lalu lembar Naik Era dengan ilustrasi papan 11 (sinar, gedung tumbuh, hantu mendarat; `ilustrasi_era.gd`)
+- [x] Art meja era 4, distrik 7–8, ikon server — meja server (sirkuit hijau, lampu berkedip), distrik di peta jaringan, `assets/ui/ikon/server.svg`
 
 ## 0.6.0 — Ending & balancing
 
@@ -158,7 +158,7 @@ Semua pakai kotak abu-abu dan teks polos. **Jangan sentuh art.**
 - [x] Penghasilan offline ringan (staf, maks 8 jam × 0,5)
 - [x] Semua harga dan pengali dipindah ke spreadsheet (`balancing/*.csv`), diekspor ke JSON (`tools/terapkan_balancing.gd`)
 - [ ] Ritme unlock: hal baru tiap 3–5 menit di awal, 10–15 menit di akhir — bot 2026-11-08 (32 sesi, median): 5 misi selesai menit 7, Era 2 menit 10, staf 12, Era 3 19, Era 4 31, kampanye akhir 45. Jarak awal 2–3 menit, akhir 12–14 menit; perlu dirasakan saat playtest
-- [ ] Musik ending (placeholder CC0, selesai), animasi ending, art ending (menunggu desain UI)
+- [x] Musik ending (placeholder CC0), animasi ending, art ending — kota memudar titik demi titik 4 dtk (emas/kelabu, `kota_memudar.gd`), lalu art papan 17/18 (`ilustrasi_ending.gd`: hantu bermahkota + hujan koran / hantu kelabu + kucing oren), judul memantul, statistik bertahap
 - [ ] Satu perjalanan penuh kamar → ending dimainkan tanpa macet — bot 2026-11-08 (32 sesi × 70 menit, deterministik, dengan tutorial dan petunjuk di main): tanpa crash/macet teknis; Era 4 27/32 sesi (median menit 31), kampanye akhir 24/32 (median menit 45, 19 menang). Tokoh bukan penghambat: sekali Era 4 tercapai dengan kredibilitas sehat, ketiganya jatuh dalam 3–9 menit. Yang menghambat: 8/32 sesi terjebak kredibilitas < 30 lebih dari 10 menit (dibongkar → kurang dipercaya → makin sering dibongkar), biasanya di Era 2–3. Setelah `KRED_PULIH_PER_DETIK` 0,1 → 0,2: 0/32 sesi terjebak, Era 4 31/32 (median menit 32), kampanye akhir 22/32 (median menit 47). Balapan akhir (2026-11-09): kebal menular tiap 20 detik (sebelumnya 10, hampir mustahil untuk pemain yang berpikir 10–20 detik per rumor); 16 dari 21 sesi kini menang di percobaan pertama. Perlu dimainkan manusia
 
 ## 0.9.0 — Beta & polish
@@ -180,10 +180,10 @@ Save dasar sudah dibuat di 0.2.0 ([ADR-0002](../../../architecture/adr-0002-back
 
 **Juice & aset**
 
-- [ ] Angka uang melayang dari titik warga
+- [x] Angka uang melayang dari titik warga — dari warga yang paling baru percaya di distrik itu (`kiriman_animasi.gd`)
 - [x] Getar ringan (haptic) saat headline dikirim (dan lebih kuat saat HOAKS; izin VIBRATE di preset Android)
 - [x] Musik menu (`mus_menu`) dan kredit musik di layar Tentang — musik menu (placeholder CC0, diputar di layar judul); layar Tentang & kredit dari Pengaturan (`tentang_layar.gd`, data `data/kredit.json`, tes `test_kredit.gd` dan `test_tentang.gd`), termasuk lisensi OFL dan Godot Engine
-- [ ] Rapikan semua art: satu palet, font utama + font mesin tik
+- [x] Rapikan semua art: satu palet, font utama + font mesin tik — `Palet` + `Tema` (Fredoka, Lilita One, Courier Prime); semua art digambar kode atau SVG di `assets/ui/ikon`
 - [x] Ikon aplikasi final (adaptive + monochrome), layar judul, splash — ikon Si Hantu Penulis (kanvas papan 21) dan boot splash (papan 22) dari `assets/ikon_app/`; ikon di APK debug sudah dicek. Belum dilihat di HP: warna latar splash sistem Android 12+ baru bisa diatur setelah Gradle build aktif
 
 **Teknis**

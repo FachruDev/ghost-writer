@@ -28,6 +28,32 @@ func _on_feed_baru(entri: Dictionary) -> void:
 	if baru:
 		baru.modulate.a = 0.0
 		create_tween().tween_property(baru, "modulate:a", 1.0, 0.3)
+		if str(entri.get("jenis", "")) == "mutasi":
+			_kedip_mutasi(baru, entri)
+
+
+## anim_headline_mutate: baris baru menampilkan headline asli dulu, berkedip, lalu berganti ke versi
+## mutasi dengan kilat pink (±0,4 dtk). Headline asli diambil dari kabar "rumor" terakhir.
+func _kedip_mutasi(baris: Control, e: Dictionary) -> void:
+	var label := baris.get_child(0).get_child(1) as Label if baris.get_child_count() > 0 else null
+	var asal := {}
+	for k in range(1, _entri.size()):
+		if _entri[k].get("jenis", "") == "rumor" and _entri[k].get("template_id", "") == e.get("template_id", ""):
+			asal = _entri[k]
+			break
+	if label == null or asal.is_empty():
+		return
+	var teks_mutasi := label.text
+	label.text = _teks(asal)
+	var t := label.create_tween()
+	for i in 3:
+		t.tween_property(label, "modulate:a", 0.2, 0.05)
+		t.tween_property(label, "modulate:a", 1.0, 0.05)
+	t.tween_callback(func() -> void:
+		label.text = teks_mutasi
+		label.add_theme_color_override("font_color", Palet.PINK))
+	t.tween_interval(0.6)
+	t.tween_callback(func() -> void: label.add_theme_color_override("font_color", Palet.TEKS))
 
 
 func _gui_input(event: InputEvent) -> void:

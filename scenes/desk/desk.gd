@@ -13,6 +13,7 @@ var _saluran := "merpati"
 var _rumor_aktif := false
 var _mengetik := false
 
+var _meja: MejaEra
 var _kertas: KertasHeadline
 var _judul_tangan: Label
 var _petunjuk: Label
@@ -31,7 +32,8 @@ func _ready() -> void:
 	_bangun_ui()
 	Events.kepemilikan_berubah.connect(_on_kepemilikan)
 	Events.kartu_dipilih.connect(_on_kartu)
-	Events.kartu_terbang.connect(_terbangkan_kartu)
+	Events.kartu_terbang.connect(func(kata_id: String, dari: Vector2) -> void:
+		KartuTerbang.terbangkan(self, _kertas, kata_id, dari))
 	Events.distrik_dipilih.connect(func(id: String) -> void:
 		_target = id
 		_segarkan())
@@ -51,6 +53,8 @@ func _ready() -> void:
 
 
 func _bangun_ui() -> void:
+	_meja = MejaEra.new()  # anak pertama: digambar di belakang kertas, tangan, dan kaki
+	add_child(_meja)
 	var kolom := UiKit.kolom(self, 0)
 	var m := UiKit.margin(kolom, 24, -36, 24, 0)
 	_kertas = KertasHeadline.new()
@@ -75,7 +79,7 @@ func _bangun_ui() -> void:
 
 func _bangun_kaki(induk: Control) -> void:
 	var kaki := PanelContainer.new()
-	var gaya := Palet.kotak(Color("221c40"), Color.TRANSPARENT, 44)
+	var gaya := Palet.kotak(Palet.MEJA_ERA[1], Color.TRANSPARENT, 44)
 	gaya.corner_radius_bottom_left = 0
 	gaya.corner_radius_bottom_right = 0
 	gaya.content_margin_left = 24
@@ -84,6 +88,9 @@ func _bangun_kaki(induk: Control) -> void:
 	gaya.content_margin_bottom = 24.0 + UiKit.inset_aman(self).y
 	kaki.add_theme_stylebox_override("panel", gaya)
 	induk.add_child(kaki)
+	var hiasan := MejaEra.Hiasan.new()
+	kaki.add_child(hiasan)
+	_meja.pasang_kaki(gaya, hiasan)
 	var baris := UiKit.baris(kaki, 16)
 	_tombol_saluran = Button.new()
 	_tombol_saluran.custom_minimum_size = Vector2(236, 108)
@@ -91,6 +98,7 @@ func _bangun_kaki(induk: Control) -> void:
 	Palet.gaya_tombol(_tombol_saluran, Palet.PANEL_2, Palet.PANEL, Palet.TEKS, 28)
 	_tombol_saluran.pressed.connect(func() -> void: Events.layar_diminta.emit("saluran"))
 	_tombol_saluran.add_to_group(TutorialSasaran.SALURAN)
+	UmpanTekan.pasang(_tombol_saluran)
 	baris.add_child(_tombol_saluran)
 	var isi := UiKit.baris(null, 12)
 	isi.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -277,24 +285,3 @@ func _segarkan_tombol() -> void:
 		_tombol_kirim.text = tr("UI_DIKUNCI") % Bahasa.teks(DataDB.get_upgrade(_saluran).get("nama", ""))
 	else:
 		_tombol_kirim.text = tr("UI_BIAYA") % Bahasa.angka(int(DataDB.get_upgrade(_saluran).get("biaya_kirim", 0)))
-
-
-## Animasi kartu terbang ke chip slotnya di kertas.
-func _terbangkan_kartu(kata_id: String, dari: Vector2) -> void:
-	await get_tree().process_frame
-	var slot := str(DataDB.get_word(kata_id).get("slot", ""))
-	var tujuan := _kertas.chip(slot)
-	if tujuan == null or not is_instance_valid(tujuan):
-		return
-	var hantu := UiKit.pil(null, Bahasa.teks(DataDB.get_word(kata_id).get("text", "")),
-		Palet.emosi(str(DataDB.get_word(kata_id).get("emosi", ""))), Palet.TINTA, 22)
-	hantu.top_level = true
-	add_child(hantu)
-	hantu.reset_size()
-	hantu.global_position = dari - hantu.size / 2.0
-	tujuan.modulate.a = 0.0
-	var t := create_tween()
-	t.tween_property(hantu, "global_position", tujuan.global_position + tujuan.size / 2.0 - hantu.size / 2.0, 0.25) \
-		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
-	t.tween_callback(hantu.queue_free)
-	t.tween_property(tujuan, "modulate:a", 1.0, 0.1)

@@ -6,7 +6,7 @@ const UPGRADE_ERA := {2: "kantor", 3: "gedung_media", 4: "menara_server"}
 
 var _era_dilihat := 0
 var _lencana: Label
-var _hantu: Hantu
+var _ilustrasi: IlustrasiEra
 var _angka: Label
 var _nama: Label
 var _daftar: VBoxContainer
@@ -30,10 +30,8 @@ func _bangun_isi() -> void:
 	var lencana := UiKit.pil(konten, "", Palet.KUNING, Palet.TINTA, 26)
 	lencana.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	_lencana = lencana.get_child(0)
-	_hantu = Hantu.new()
-	_hantu.suasana = Hantu.Suasana.GIRANG
-	_hantu.custom_minimum_size = Vector2(0, 180)
-	konten.add_child(_hantu)
+	_ilustrasi = IlustrasiEra.new()  # sinar, gedung era baru, hantu di atap (papan 11)
+	konten.add_child(_ilustrasi)
 	_angka = UiKit.label(konten, 88, Palet.TEKS, Tema.font_judul())
 	_angka.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_angka.add_theme_color_override("font_shadow_color", Palet.PINK)
@@ -62,13 +60,17 @@ func _bangun_isi() -> void:
 func _on_era(era: int) -> void:
 	if era > _era_dilihat and _era_dilihat > 0 and is_inside_tree():
 		_era_dilihat = era
-		buka.call_deferred()
+		# Meja berganti dulu (MejaEra, anim_era_transition), baru lembar ini muncul.
+		get_tree().create_timer(MejaEra.LAMA_TRANSISI).timeout.connect(func() -> void:
+			if is_inside_tree():
+				buka())
 	else:
 		_era_dilihat = era
 
 
 func _segarkan() -> void:
 	var era := GameState.era
+	_ilustrasi.mulai(era)
 	_lencana.text = tr("UI_NAIK_ERA")
 	_angka.text = tr("UI_ERA_PENDEK") % era
 	_nama.text = tr("UI_ERA_NAMA_%d" % clampi(era, 1, 4))

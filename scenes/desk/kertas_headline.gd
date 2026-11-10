@@ -13,6 +13,8 @@ const TINGGI_KETUK := 88
 ## Tinggi chip dalam tata letak kalimat. Lebih pendek dari area ketuk supaya kertas tidak menggencet
 ## peta di layar 16:9; area ketuknya diperluas lewat ChipSlot._has_point().
 const TINGGI_CHIP := 60
+## Grup untuk menemukan kertas dari luar meja (kertas terbang saat rumor dikirim).
+const GRUP := &"kertas_headline"
 
 var _info: Label
 var _alir: HFlowContainer
@@ -42,6 +44,7 @@ class ChipSlot extends Button:
 
 
 func _ready() -> void:
+	add_to_group(GRUP)
 	_regex.compile(POLA_SLOT)
 	var gaya := Palet.kotak(Palet.KERTAS, Color("0e0b1f"), 36)
 	gaya.border_width_bottom = 10

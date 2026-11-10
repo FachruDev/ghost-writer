@@ -31,6 +31,7 @@ static func tombol(induk: Node, teks: String, warna: Color = Palet.PANEL_2, baya
 	if font:
 		b.add_theme_font_override("font", font)
 	Palet.gaya_tombol(b, warna, bayang)
+	UmpanTekan.pasang(b)
 	if induk:
 		induk.add_child(b)
 	return b
@@ -62,6 +63,7 @@ static func tombol_ikon(induk: Node, ikon_nama: String, aria: String, warna: Col
 		var s := b.get_theme_stylebox(gaya) as StyleBoxFlat
 		s.content_margin_left = 22
 		s.content_margin_right = 22
+	UmpanTekan.pasang(b)
 	if induk:
 		induk.add_child(b)
 	return b

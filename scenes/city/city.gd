@@ -1,6 +1,6 @@
 extends Control
 ## Peta kota: jaringan wajah warga (PetaJaringan), lalu feed dan banner event di atasnya.
-## Juga menampilkan uang yang melayang dari distrik dan stempel HOAKS.
+## Juga menampilkan stempel HOAKS; kertas terbang dan uang dari titik warga diurus KirimanAnimasi.
 
 const FEED := preload("res://scenes/city/feed.tscn")
 const EVENT_BANNER := preload("res://scenes/city/event_banner.tscn")
@@ -10,6 +10,7 @@ const JARAK_BAWAH := 56.0
 var _peta: PetaJaringan
 var _feed: Control
 var _banner: Control
+var _memudar: KotaMemudar
 
 
 func _ready() -> void:
@@ -18,10 +19,15 @@ func _ready() -> void:
 	Events.distrik_dipilih.connect(func(id: String) -> void:
 		if _peta:
 			_peta.dipilih = id)
-	Events.uang_dari_distrik.connect(_uang_melayang)
 	Events.feed_baru.connect(func(e: Dictionary) -> void:
 		if e.get("jenis", "") == "hoaks":
 			_stempel_hoaks())
+	Events.ending_tercapai.connect(func(hasil: String) -> void:
+		if _peta and _peta.siap():
+			_memudar = KotaMemudar.mulai(_peta, hasil))
+	Events.ending_ditutup.connect(func() -> void:
+		if is_instance_valid(_memudar):
+			_memudar.queue_free())
 
 
 func atur_sim(sim: SpreadSim) -> void:
@@ -34,6 +40,11 @@ func atur_sim(sim: SpreadSim) -> void:
 	add_child(_feed)
 	_banner = EVENT_BANNER.instantiate()
 	add_child(_banner)
+	var animasi := KirimanAnimasi.new()
+	animasi.name = "KirimanAnimasi"
+	animasi.peta = _peta
+	animasi.kota = self
+	add_child(animasi)
 	_tata()
 
 
@@ -76,16 +87,3 @@ func _stempel_hoaks() -> void:
 	for i in 4:
 		g.tween_property(self, "position", asal + Vector2(randf_range(-6, 6), randf_range(-4, 4)), 0.04)
 	g.tween_property(self, "position", asal, 0.04)
-
-
-## Pil kuning "+N" melayang naik dari gugus distrik.
-func _uang_melayang(distrik: int, jumlah: int) -> void:
-	if _peta == null or distrik < 0 or distrik >= DataDB.districts.size():
-		return
-	var pil := UiKit.pil(self, "+" + Bahasa.angka(jumlah), Palet.KUNING, Palet.TINTA, 20)
-	pil.reset_size()
-	pil.position = _peta.pusat_distrik(distrik) + Vector2(randf_range(-60, 60), randf_range(-30, 30)) - pil.size / 2.0
-	var t := create_tween().set_parallel()
-	t.tween_property(pil, "position:y", pil.position.y - 60.0, 0.9).set_ease(Tween.EASE_OUT)
-	t.tween_property(pil, "modulate:a", 0.0, 0.5).set_delay(0.4)
-	t.chain().tween_callback(pil.queue_free)

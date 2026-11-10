@@ -54,6 +54,9 @@ res://
     ui/tutorial_sasaran.gd  #   dan pencari node sasaran lewat grup
     ui/petunjuk_lapisan.gd  # kartu petunjuk sistem baru (petunjuk_kartu.gd) + ekor ke sasaran
     ui/tentang_layar.gd     # layar Tentang & kredit (dari Pengaturan); baris + teks lisensi: kredit_baris.gd
+    ui/ilustrasi_era.gd, ilustrasi_ending.gd, cincin_staf.gd   # art Naik Era, ending, cincin staf
+    desk/meja_era.gd, kartu_terbang.gd                         # art meja per era, kartu ke slot
+    city/kiriman_animasi.gd, kertas_terbang.gd, kota_memudar.gd # kertas terbang, uang dari warga, ending
   scripts/
     autoload/game_state.gd   # uang, pengikut, kredibilitas, kartu dimiliki
     autoload/data_db.gd      # memuat semua JSON saat start
@@ -76,6 +79,7 @@ res://
     ui/tema.gd               # Theme global + font (Lilita One, Fredoka, Courier Prime)
     ui/ui_kit.gd             # pembuat label, tombol, pil, bar, ikon
     ui/gambar_wajah.gd       # menggambar wajah warga per status
+    ui/umpan_tekan.gd        # tombol mengecil saat ditekan (dipasang UiKit)
     ui/atlas_wajah.gd        # atlas tekstur wajah (status × variasi) untuk peta
     systems/headline_builder.gd  # susun headline dari template_id + kata_ids
   tests/                     # tes gdUnit4
