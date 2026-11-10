@@ -30,6 +30,7 @@ SaveSystem="*res://scripts/autoload/save_system.gd"
 Pengaturan="*res://scripts/autoload/pengaturan.gd"
 Suara="*res://scripts/autoload/suara.gd"
 Getar="*res://scripts/autoload/getar.gd"
+GulirSentuh="*res://scripts/autoload/gulir_sentuh.gd"
 
 [display]
 

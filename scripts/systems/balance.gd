@@ -31,6 +31,9 @@ static var BATAS_HEBOH_AMAN: float = _f("BATAS_HEBOH_AMAN")
 static var PENALTI_PER_HEBOH: float = _f("PENALTI_PER_HEBOH")
 static var DIPERCAYA_MIN: float = _f("DIPERCAYA_MIN")
 static var DIPERCAYA_MAKS: float = _f("DIPERCAYA_MAKS")
+static var JENUH_JENDELA: int = _i("JENUH_JENDELA")
+static var JENUH_PER_PAKAI: float = _f("JENUH_PER_PAKAI")
+static var JENUH_MIN: float = _f("JENUH_MIN")
 static var KREDIBILITAS_AWAL: float = _f("KREDIBILITAS_AWAL")
 
 # Penyebaran

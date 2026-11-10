@@ -7,6 +7,9 @@ BATAS_HEBOH_AMAN,6,Total heboh di atas ini mulai mengurangi dipercaya
 PENALTI_PER_HEBOH,0.05,Dipercaya berkurang per poin heboh di atas batas aman
 DIPERCAYA_MIN,0.1,Batas bawah dipercaya
 DIPERCAYA_MAKS,1.0,Batas atas dipercaya
+JENUH_JENDELA,3,Kata basi: jumlah rumor pemain terakhir (tanpa staf) yang dihitung
+JENUH_PER_PAKAI,0.1,"Heboh kata berkurang sebesar ini per pemakaian dalam jendela (0,2 dan min 0,4 memperlambat Era 4 bot dari menit 29 ke 42)"
+JENUH_MIN,0.6,Pengali heboh terendah untuk kata yang terus dipakai
 KREDIBILITAS_AWAL,50,Kredibilitas saat mulai baru (0-100)
 PELUANG_TULAR_DASAR,0.025,Peluang dasar tiap tetangga tertular per tick
 TETANGGA_PER_WARGA,6,Jumlah tetangga terdekat tiap warga

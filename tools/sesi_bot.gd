@@ -5,6 +5,10 @@ extends SceneTree
 ##
 ## Jalankan: godot --headless --path . -s res://tools/sesi_bot.gd
 ## Hanya kampanye akhir (mulai dari era 4, semua tokoh jatuh): tambahkan `-- final` di akhir perintah.
+## Kata basi: bot memilih kartu tanpa melihat kata basi (tetap kena penaltinya), sama seperti bot sebelum
+## kejenuhan ada, supaya hasilnya bisa dibandingkan dengan laporan lama. `-- peduli`: bot menurunkan nilai kartu
+## basi (heuristik kasar; di uji 2026-11-10 justru memilih kartu lebih lemah). `-- tanpa_jenuh`: kejenuhan dimatikan.
+## Coba angka lain tanpa mengubah CSV: `-- jenuh_per_pakai=0.1 jenuh_min=0.6`.
 ## Mengubah angka di balancing/*.csv (lalu tools/terapkan_balancing.gd) dan menjalankan ulang alat ini adalah cara
 ## menyetel balancing tanpa playtest manual (ADR-0003: simulasi berseed + headless).
 ## Catatan: jangan rujuk class yang memakai autoload saat compile (mis. MissionController);
@@ -23,6 +27,8 @@ const Laporan := preload("res://tools/bot_laporan.gd")
 var R: Node
 var _mode_final: bool = "final" in OS.get_cmdline_user_args()
 var _frame := 0
+var _peduli: bool = "peduli" in OS.get_cmdline_user_args()
+var _jenuh := {}  # kata_id -> jumlah pemakaian dalam rumor pemain terakhir (Kejenuhan), diisi tiap _kirim
 
 
 func _process(_d: float) -> bool:
@@ -34,6 +40,13 @@ func _process(_d: float) -> bool:
 
 func _jalankan_semua() -> void:
 	R = get_root()
+	for arg in OS.get_cmdline_user_args():
+		if arg == "tanpa_jenuh":
+			Balance.JENUH_PER_PAKAI = 0.0
+		elif arg.begins_with("jenuh_per_pakai="):
+			Balance.JENUH_PER_PAKAI = float(arg.get_slice("=", 1))
+		elif arg.begins_with("jenuh_min="):
+			Balance.JENUH_MIN = float(arg.get_slice("=", 1))
 	# Bot memajukan waktu sendiri lewat jalankan_tick. Tanpa ini GameClock._process menambah tick dari
 	# waktu nyata di sela await process_frame, sehingga hasil seed yang sama berbeda tiap run.
 	a("GameClock").process_mode = Node.PROCESS_MODE_DISABLED
@@ -210,6 +223,7 @@ func _kartu_terbaik_per_slot(st, db, d: Dictionary, paksa_takut: bool, pakai_tok
 func _kirim(st, db, ev) -> bool:
 	var misi: Dictionary = db.missions[st.misi_idx] if st.misi_idx < db.missions.size() else {}
 	var paksa_takut: bool = misi.get("syarat", {}).get("tipe", "") == "rumor_emosi_distrik"
+	_jenuh = st.kejenuhan_kata() if _peduli else {}
 	var terbaik := {}
 	var nilai_terbaik := -INF
 	var kartu_terbaik := {}  # [distrik, varian] -> {slot: kata_id}; nilai kartu tidak bergantung pada template
@@ -254,7 +268,7 @@ func _nilai_rumor(st, db, tmpl: Dictionary, pilih: Dictionary, di: int, paksa_ta
 	var kata := {}
 	for s in pilih:
 		kata[s] = db.get_word(pilih[s])
-	var skor := RumorScorer.nilai(tmpl, kata, db.districts, st.kredibilitas)
+	var skor := RumorScorer.nilai(tmpl, Kejenuhan.terapkan(kata, _jenuh), db.districts, st.kredibilitas)
 	var pb := Konsekuensi.peluang_bongkar(skor["dipercaya_akhir"], st.heat)
 	var tokoh := _tokoh_berdiri(st, db, pilih)
 	var p: Dictionary = tokoh.get("pertahanan", {})
@@ -279,7 +293,7 @@ func _tokoh_berdiri(st, db, pilih: Dictionary) -> Dictionary:
 
 
 func _nilai_kartu(st, k: Dictionary, d: Dictionary, paksa_takut: bool, pakai_tokoh: bool) -> float:
-	var v := float(k["kred"]) * 1.2 + float(k["heboh"])
+	var v := float(k["kred"]) * 1.2 + float(k["heboh"]) * Kejenuhan.pengali_kata(k, _jenuh)
 	if k["emosi"] == d["emosi_favorit"]:
 		v += 2.0
 	if paksa_takut and k["emosi"] == "takut":

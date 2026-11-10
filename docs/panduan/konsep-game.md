@@ -59,7 +59,7 @@ Beli kata / template / saluran / upgrade baru
 ### Rumus awal (untuk dicoba, nanti diseimbangkan)
 
 ```
-heboh_total   = (jumlah heboh semua kartu) × pengali_heboh_template
+heboh_total   = (jumlah heboh kartu × pengali_basi kartu) × pengali_heboh_template
 kred_rata     = rata-rata kred semua kartu
 cocok_emosi   = 1.5 jika emosi dominan = emosi favorit distrik
                 1.0 jika headline netral
@@ -77,6 +77,8 @@ peluang_percaya (saat tertular)        = dipercaya_akhir        (× 0.5 jika war
 **Emosi dominan.** Hitung emosi semua kartu kecuali netral; emosi terbanyak menang. Kalau seri, ambil emosi kartu dengan heboh tertinggi; kalau masih seri, kartu yang slotnya paling awal (subjek → aksi → tempat → sumber). Kalau semua kartu netral, headline netral.
 
 **Pasangan emosi berlawanan** (usulan awal, ubah saat playtest): lucu ↔ takut, marah ↔ iri.
+
+**Kejenuhan kata (kata basi).** Kota bosan mendengar kata yang sama. Untuk tiap kartu, hitung `n` = berapa kali kata itu dipakai dalam 3 rumor terakhir yang dikirim pemain (rumor staf tidak dihitung). `pengali_basi = max(0,6, 1 − 0,1 × n)`, jadi heboh kata turun 10% per pemakaian dan mentok di 60%. Kata pulih sendiri setelah tidak dipakai selama 3 rumor. Rumor yang sama persis dikirim terus akan kehilangan viral, tapi juga lebih dipercaya dan lebih sedikit heat (heboh lebih rendah); pemain didorong memutar kartu dan membeli kata baru. Kata ber-tag tidak bisa basi: tokoh (harus disebut berulang untuk menjatuhkannya), calon RT (E04), dan dokumen bocor (E07, sudah dibatasi 3 pemakaian). Angka di `balancing/angka.csv` (`JENUH_*`), kode di `scripts/systems/kejenuhan.gd`. Disetel 2026-11-10 dengan bot (8 sesi, median): tanpa kejenuhan Era 4 menit 29,5; dengan 0,2/0,4 bot yang tidak memutar kartu tertahan di menit 42 dan misi ke-5 di menit 13,5 (terlalu keras karena awal game hanya punya 3 kartu aksi dan 3 tempat); dengan 0,1/0,6 Era 4 menit 35 dan misi ke-5 menit 9, kampanye akhir tetap dimenangkan 7/8 sesi.
 
 ### Status warga
 

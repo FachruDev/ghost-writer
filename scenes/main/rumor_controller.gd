@@ -59,6 +59,7 @@ func _on_kirim(data: Dictionary) -> void:
 	var kata_by_slot := {}
 	for slot in kata_ids:
 		kata_by_slot[slot] = DataDB.get_word(kata_ids[slot])
+	kata_by_slot = Kejenuhan.terapkan(kata_by_slot, GameState.kejenuhan_kata())  # kata basi kurang heboh
 	var template_id := str(data.get("template_id", ""))
 	var pengali := {"uang": 1.0, "heat": 1.0, "kred": 0}
 	if pengali_rumor.is_valid():

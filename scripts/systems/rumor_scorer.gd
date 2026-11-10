@@ -9,11 +9,11 @@ const URUTAN_SLOT := ["subjek", "aksi", "tempat", "sumber"]
 ## kred_tambah: penyesuaian kredibilitas tiap kartu dari event (E08: -1), dibatasi minimal 0.
 static func nilai(template: Dictionary, kata_by_slot: Dictionary, distrik_list: Array, kredibilitas: float,
 		kred_tambah: int = 0) -> Dictionary:
-	var jumlah_heboh := 0
+	var jumlah_heboh := 0.0  # float: kata basi (Kejenuhan) punya heboh pecahan
 	var jumlah_kred := 0
 	for slot in kata_by_slot:
 		var kata: Dictionary = kata_by_slot[slot]
-		jumlah_heboh += int(kata.get("heboh", 0))
+		jumlah_heboh += float(kata.get("heboh", 0))
 		jumlah_kred += maxi(0, int(kata.get("kred", 0)) + kred_tambah)
 	var n := maxi(kata_by_slot.size(), 1)
 	var heboh_total := jumlah_heboh * float(template.get("pengali_heboh", 1.0))
@@ -56,9 +56,9 @@ static func emosi_dominan(kata_by_slot: Dictionary) -> String:
 		var emosi := str(kata.get("emosi", "netral"))
 		if emosi == "netral":
 			continue
-		var heboh := int(kata.get("heboh", 0))
+		var heboh := float(kata.get("heboh", 0))
 		if not calon.has(emosi):
-			calon[emosi] = [0, -1, i]
+			calon[emosi] = [0, -1.0, i]
 		var c: Array = calon[emosi]
 		c[0] += 1
 		if heboh > c[1]:

@@ -202,6 +202,11 @@ func beli_template(id: String) -> bool:
 	return true
 
 
+## Kata basi: jumlah pemakaian tiap kata_id dalam rumor pemain terakhir (Kejenuhan.hitung).
+func kejenuhan_kata() -> Dictionary:
+	return Kejenuhan.hitung(riwayat_rumor)
+
+
 func catat_rumor(entri: Dictionary) -> void:
 	riwayat_rumor.append(entri)
 	var terbaik: Variant = statistik.get("rumor_terbaik")
