@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="432" height="432" viewBox="0 0 432 432">
+  <!-- Lapisan belakang adaptive icon: langit malam (warna layar judul) dengan cahaya lembut di belakang hantu. -->
+  <defs>
+    <linearGradient id="langit" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2E2460"/>
+      <stop offset="1" stop-color="#1A1530"/>
+    </linearGradient>
+    <radialGradient id="cahaya" cx="216" cy="222" r="170" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#F4F1FF" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#F4F1FF" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="432" height="432" fill="url(#langit)"/>
+  <circle cx="216" cy="222" r="170" fill="url(#cahaya)"/>
+  <circle cx="118" cy="104" r="3" fill="#FFFFFF" fill-opacity="0.7"/>
+  <circle cx="318" cy="96" r="2.5" fill="#FFFFFF" fill-opacity="0.6"/>
+  <circle cx="338" cy="232" r="2.5" fill="#FFFFFF" fill-opacity="0.5"/>
+  <circle cx="96" cy="190" r="2" fill="#FFFFFF" fill-opacity="0.5"/>
+</svg>

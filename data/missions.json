@@ -1,0 +1,12 @@
+[
+  {"id": "m_01", "teks": {"id": "Kirim rumor pertamamu", "en": "Send your first rumor"},
+   "syarat": {"tipe": "rumor_dikirim", "nilai": 1}, "hadiah": {"uang": 20}},
+  {"id": "m_02", "teks": {"id": "Yakinkan 20 warga dalam satu rumor", "en": "Convince 20 citizens with one rumor"},
+   "syarat": {"tipe": "warga_sekaligus", "nilai": 20}, "hadiah": {"uang": 30}},
+  {"id": "m_03", "teks": {"id": "Beli 2 kata baru", "en": "Buy 2 new words"},
+   "syarat": {"tipe": "kata_dibeli", "nilai": 2}, "hadiah": {"uang": 30}},
+  {"id": "m_04", "teks": {"id": "Kirim rumor yang menakutkan ke Gang Sempit", "en": "Send a scary rumor to Narrow Alley"},
+   "syarat": {"tipe": "rumor_emosi_distrik", "emosi": "takut", "distrik": "gang_sempit"}, "hadiah": {"uang": 40}},
+  {"id": "m_05", "teks": {"id": "Capai 100 pengikut (Koran terbuka)", "en": "Reach 100 followers (unlocks Newspaper)"},
+   "syarat": {"tipe": "pengikut", "nilai": 100}, "hadiah": {"uang": 50}}
+]

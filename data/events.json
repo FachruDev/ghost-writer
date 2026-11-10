@@ -1,0 +1,454 @@
+[
+  {
+    "id": "e_hari_pasar",
+    "nama": {
+      "id": "Hari Pasar",
+      "en": "Market Day"
+    },
+    "jenis": "modifier",
+    "era_min": 1,
+    "pemicu": {
+      "tipe": "acak",
+      "peluang": 0.15
+    },
+    "durasi": 60,
+    "teks": {
+      "id": "Pasar Lama sedang ramai. Gosip menyebar lebih cepat di sana!",
+      "en": "The Old Market is packed. Gossip spreads faster there!"
+    },
+    "efek": [
+      {
+        "tipe": "kerentanan_distrik",
+        "distrik": "pasar_lama",
+        "kali": 1.5
+      }
+    ],
+    "pilihan": []
+  },
+  {
+    "id": "e_ronda_malam",
+    "nama": {
+      "id": "Ronda Malam",
+      "en": "Night Watch"
+    },
+    "jenis": "modifier",
+    "era_min": 1,
+    "pemicu": {
+      "tipe": "acak",
+      "peluang": 0.15
+    },
+    "durasi": 60,
+    "teks": {
+      "id": "Warga Gang Sempit sedang ronda. Cerita seram laku, lelucon garing.",
+      "en": "Narrow Alley is on night watch. Scary stories land, jokes fall flat."
+    },
+    "efek": [
+      {
+        "tipe": "emosi_distrik",
+        "distrik": "gang_sempit",
+        "emosi": "takut",
+        "kali": 1.5
+      },
+      {
+        "tipe": "emosi_distrik",
+        "distrik": "gang_sempit",
+        "emosi": "lucu",
+        "kali": 0.7
+      }
+    ],
+    "pilihan": []
+  },
+  {
+    "id": "e_pembongkar_fakta",
+    "nama": {
+      "id": "Pembongkar Fakta",
+      "en": "Fact Checker"
+    },
+    "jenis": "ancaman",
+    "era_min": 1,
+    "pemicu": {
+      "tipe": "kondisi",
+      "heat_min": 70
+    },
+    "durasi": 6,
+    "teks": {
+      "id": "Seorang pembongkar fakta turun ke jalan. Warga di sekitarnya jadi kebal!",
+      "en": "A fact checker hits the streets. Citizens nearby become immune!"
+    },
+    "efek": [
+      {
+        "tipe": "pembongkar",
+        "radius": 0.14
+      },
+      {
+        "tipe": "kredibilitas",
+        "nilai": -10
+      }
+    ],
+    "pilihan": []
+  },
+  {
+    "id": "e_pemilihan_rt",
+    "nama": {
+      "id": "Pemilihan Ketua RT",
+      "en": "Neighborhood Chief Election"
+    },
+    "jenis": "peluang",
+    "era_min": 1,
+    "pemicu": {
+      "tipe": "pengikut",
+      "nilai": 300
+    },
+    "durasi": 90,
+    "teks": {
+      "id": "Musim pemilihan! Dua calon fiktif masuk ke tanganmu. Rumor tentang mereka bernilai dua kali lipat, tapi lebih panas.",
+      "en": "Election season! Two fictional candidates join your hand. Rumors about them pay double, but run hotter."
+    },
+    "efek": [
+      {
+        "tipe": "beri_kata",
+        "kata": [
+          "calon_darto",
+          "calon_wati"
+        ]
+      },
+      {
+        "tipe": "pengali_tag",
+        "tag": "kandidat",
+        "uang": 2.0,
+        "heat": 1.5
+      }
+    ],
+    "pilihan": []
+  },
+  {
+    "id": "e_wartawan",
+    "nama": {
+      "id": "Wartawan Penasaran",
+      "en": "Curious Reporter"
+    },
+    "jenis": "dilema",
+    "era_min": 2,
+    "pemicu": {
+      "tipe": "acak",
+      "peluang": 0.08,
+      "syarat": {
+        "heat_min": 40
+      }
+    },
+    "durasi": 0,
+    "teks": {
+      "id": "Seorang wartawan mencium jejakmu. Dia mau diam... asal ada imbalan.",
+      "en": "A reporter has picked up your trail. They will stay quiet... for a price."
+    },
+    "efek": [],
+    "pilihan": [
+      {
+        "label": {
+          "id": "Bayar dia (200)",
+          "en": "Pay up (200)"
+        },
+        "efek": [
+          {
+            "tipe": "uang",
+            "nilai": -200
+          },
+          {
+            "tipe": "heat",
+            "nilai": -30
+          }
+        ]
+      },
+      {
+        "label": {
+          "id": "Abaikan",
+          "en": "Ignore"
+        },
+        "efek": [
+          {
+            "tipe": "heat",
+            "nilai": 20
+          },
+          {
+            "tipe": "pengikut",
+            "nilai": 50
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "e_festival",
+    "nama": {
+      "id": "Festival Kampung",
+      "en": "Village Festival"
+    },
+    "jenis": "modifier",
+    "era_min": 2,
+    "pemicu": {
+      "tipe": "acak",
+      "peluang": 0.12
+    },
+    "durasi": 60,
+    "teks": {
+      "id": "Seluruh kampung berpesta. Gosip menyebar di mana-mana dan warga royal.",
+      "en": "The whole village is partying. Gossip is everywhere and people are generous."
+    },
+    "efek": [
+      {
+        "tipe": "kerentanan_distrik",
+        "distrik": "*",
+        "kali": 1.2
+      },
+      {
+        "tipe": "uang_per_warga",
+        "kali": 1.5
+      }
+    ],
+    "pilihan": []
+  },
+  {
+    "id": "e_dokumen_bocor",
+    "nama": {
+      "id": "Dokumen Bocor",
+      "en": "Leaked Document"
+    },
+    "jenis": "peluang",
+    "era_min": 2,
+    "pemicu": {
+      "tipe": "acak",
+      "peluang": 0.1
+    },
+    "durasi": 20,
+    "teks": {
+      "id": "Sebuah dokumen bocor sampai di mejamu. Pakai untuk 3 rumor sebelum basi!",
+      "en": "A leaked document lands on your desk. Use it for 3 rumors before it goes stale!"
+    },
+    "efek": [
+      {
+        "tipe": "kartu_sementara",
+        "kata": "dokumen_bocor",
+        "rumor": 3
+      }
+    ],
+    "pilihan": []
+  },
+  {
+    "id": "e_viral_challenge",
+    "nama": {
+      "id": "Viral Challenge",
+      "en": "Viral Challenge"
+    },
+    "jenis": "modifier",
+    "era_min": 3,
+    "pemicu": {
+      "tipe": "acak",
+      "peluang": 0.12
+    },
+    "durasi": 60,
+    "teks": {
+      "id": "Semua orang ikut challenge konyol. Rumor lucu meledak, tapi tak ada yang dipercaya penuh.",
+      "en": "Everyone is doing a silly challenge. Funny rumors explode, but nothing is fully believed."
+    },
+    "efek": [
+      {
+        "tipe": "emosi_distrik",
+        "distrik": "*",
+        "emosi": "lucu",
+        "kali": 2.0
+      },
+      {
+        "tipe": "kred_kartu",
+        "nilai": -1
+      }
+    ],
+    "pilihan": []
+  },
+  {
+    "id": "e_razia_hoaks",
+    "nama": {
+      "id": "Razia Hoaks",
+      "en": "Hoax Crackdown"
+    },
+    "jenis": "ancaman",
+    "era_min": 3,
+    "pemicu": {
+      "tipe": "kondisi",
+      "kred_maks": 30
+    },
+    "durasi": 8,
+    "teks": {
+      "id": "Kredibilitasmu jatuh. Platform merazia hoaks: medsos dikunci 90 detik dan pengikut kabur.",
+      "en": "Your credibility collapsed. Platforms crack down: social media locked for 90 seconds and followers flee."
+    },
+    "efek": [
+      {
+        "tipe": "kunci_saluran",
+        "saluran": "medsos",
+        "detik": 90
+      },
+      {
+        "tipe": "pengikut_persen",
+        "nilai": -5
+      }
+    ],
+    "pilihan": []
+  },
+  {
+    "id": "e_rumor_tandingan",
+    "nama": {
+      "id": "Rumor Tandingan",
+      "en": "Counter-Rumor"
+    },
+    "jenis": "ancaman",
+    "era_min": 3,
+    "pemicu": {
+      "tipe": "acak",
+      "peluang": 0.06
+    },
+    "durasi": 6,
+    "teks": {
+      "id": "Media saingan menyebar rumor tandingan. Banyak pemercayamu mulai ragu!",
+      "en": "A rival outlet spreads a counter-rumor. Many of your believers start to doubt!"
+    },
+    "efek": [
+      {
+        "tipe": "ragukan",
+        "persen": 40
+      }
+    ],
+    "pilihan": []
+  },
+  {
+    "id": "e_server_down",
+    "nama": {
+      "id": "Server Down",
+      "en": "Server Down"
+    },
+    "jenis": "dilema",
+    "era_min": 4,
+    "pemicu": {
+      "tipe": "acak",
+      "peluang": 0.06
+    },
+    "durasi": 0,
+    "teks": {
+      "id": "Server utama mati! Bayar teknisi sekarang, atau staf dan server berhenti dua menit.",
+      "en": "The main server is down! Pay a technician now, or staff and servers stop for two minutes."
+    },
+    "efek": [],
+    "pilihan": [
+      {
+        "label": {
+          "id": "Perbaiki cepat (400)",
+          "en": "Quick fix (400)"
+        },
+        "efek": [
+          {
+            "tipe": "uang",
+            "nilai": -400
+          }
+        ]
+      },
+      {
+        "label": {
+          "id": "Biarkan",
+          "en": "Let it be"
+        },
+        "efek": [
+          {
+            "tipe": "kunci_saluran",
+            "saluran": "server",
+            "detik": 120
+          },
+          {
+            "tipe": "kunci_saluran",
+            "saluran": "staf_1",
+            "detik": 120
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "e_kota_tak_percaya",
+    "nama": {
+      "id": "Kota Tak Percaya Lagi",
+      "en": "The City Stops Believing"
+    },
+    "jenis": "ancaman",
+    "era_min": 4,
+    "pemicu": {
+      "tipe": "final"
+    },
+    "durasi": 300,
+    "teks": {
+      "id": "Seluruh kota mendadak ragu dan susah diyakinkan. Yang kebal menulari tetangganya tiap %d detik. Buat %d%% kota percaya sebelum %d%% warga mati rasa!",
+      "en": "The whole city suddenly doubts everything and is hard to convince. The immune infect their neighbors every %d seconds. Get %d%% of the city believing before %d%% go numb!"
+    },
+    "efek": [],
+    "pilihan": []
+  },
+  {
+    "id": "e_arisan",
+    "nama": {
+      "id": "Arisan Kompleks",
+      "en": "Savings Club Meetup"
+    },
+    "jenis": "modifier",
+    "era_min": 1,
+    "pemicu": {
+      "tipe": "acak",
+      "peluang": 0.15
+    },
+    "durasi": 60,
+    "teks": {
+      "id": "Arisan bulanan di Kompleks Hijau. Siapa yang baru beli mobil jadi bahan obrolan utama.",
+      "en": "It's savings club day in Green Estate. Who just bought a new car is the only topic."
+    },
+    "efek": [
+      {
+        "tipe": "emosi_distrik",
+        "distrik": "kompleks_hijau",
+        "emosi": "iri",
+        "kali": 1.5
+      },
+      {
+        "tipe": "kerentanan_distrik",
+        "distrik": "kompleks_hijau",
+        "kali": 1.2
+      }
+    ],
+    "pilihan": []
+  },
+  {
+    "id": "e_mati_lampu",
+    "nama": {
+      "id": "Mati Lampu",
+      "en": "Blackout"
+    },
+    "jenis": "modifier",
+    "era_min": 1,
+    "pemicu": {
+      "tipe": "acak",
+      "peluang": 0.12
+    },
+    "durasi": 60,
+    "teks": {
+      "id": "Listrik padam sekampung. Warga mengobrol di teras, jadi gosip cepat menyebar, tapi warung tutup.",
+      "en": "The whole village loses power. Everyone's chatting on the porch, so gossip travels fast, but the shops are closed."
+    },
+    "efek": [
+      {
+        "tipe": "kerentanan_distrik",
+        "distrik": "*",
+        "kali": 1.25
+      },
+      {
+        "tipe": "uang_per_warga",
+        "kali": 0.5
+      }
+    ],
+    "pilihan": []
+  }
+]

@@ -2,43 +2,106 @@
 
 Pisahkan data, logika, dan tampilan sejak awal: konten di JSON, aturan di script sistem tanpa node, scene hanya menampilkan. Menambah kata atau menyeimbangkan angka tidak perlu menyentuh scene.
 
+Keputusan yang mengikat struktur ini ada di [`docs/architecture/`](../architecture/): renderer ([ADR-0001](../architecture/adr-0001-renderer.md)), save ([ADR-0002](../architecture/adr-0002-backend-save.md)), waktu simulasi ([ADR-0003](../architecture/adr-0003-model-waktu.md)), dan bahasa ([ADR-0004](../architecture/adr-0004-lokalisasi.md)).
+
 ```
 res://
-  addons/
-    godot-sqlite/     # plugin GDExtension SQLite
   data/
-    words.json        # semua kartu kata
-    templates.json    # pola headline
-    districts.json    # distrik dan profil emosi
-    upgrades.json     # saluran, staf, era
+    words.json        # semua kartu kata (teks per bahasa)
+    templates.json    # pola headline per bahasa
+    districts.json    # distrik, profil emosi, area per era (area_era)
+    upgrades.json     # saluran (Merpati, Koran, Radio), Sewa Kantor (era), staf
+    missions.json     # misi berurutan
+    tokoh.json        # tokoh fiktif target besar (era 4)
+    endings.json      # dua ending: judul + epilog
+    kredit.json       # kredit font, musik, efek suara (layar Tentang); tiap file aset tercatat
+    balance.json      # dibuat dari balancing/angka.csv; jangan diedit langsung
+    events.json       # event (lihat EVENT.md)
+  localization/
+    ui.csv            # teks UI: keys,id,en
   scenes/
-    main/Main.tscn          # layout portrait: HUD, kota, meja, tangan
-    city/City.tscn          # peta + titik warga
-    city/District.tscn
-    desk/Desk.tscn          # mesin tik + slot template
-    hand/Hand.tscn          # deretan kartu
-    card/WordCard.tscn
-    ui/HUD.tscn
-    ui/Shop.tscn
+    main/main.tscn          # layout portrait: HUD, peta, meja (kertas + tangan + saluran/KIRIM)
+    main/rumor_controller.gd    # alur satu rumor: kirim, menjalar, mutasi, konsekuensi
+    main/event_controller.gd    # event kota (EVENT.md)
+    main/mission_controller.gd  # misi berurutan
+    main/staff_controller.gd    # staf otomatis era 2
+    main/campaign_controller.gd # kontrak kampanye era 3
+    main/tokoh_controller.gd    # tokoh target dan pertahanannya (era 4)
+    main/final_controller.gd    # kampanye akhir + E12
+    main/tutorial_controller.gd # tutorial 3 langkah: sasaran yang ditunjuk UI
+    main/petunjuk_controller.gd # petunjuk singkat saat sistem baru terbuka
+    city/city.tscn          # peta: feed, banner, stempel HOAKS, uang melayang
+    city/peta_jaringan.gd   # warga = wajah, tetangga = garis (Konsep A "Jaringan Gosip")
+    city/peta_latar.gd      # lapisan latar statis peta (kotak, grid, cahaya distrik)
+    city/peta_animasi.gd    # lapisan animasi peta (denyut, gelembung, cincin TARGET)
+    city/feed.tscn          # feed kabar satu baris, ketuk untuk 5 terakhir
+    city/event_banner.tscn  # banner modifier/peluang/ancaman
+    desk/desk.tscn          # meja: kertas headline, tangan, saluran + KIRIM
+    desk/kertas_headline.gd # kalimat dengan chip slot, skor, animasi mesin tik
+    desk/saluran_sheet.gd   # lembar Pilih Saluran
+    hand/hand.tscn          # deretan kartu untuk slot aktif
+    card/word_card.tscn     # kartu kata (pita emosi, varian tokoh/calon/sementara)
+    ui/judul.tscn           # layar judul (main scene)
+    ui/hud.tscn             # menu hantu, era, uang, pengikut, toko, meter, strip kontrak
+    ui/hud_strip.gd         # strip utama HUD: misi / tokoh / kampanye akhir
+    ui/shop.tscn            # toko layar penuh: Kata, Template, Kantor & staf (toko_kantor.gd)
+    ui/ending.tscn          # ending menang/kalah
+    ui/lembar.gd            # dasar lembar bawah/layar penuh
+    ui/dilema_sheet.gd, tokoh_sheet.gd, final_sheet.gd, naik_era.gd,
+    ui/offline_sheet.gd, pengaturan_layar.gd   # lapisan lain (kanvas papan 10–20)
+    ui/hantu.gd             # maskot Si Hantu Penulis (digambar, 4 suasana)
+    ui/tutorial_lapisan.gd  # lapisan tutorial (CanvasLayer): tangan_tunjuk.gd, tutorial_gelembung.gd,
+    ui/tutorial_sasaran.gd  #   dan pencari node sasaran lewat grup
+    ui/petunjuk_lapisan.gd  # kartu petunjuk sistem baru (petunjuk_kartu.gd) + ekor ke sasaran
+    ui/tentang_layar.gd     # layar Tentang & kredit (dari Pengaturan); baris + teks lisensi: kredit_baris.gd
+    ui/ilustrasi_era.gd, ilustrasi_ending.gd, cincin_staf.gd   # art Naik Era, ending, cincin staf
+    desk/meja_era.gd, kartu_terbang.gd                         # art meja per era, kartu ke slot
+    city/kiriman_animasi.gd, kertas_terbang.gd, kota_memudar.gd # kertas terbang, uang dari warga, ending
   scripts/
-    autoload/GameState.gd   # uang, pengikut, kredibilitas, kartu dimiliki
-    autoload/DataDB.gd      # memuat semua JSON saat start
-    autoload/Events.gd      # sinyal global
-    autoload/SaveSystem.gd  # simpan/muat progres ke SQLite di user://
-    systems/Balance.gd      # semua konstanta balancing
-    systems/RumorScorer.gd  # hitung viral & dipercaya
-    systems/SpreadSim.gd    # simulasi penyebaran per tick
-    systems/Economy.gd      # pendapatan, harga, upgrade
+    autoload/game_state.gd   # uang, pengikut, kredibilitas, kartu dimiliki
+    autoload/data_db.gd      # memuat semua JSON saat start
+    autoload/events.gd       # sinyal global
+    autoload/game_clock.gd   # tick simulasi tetap 0,2 detik (ADR-0003)
+    autoload/save_system.gd  # simpan/muat user://save.json (ADR-0002)
+    autoload/bahasa.gd       # bahasa aktif, teks konten, format angka (ADR-0004)
+    autoload/pengaturan.gd   # volume musik/SFX, getar di user://settings.cfg
+    autoload/suara.gd        # bus audio, musik era, lapisan ancaman, SFX
+    autoload/getar.gd        # getar ringan di HP (kirim, HOAKS)
+    systems/balance.gd       # Balance.X: angka dari data/balance.json + konstanta teknis
+    systems/state_serial.gd  # GameState <-> dictionary save
+    systems/rumor_scorer.gd  # hitung viral & dipercaya
+    systems/spread_sim.gd    # simulasi penyebaran per tick
+    systems/economy.gd       # pendapatan, harga, upgrade
+    systems/konsekuensi.gd   # heat, pembongkaran, kredibilitas, pengikut
+    systems/mutasi.gd        # ganti satu kata saat menyebar
+    systems/staf.gd          # rumus rumor abstrak staf (juga untuk offline)
+    ui/palet.gd              # warna "Kota Gosip Malam" + StyleBox tombol tebal
+    ui/tema.gd               # Theme global + font (Lilita One, Fredoka, Courier Prime)
+    ui/ui_kit.gd             # pembuat label, tombol, pil, bar, ikon
+    ui/gambar_wajah.gd       # menggambar wajah warga per status
+    ui/umpan_tekan.gd        # tombol mengecil saat ditekan (dipasang UiKit)
+    ui/atlas_wajah.gd        # atlas tekstur wajah (status × variasi) untuk peta
+    systems/headline_builder.gd  # susun headline dari template_id + kata_ids
+  tests/                     # tes gdUnit4
+  tools/sesi_bot.gd          # bot balancing: simulasi sesi headless
+  tools/uji_tutup_paksa.gd   # uji tutup paksa saat autosave (desktop)
+  tools/buat_ikon_splash.gd  # render PNG ikon aplikasi + boot splash (jalankan dengan jendela)
+  addons/gdUnit4/            # framework tes (tidak ikut diekspor)
   assets/
-    fonts/  sfx/  ui/
+    fonts/  sfx/  music/  ui/ikon/   # font OFL + lisensi, ikon SVG garis
+    ikon_app/                 # ikon aplikasi (SVG sumber + PNG Android/Play Store) dan boot splash
 ```
+
+Nama file dan scene memakai `snake_case`; nama class dan autoload tetap `PascalCase`. Satu tanggung jawab per script, dengan batas lunak ±300 baris; kalau lewat, pecah ke file baru (lihat [konvensi](konvensi.md)).
 
 | Autoload | Tugas |
 | --- | --- |
 | `DataDB` | Membaca file di `data/` dengan `JSON.parse_string`, menyediakan `get_word(id)`, `get_template(id)` |
 | `GameState` | Satu-satunya tempat angka pemain disimpan; scene membaca dari sini |
 | `Events` | Sinyal seperti `rumor_published`, `citizen_converted`, `money_changed` supaya scene tidak saling memanggil langsung |
-| `SaveSystem` | Membuka `user://ghostwriter.db`, menjalankan migrasi, menyimpan dan memuat `GameState`, mencatat riwayat rumor dan event |
+| `GameClock` | Satu-satunya sumber waktu simulasi: sinyal `tick`, jeda bernama, RNG berseed |
+| `SaveSystem` | Menyimpan dan memuat `GameState` ke `user://save.json` dengan tulis atomik dan migrasi skema |
+| `Bahasa` | Bahasa aktif, `teks()` untuk konten per bahasa, `angka()` untuk format angka |
 
 ### Layout layar (portrait)
 
@@ -59,18 +122,24 @@ res://
 └───────────────────┘
 ```
 
-Susun dengan `VBoxContainer` di root `Main.tscn`, dan beri `size_flags_stretch_ratio` (misalnya 0.08 / 0.45 / 0.22 / 0.25) supaya proporsinya ikut menyesuaikan rasio layar HP.
+Susun dengan `VBoxContainer` di root `main.tscn`, dan beri `size_flags_stretch_ratio` (misalnya 0.08 / 0.45 / 0.22 / 0.25) supaya proporsinya ikut menyesuaikan rasio layar HP.
 
 ### Contoh data (cukup 30 kata dan 5 template untuk prototipe)
+
+Setiap teks yang tampil ke pemain berupa dictionary per bahasa. Field `en` boleh kosong sampai 0.9.0; teks Indonesia dipakai sebagai cadangan.
 
 `words.json`
 
 ```json
 [
-  {"id": "pak_rt", "text": "Pak RT", "slot": "subjek", "emosi": "lucu", "heboh": 1, "kred": 2, "harga": 0},
-  {"id": "menari_malam", "text": "menari tengah malam", "slot": "aksi", "emosi": "lucu", "heboh": 2, "kred": 1, "harga": 0},
-  {"id": "pasar", "text": "pasar", "slot": "tempat", "emosi": "netral", "heboh": 0, "kred": 2, "harga": 0},
-  {"id": "tetangga", "text": "tetangga", "slot": "sumber", "emosi": "netral", "heboh": 0, "kred": 1, "harga": 0}
+  {"id": "pak_rt", "slot": "subjek", "emosi": "lucu", "heboh": 1, "kred": 2, "harga": 0,
+   "text": {"id": "Pak RT", "en": "the Neighborhood Chief"}},
+  {"id": "menari_malam", "slot": "aksi", "emosi": "lucu", "heboh": 2, "kred": 1, "harga": 0,
+   "text": {"id": "menari tengah malam", "en": "dancing at midnight"}},
+  {"id": "pasar", "slot": "tempat", "emosi": "netral", "heboh": 0, "kred": 2, "harga": 0,
+   "text": {"id": "pasar", "en": "the market"}},
+  {"id": "tetangga", "slot": "sumber", "emosi": "netral", "heboh": 0, "kred": 1, "harga": 0,
+   "text": {"id": "tetangga", "en": "a neighbor"}}
 ]
 ```
 
@@ -80,10 +149,13 @@ Susun dengan `VBoxContainer` di root `Main.tscn`, dan beri `size_flags_stretch_r
 [
   {
     "id": "t_dasar",
-    "pola": "{subjek} ketahuan {aksi} di {tempat}, kata {sumber}!",
     "slot": ["subjek", "aksi", "tempat", "sumber"],
     "pengali_heboh": 1.0,
-    "unlock": 0
+    "unlock": 0,
+    "pola": {
+      "id": "{subjek} ketahuan {aksi} di {tempat}, kata {sumber}!",
+      "en": "{sumber} says {subjek} was caught {aksi} at {tempat}!"
+    }
   }
 ]
 ```
@@ -92,130 +164,38 @@ Susun dengan `VBoxContainer` di root `Main.tscn`, dan beri `size_flags_stretch_r
 
 ```json
 [
-  {"id": "pasar_lama", "nama": "Pasar Lama", "emosi_favorit": "lucu", "kerentanan": 1.2, "warga": 40},
-  {"id": "kompleks_hijau", "nama": "Kompleks Hijau", "emosi_favorit": "iri", "kerentanan": 0.9, "warga": 30},
-  {"id": "gang_sempit", "nama": "Gang Sempit", "emosi_favorit": "takut", "kerentanan": 1.0, "warga": 35}
+  {"id": "pasar_lama", "nama": {"id": "Pasar Lama", "en": "Old Market"}, "emosi_favorit": "lucu", "kerentanan": 1.2, "warga": 40},
+  {"id": "kompleks_hijau", "nama": {"id": "Kompleks Hijau", "en": "Green Estate"}, "emosi_favorit": "iri", "kerentanan": 0.9, "warga": 30},
+  {"id": "gang_sempit", "nama": {"id": "Gang Sempit", "en": "Narrow Alley"}, "emosi_favorit": "takut", "kerentanan": 1.0, "warga": 35}
 ]
 ```
 
-Pola template diisi dengan `pola.format({"subjek": "Pak RT", ...})` milik GDScript.
+Headline disusun oleh `headline_builder.gd`: ambil pola bahasa aktif lewat `Bahasa.teks()`, lalu `pola.format({"subjek": ..., ...})` dengan teks kata dalam bahasa yang sama. Kata AKSI bahasa Inggris ditulis dalam bentuk yang pas dengan semua template EN.
 
-## Database save (SQLite)
+`localization/ui.csv`
 
-Pembagian data:
+```csv
+keys,id,en
+UI_KIRIM,KIRIM,SEND
+UI_TOKO,Toko,Shop
+```
+
+## Save (JSON)
+
+Detail lengkap ada di [ADR-0002](../architecture/adr-0002-backend-save.md); ringkasnya:
 
 | Data | Disimpan di | Alasan |
 | --- | --- | --- |
 | Konten (kata, template, distrik, event, upgrade) | JSON di `res://data/` | Dibuat developer, tidak berubah saat main, mudah diedit dan dibaca di git |
-| Progres pemain, riwayat, statistik | SQLite di `user://ghostwriter.db` | Berubah terus; butuh simpan aman (transaksi), query, dan migrasi versi |
-| Pengaturan (suara, musik, getar) | `user://settings.cfg` (`ConfigFile`) | Tetap ada walaupun progres di-reset |
+| Progres pemain, riwayat, statistik | `user://save.json` | Satu file kecil, tulis atomik, migrasi versi skema |
+| Pengaturan (bahasa, suara, musik, getar) | `user://settings.cfg` (`ConfigFile`) | Tetap ada walaupun progres di-reset |
 
-Tabel SQLite hanya menyimpan **ID** konten (misalnya `pak_rt`, `t_dasar`), bukan isinya. Isi kata dan template selalu dibaca dari JSON, jadi memperbaiki typo di JSON langsung berlaku untuk save lama.
-
-### Skema awal (versi skema 1)
-
-```sql
--- Satu baris saja: keadaan pemain saat ini
-CREATE TABLE pemain (
-  id               INTEGER PRIMARY KEY CHECK (id = 1),
-  uang             INTEGER NOT NULL DEFAULT 0,
-  pengikut         INTEGER NOT NULL DEFAULT 0,
-  kredibilitas     INTEGER NOT NULL DEFAULT 50,
-  heat             INTEGER NOT NULL DEFAULT 0,
-  era              INTEGER NOT NULL DEFAULT 1,
-  waktu_main_detik INTEGER NOT NULL DEFAULT 0,
-  terakhir_simpan  TEXT
-);
-
--- Kepemilikan (ID mengacu ke JSON)
-CREATE TABLE kartu_dimiliki    (kata_id TEXT PRIMARY KEY, didapat_pada TEXT);
-CREATE TABLE template_dimiliki (template_id TEXT PRIMARY KEY);
-CREATE TABLE upgrade_dimiliki  (upgrade_id TEXT PRIMARY KEY, level INTEGER NOT NULL DEFAULT 1);
-
--- Progres
-CREATE TABLE misi (
-  misi_id      TEXT PRIMARY KEY,
-  status       TEXT NOT NULL CHECK (status IN ('aktif', 'selesai')),
-  selesai_pada TEXT
-);
-CREATE TABLE distrik_status (
-  distrik_id TEXT PRIMARY KEY,
-  terbuka    INTEGER NOT NULL DEFAULT 0,
-  percaya    INTEGER NOT NULL DEFAULT 0,
-  ragu       INTEGER NOT NULL DEFAULT 0,
-  kebal      INTEGER NOT NULL DEFAULT 0
-);
-
--- Riwayat (bahan statistik dan layar ending)
-CREATE TABLE riwayat_rumor (
-  id            INTEGER PRIMARY KEY AUTOINCREMENT,
-  headline      TEXT NOT NULL,
-  template_id   TEXT NOT NULL,
-  kata_ids      TEXT NOT NULL,      -- array JSON, mis. ["pak_rt","menari_malam"]
-  saluran_id    TEXT NOT NULL,
-  distrik_id    TEXT NOT NULL,
-  viral         REAL NOT NULL,
-  dipercaya     REAL NOT NULL,
-  warga_percaya INTEGER NOT NULL DEFAULT 0,
-  uang_didapat  INTEGER NOT NULL DEFAULT 0,
-  dibongkar     INTEGER NOT NULL DEFAULT 0,
-  dibuat_pada   TEXT NOT NULL
-);
-CREATE TABLE riwayat_event (
-  id          INTEGER PRIMARY KEY AUTOINCREMENT,
-  event_id    TEXT NOT NULL,
-  pilihan     TEXT,                 -- label pilihan untuk event dilema
-  terjadi_pada TEXT NOT NULL
-);
-```
-
-Posisi tiap titik warga **tidak** disimpan. Saat game dimuat, warga dibangkitkan ulang dari jumlah `percaya`, `ragu`, dan `kebal` per distrik.
-
-### Aturan
-
-- Semua penyimpanan dibungkus **satu transaksi** (`BEGIN` … `COMMIT`) supaya save tidak setengah jadi kalau aplikasi tertutup paksa.
-- Autosave tiap 30 detik (atur di `Balance.gd`) dan saat aplikasi dijeda (`NOTIFICATION_APPLICATION_PAUSED`).
-- Versi skema disimpan di `PRAGMA user_version`. Setiap perubahan skema = satu langkah migrasi baru di `SaveSystem.gd`; migrasi lama tidak pernah diubah.
-- Selalu pakai query dengan parameter (`query_with_bindings`), jangan menyusun SQL dari gabungan string.
-- `riwayat_rumor` dibatasi (misalnya 1.000 baris terakhir); statistik total disimpan terpisah bila perlu.
-- Reset progres = mengosongkan tabel, bukan menghapus file.
-- File database tidak pernah ditaruh di `res://`: setelah diekspor, `res://` hanya bisa dibaca.
-
-### Contoh pemakaian
-
-```gdscript
-# SaveSystem.gd (ringkas)
-extends Node
-
-const DB_PATH := "user://ghostwriter.db"
-const MIGRASI := [
-    # indeks 0 -> skema versi 1; tambahkan langkah baru di akhir, jangan ubah yang lama
-    ["CREATE TABLE pemain (...)", "CREATE TABLE kartu_dimiliki (...)"],
-]
-
-var db: SQLite
-
-func _ready() -> void:
-    db = SQLite.new()
-    db.path = DB_PATH
-    db.open_db()
-    _migrasi()
-
-func _migrasi() -> void:
-    db.query("PRAGMA user_version;")
-    var versi: int = db.query_result[0]["user_version"]
-    while versi < MIGRASI.size():
-        db.query("BEGIN;")
-        for sql in MIGRASI[versi]:
-            db.query(sql)
-        versi += 1
-        db.query("PRAGMA user_version = %d;" % versi)
-        db.query("COMMIT;")
-
-func catat_rumor(r: Dictionary) -> void:
-    db.query_with_bindings(
-        "INSERT INTO riwayat_rumor (headline, template_id, kata_ids, saluran_id, distrik_id, viral, dipercaya, dibuat_pada) VALUES (?, ?, ?, ?, ?, ?, ?, ?);",
-        [r.headline, r.template_id, JSON.stringify(r.kata_ids), r.saluran_id, r.distrik_id, r.viral, r.dipercaya, Time.get_datetime_string_from_system()]
-    )
-```
-
+- Save hanya menyimpan **ID** konten (`pak_rt`, `t_dasar`), bukan isinya. Riwayat menyimpan `template_id` + `kata_ids`, dan headline disusun saat ditampilkan, jadi riwayat ikut berganti bahasa.
+- Tulis atomik: tulis ke `save.tmp`, file lama jadi `save.bak`, lalu `save.tmp` di-rename jadi `save.json`. Saat memuat dicoba berurutan `save.tmp` (hanya ada kalau proses mati di tengah simpan; kalau utuh, itu yang terbaru) → `save.json` → `save.bak`.
+- `versi_skema` di file; setiap perubahan skema = satu fungsi migrasi baru, migrasi lama tidak pernah diubah.
+- Angka dari JSON terbaca sebagai float; cast `int()` saat memuat.
+- Autosave tiap 30 detik (waktu nyata) dan saat `NOTIFICATION_APPLICATION_PAUSED`; di desktop juga saat `NOTIFICATION_WM_CLOSE_REQUEST`.
+- Rumor yang sedang menjalar disimpan sebagai hasil proyeksi ([ADR-0003](../architecture/adr-0003-model-waktu.md)).
+- Riwayat dibatasi 200 entri terakhir; total sepanjang permainan ada di `statistik`.
+- Posisi titik warga tidak disimpan; warga dibangkitkan ulang dari jumlah `percaya`, `ragu`, `kebal` per distrik.
+- Reset progres = menghapus `save.json`/`.bak`/`.tmp`; `settings.cfg` tidak disentuh.

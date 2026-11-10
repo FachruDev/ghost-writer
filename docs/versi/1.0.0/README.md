@@ -19,7 +19,7 @@ Versi 1.0.0 dicapai lewat 7 rilis kecil. Setiap rilis punya cakupan tetap; ide b
 | --- | --- |
 | [mvp/mvp-v1.md](mvp/mvp-v1.md) | Roadmap: fase, gerbang keputusan, scope, risiko |
 | [mvp/CHECKLIST.md](mvp/CHECKLIST.md) | Checklist semua versi, dari setup sampai 1.0.0 |
-| [event/EVENT.md](event/EVENT.md) | Sistem event dan 12 event v1 |
+| [event/EVENT.md](event/EVENT.md) | Sistem event dan 14 event v1 |
 | [aset/suara.md](aset/suara.md) | Daftar SFX |
 | [aset/musik.md](aset/musik.md) | Daftar musik |
 | [aset/animasi.md](aset/animasi.md) | Daftar animasi |

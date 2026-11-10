@@ -1,0 +1,236 @@
+keys,id,en
+UI_KIRIM,KIRIM,SEND
+UI_TOKO,Toko,Shop
+UI_TUTUP,Tutup,Close
+UI_BELI,Beli,Buy
+UI_BAHASA,EN,ID
+UI_UANG,Uang: %s,Money: %s
+UI_TARGET,Target: %s,Target: %s
+UI_PILIH_DISTRIK,Ketuk distrik di peta,Tap a district on the map
+UI_MENYEBAR,Rumor menyebar...,Rumor spreading...
+UI_HASIL,+%s dari %d warga,+%s from %d citizens
+UI_TEMPLATE,Template %d/%d,Template %d/%d
+UI_DEBUG_SKOR,Viral %.1f · Dipercaya %d%%,Viral %.1f · Believed %d%%
+UI_HEBOH_KRED,Heboh %d · Kred %d,Buzz %d · Cred %d
+UI_SLOT_SUBJEK,SUBJEK,WHO
+UI_SLOT_AKSI,AKSI,DOING
+UI_SLOT_TEMPAT,TEMPAT,WHERE
+UI_SLOT_SUMBER,SUMBER,SOURCE
+UI_EMO_LUCU,lucu,funny
+UI_EMO_TAKUT,takut,scary
+UI_EMO_MARAH,marah,angry
+UI_EMO_IRI,iri,envy
+UI_EMO_NETRAL,netral,neutral
+UI_TOKO_KATA,Kata baru,New words
+UI_TOKO_TEMPLATE,Template baru,New templates
+UI_TOKO_KOSONG,Semua sudah dibeli,Everything is bought
+UI_PENGIKUT,Pengikut: %s,Followers: %s
+UI_KRED_HEAT,Kred %d · Panas %d,Cred %d · Heat %d
+UI_SEMUA_DISTRIK,Semua distrik,All districts
+UI_BIAYA,biaya %s,cost %s
+UI_HOAKS,HOAKS! %s,HOAX! %s
+UI_DIBONGKAR,Dibongkar! Kredibilitas -%d,Debunked! Credibility -%d
+UI_MUTASI,Mutasi: %s,Mutated: %s
+UI_MISI,Misi: %s,Mission: %s
+UI_MISI_SELESAI,Misi selesai: %s,Mission complete: %s
+UI_MISI_HABIS,Semua misi selesai,All missions complete
+UI_TERKUNCI,%s (%d pengikut),%s (%d followers)
+UI_SISA_DETIK,%d dtk,%ds
+UI_PEMBONGKAR,%d warga jadi kebal,%d citizens became immune
+UI_TERKUNCI_ERA,%s (Era %d),%s (Era %d)
+UI_TOKO_UPGRADE,Kantor & staf,Office & staff
+UI_ERA,Era %d,Era %d
+UI_STAF,Staf: %s,Staff: %s
+UI_STAF_HOAKS,Rumor staf dibongkar! Kredibilitas -%d,Staff rumor debunked! Credibility -%d
+UI_ERA_NAIK,Era %d dimulai! Ada barang baru di toko,Era %d begins! New items in the shop
+UI_DILEMA_DIPILIH,Kamu memilih: %s,You chose: %s
+UI_KONTRAK_NAMA,Tawaran Kontrak,Contract Offer
+UI_KONTRAK_TEKS,Klien misterius membayar %s jika %d%% warga %s dan %s percaya dalam %d menit.,A mysterious client pays %s if %d%% of %s and %s believe within %d minutes.
+UI_TERIMA,Terima,Accept
+UI_TOLAK,Tolak,Decline
+UI_KONTRAK_JALAN,Kontrak: %s %d%% · %s %d%% · %s,Contract: %s %d%% · %s %d%% · %s
+UI_KONTRAK_BERHASIL,Kontrak berhasil! +%s uang · +%d pengikut,Contract done! +%s money · +%d followers
+UI_KONTRAK_GAGAL,Kontrak gagal. Kredibilitas -%d,Contract failed. Credibility -%d
+UI_DIKUNCI,%s (dikunci),%s (locked)
+UI_KARTU_SEMENTARA,%s (sisa %d),%s (%d left)
+UI_TOKOH,Tokoh: %s,Targets: %s
+UI_TOKOH_JATUH,%s jatuh! +%s uang · +%d pengikut,%s has fallen! +%s money · +%d followers
+UI_TOKOH_SERANG,%s: reputasi -%d (sisa %d),%s: reputation -%d (%d left)
+UI_PENGACARA,Pengacara %s membantah rumormu!,%s's lawyers shut your rumor down!
+UI_TOKOH_SEMUA_JATUH,Semua tokoh jatuh,All targets have fallen
+UI_OFFLINE,Staf bekerja selama kamu pergi: +%s uang (%s jam),Your staff worked while you were away: +%s money (%s h)
+UI_FINAL_TOMBOL,Kampanye Akhir,Final Campaign
+UI_FINAL_SIAP,Semua tokoh jatuh. Kota menunggu kampanye akhir.,All targets have fallen. The city awaits the final campaign.
+UI_FINAL_ULANG,Kota mati rasa. Coba kampanye akhir lagi?,The city went numb. Try the final campaign again?
+UI_FINAL_BEBAS,Imperium berdiri. Main bebas.,The empire stands. Free play.
+UI_FINAL_JALAN,Kampanye akhir: percaya %d%%/%d%% · kebal %d%%/%d%% · %s,Final campaign: believe %d%%/%d%% · immune %d%%/%d%% · %s
+UI_ENDING,ENDING,ENDING
+UI_MULAI_BARU,Mulai Baru,New Game
+UI_MULAI_BARU_YAKIN,Hapus progres? Tekan lagi,Erase progress? Tap again
+UI_LANJUT_MAIN,Lanjut Bermain,Keep Playing
+UI_STAT_RUMOR,Rumor dikirim,Rumors sent
+UI_STAT_UANG,Uang terkumpul,Money earned
+UI_STAT_TOKOH,Tokoh jatuh,Targets fallen
+UI_STAT_DIBONGKAR,Dibongkar,Debunked
+UI_STAT_WAKTU,Waktu main,Play time
+UI_STAT_TERBAIK,Rumor terbaik,Best rumor
+UI_STAT_TERBAIK_ISI,%s (%d warga percaya),%s (%d believers)
+UI_STAT_WAKTU_ISI,%d jam %d menit,%dh %dm
+UI_ERA_PENDEK,ERA %d,ERA %d
+UI_ERA_NAMA_1,Kamar Kos,Rented Room
+UI_ERA_NAMA_2,Kantor Sewaan,Rented Office
+UI_ERA_NAMA_3,Gedung Media,Media Building
+UI_ERA_NAMA_4,Menara Server,Server Tower
+UI_MISI_KE,MISI %d/%d,MISSION %d/%d
+UI_TOKOH_KE,TOKOH %d/%d,TARGETS %d/%d
+UI_KONTRAK_TAG,KONTRAK,CONTRACT
+UI_STAF_HITUNG,Staf %ds,Staff %ds
+UI_STAF_MATI,Staf mati,Staff down
+UI_FINAL_TAG,AKHIR,FINAL
+UI_FINAL_STRIP,Percaya %d%% · Kebal %d%%,Believe %d%% · Immune %d%%
+UI_MENU,Menu dan pengaturan,Menu and settings
+UI_SIARAN,%s %ds,%s %ds
+UI_FEED,feed,feed
+UI_TEMPLATE_INFO,Template %d/%d · heboh ×%s,Template %d/%d · buzz ×%s
+UI_SLOT_TAMBAH,+ %s,+ %s
+UI_KARTU_SLOT,Kartu %s,%s cards
+UI_KARTU_PETUNJUK,ketuk slot untuk ganti,tap a slot to switch
+UI_VIRAL,Viral,Viral
+UI_DIPERCAYA,Dipercaya,Believed
+UI_ISI_SLOT,isi %d slot lagi,fill %d more
+UI_KIRIM_SERU,KIRIM!,SEND!
+UI_PILIH_SALURAN,PILIH SALURAN,CHOOSE CHANNEL
+UI_PAKAI,PAKAI %s,USE %s
+UI_GANTI,ganti,change
+UI_GRATIS,Gratis,Free
+UI_PANAS_KALI,panas ×%s,heat ×%s
+UI_KARTU_TOKOH,TOKOH,TARGET
+UI_KARTU_CALON,CALON,CANDIDATE
+UI_KARTU_SISA,sisa %d,%d left
+UI_DIMILIKI,Dimiliki,Owned
+UI_MILIKMU,Milikmu,Yours
+UI_KURANG,Kurang,Short
+UI_SEMUA,Semua,All
+UI_SYARAT_PENGIKUT,%s/%s pengikut,%s/%s followers
+UI_TERKUNCI_SETELAH,Terbuka setelah %s,Unlocks after %s
+UI_TOKO_KATA_TAB,Kata,Words
+UI_TOKO_TEMPLATE_TAB,Template,Templates
+UI_WAKTU_DIJEDA,WAKTU DIJEDA,TIME PAUSED
+UI_DILEMA,DILEMA,DILEMMA
+UI_ANCAMAN,ANCAMAN,THREAT
+UI_PELUANG,PELUANG,OPPORTUNITY
+UI_KONTRAK_DARI,dari Klien Misterius,from a Mysterious Client
+UI_BERHASIL,Berhasil:,Success:
+UI_GAGAL,Gagal:,Fail:
+UI_TARGET_PERSEN,target %d%%,target %d%%
+UI_EFEK_UANG,%s uang,%s money
+UI_EFEK_HEAT,%s panas,%s heat
+UI_EFEK_PENGIKUT,%s pengikut,%s followers
+UI_EFEK_KRED,%s kred,%s cred
+UI_EFEK_KUNCI,%s mati %ds,%s down %ds
+UI_TOKOH_JUDUL,TOKOH TARGET,TARGETS
+UI_TOKOH_JATUH_N,%d dari %d sudah jatuh,%d of %d have fallen
+UI_TOKOH_PETUNJUK,Pakai kartu tokoh sebagai subjek. Tiap warga yang percaya memotong reputasinya.,Use a target card as the subject. Every believer cuts their reputation.
+UI_JATUH,JATUH!,FALLEN!
+UI_HADIAH,Hadiah: %s uang · %d pengikut,Reward: %s money · %d followers
+UI_DIDAPAT,Didapat: %s uang · %d pengikut,Earned: %s money · %d followers
+UI_FINAL_TERKUNCI,Terbuka setelah ketiga tokoh jatuh,Unlocks once all three targets fall
+UI_PERTAHANAN_PENGACARA,PENGACARA,LAWYERS
+UI_PERTAHANAN_HUMAS,HUMAS,PR TEAM
+UI_PERTAHANAN_MEDIA,MEDIA,MEDIA
+UI_FINAL_JUDUL,KAMPANYE AKHIR,FINAL CAMPAIGN
+UI_FINAL_INTRO,"Begitu dimulai, seluruh kota mendadak ragu dan susah diyakinkan. Yang kebal menulari tetangganya tiap %d detik.","Once it starts, the whole city turns doubtful and hard to convince. The immune infect their neighbours every %d seconds."
+UI_MENANG,Menang,Win
+UI_KALAH,Kalah,Lose
+UI_FINAL_MENANG_INFO,%d%% kota percaya,%d%% of the city believes
+UI_FINAL_KALAH_INFO,%d%% kota kebal atau %d menit habis,%d%% immune or %d minutes run out
+UI_FINAL_BISA_ULANG,Kalah? Kampanye akhir bisa dicoba lagi.,Lost? You can retry the final campaign.
+UI_MULAI_KAMPANYE,MULAI KAMPANYE,START CAMPAIGN
+UI_NANTI,Nanti dulu,Not yet
+UI_PERCAYA,Percaya,Believe
+UI_RAGU,Ragu,Doubt
+UI_KEBAL,Kebal,Immune
+UI_BELUM,Belum,Unaware
+UI_MENANG_DI,menang di %d%%,win at %d%%
+UI_KALAH_DI,kalah di %d%%,lose at %d%%
+UI_NAIK_ERA,NAIK ERA!,NEW ERA!
+UI_BARU_TERBUKA,BARU TERBUKA,NEW UNLOCKS
+UI_AYO_KERJA,AYO KERJA!,LET'S GO!
+UI_SALURAN_X,Saluran %s,%s channel
+UI_N_KATA,%d kata baru,%d new words
+UI_N_TEMPLATE,%d template baru,%d new templates
+UI_DISTRIK_BARU,Distrik baru: %s,New districts: %s
+UI_STAF_BUKA,Rekrut staf di toko,Hire staff in the shop
+UI_KONTRAK_BUKA,Kontrak kampanye,Campaign contracts
+UI_TOKOH_BUKA,3 tokoh target,3 target figures
+UI_ERA_BERIKUT,Berikutnya: %s · %s pengikut · %s uang,Next: %s · %s followers · %s money
+UI_ERA_TERAKHIR,Jatuhkan ketiga tokoh untuk membuka kampanye akhir,Topple all three targets to unlock the final campaign
+UI_PENGATURAN,PENGATURAN,SETTINGS
+UI_SUARA,SUARA,SOUND
+UI_MUSIK,Musik,Music
+UI_SFX,Efek suara,Sound effects
+UI_GETAR,Getar,Vibration
+UI_GETAR_INFO,saat kirim dan saat dibongkar,when sending and when debunked
+UI_BAHASA_JUDUL,Bahasa,Language
+UI_PROGRES,PROGRES,PROGRESS
+UI_PROGRES_INFO,Tersimpan otomatis tiap 30 detik. Menghapus progres tidak menghapus pengaturan ini.,Saved automatically every 30 seconds. Erasing progress keeps these settings.
+UI_HAPUS_PROGRES,Mulai baru (hapus progres),New game (erase progress)
+UI_HAPUS_YAKIN,Yakin? Tekan sekali lagi,Sure? Tap once more
+UI_VERSI,"Versi %s · Semua kota, tokoh, dan partai fiktif","Version %s · All towns, people and parties are fictional"
+UI_SELAMAT_DATANG,SELAMAT DATANG KEMBALI!,WELCOME BACK!
+UI_STAF_BEKERJA,Staf bekerja selama kamu pergi.,Your staff worked while you were away.
+UI_UANG_KECIL,uang,money
+UI_JAM_PERGI,%s jam,%s h
+UI_KAMU_PERGI,kamu pergi,away
+UI_OFFLINE_INFO,Staf dibayar setengah dan bekerja paling lama 8 jam.,Staff earn half and work up to 8 hours.
+UI_AMBIL,AMBIL,COLLECT
+UI_LANJUTKAN,LANJUTKAN,CONTINUE
+UI_MAIN,MAIN,PLAY
+UI_MAIN_BARU,Main baru,New game
+UI_PENGATURAN_TOMBOL,Pengaturan,Settings
+UI_TAGLINE,racik · sebar · panen · kabur,craft · spread · cash in · run
+UI_FIKTIF,"Semua kota, tokoh, dan partai di game ini fiktif.","All towns, people and parties in this game are fictional."
+UI_KETAHUAN,KETAHUAN!,BUSTED!
+UI_RUMOR_TERBAIK,RUMOR TERBAIK · %d warga percaya,BEST RUMOR · %d believers
+UI_KOTA_PERCAYA,Kota percaya,City believes
+UI_KOTA_KEBAL,Kota kebal,City immune
+UI_TARGET_TAG,TARGET,TARGET
+UI_SIARAN_TAG,SIARAN,BROADCAST
+UI_HEBOH_KALI,heboh ×%s,buzz ×%s
+UI_STAT_PENGIKUT,Pengikut,Followers
+UI_SIMBOL_UANG,R,R
+UI_JUDUL_GAME,GHOSTWRITER,GHOSTWRITER
+UI_KODE_ID,ID,ID
+UI_KODE_EN,EN,EN
+UI_NAMA_ID,Indonesia,Indonesia
+UI_NAMA_EN,English,English
+UI_N_KATA_1,1 kata baru,1 new word
+UI_N_TEMPLATE_1,1 template baru,1 new template
+UI_TUT_ISI_SLOT,Ketuk kartu untuk mengisi slot yang kosong,Tap a card to fill the empty slot
+UI_TUT_DISTRIK,Ketuk satu distrik di peta sebagai sasaran,Tap a district on the map as your target
+UI_TUT_SALURAN,Saluran ini belum bisa dipakai. Ganti saluran,This channel isn't available. Switch channels
+UI_TUT_KIRIM,Headline siap. Tekan KIRIM!,Headline ready. Press SEND!
+UI_TUT_TOKO,Uangmu cukup untuk kata baru. Buka Toko,You can afford a new word. Open the Shop
+UI_TUT_BELI,Beli satu kata untuk menambah pilihan rumor,Buy a word to get more rumor options
+UI_TUT_LANGKAH,LANGKAH %d/%d,STEP %d/%d
+UI_TUT_LEWATI,Lewati,Skip
+UI_TUT_SELESAI,Mantap! Sekarang kota ini milikmu.,Nice! This town is yours now.
+UI_TIP_KREDIBILITAS,"Kredibilitas turun kalau rumormu dibongkar, dan rumor berikutnya jadi sulit dipercaya. Panas naik tiap kirim; makin panas, makin mudah dibongkar.","Credibility drops when a rumor gets debunked, making the next ones harder to believe. Heat rises with every send; the hotter it gets, the easier you get debunked."
+UI_TIP_SALURAN,Saluran baru terbuka: %s. Ketuk tombol saluran di meja untuk memakainya.,New channel unlocked: %s. Tap the channel button on your desk to use it.
+UI_TIP_STAF,Stafmu kini mengirim rumor kecil sendiri tiap %d detik. Cincin di HUD menghitung mundur.,Your staff now sends a small rumor every %d seconds. The ring on the HUD counts down.
+UI_TIP_OKE,Oke,Got it
+UI_KREDIT,Kredit,Credits
+UI_KREDIT_FONT,Huruf,Fonts
+UI_KREDIT_MUSIK,Musik,Music
+UI_KREDIT_SUARA,Efek suara,Sound effects
+UI_KREDIT_OLEH,oleh %s,by %s
+UI_TENTANG,TENTANG,ABOUT
+UI_TENTANG_TOMBOL,Tentang & kredit,About & credits
+UI_TENTANG_ISI,"Game satir tentang meracik rumor dari kartu kata, melihatnya menjalar di kota fiktif, lalu tumbuh dari mesin tik tua menjadi imperium media.","A satirical game about crafting rumors from word cards, watching them spread through a fictional town, and growing from an old typewriter into a media empire."
+UI_KREDIT_MESIN,Mesin game,Game engine
+UI_KREDIT_GODOT_KET,godotengine.org · Lisensi MIT,godotengine.org · MIT License
+UI_KREDIT_LISENSI,Lihat lisensi,View license
+UI_KREDIT_SEMBUNYI,Sembunyikan lisensi,Hide license
+UI_KREDIT_PIHAK_KETIGA,Komponen pihak ketiga di dalam Godot Engine:,Third-party components in Godot Engine:
+UI_ANGKA_RIBU,%s rb,%sK
+UI_ANGKA_JUTA,%s jt,%sM

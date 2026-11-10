@@ -43,7 +43,9 @@ Semua ID dan nama file memakai huruf kecil, `snake_case`, tanpa spasi.
 | Template | `t_` | `t_dasar` | `res://data/templates.json` |
 | Distrik | tanpa awalan | `pasar_lama` | `res://data/districts.json` |
 
-Scene dan script memakai `PascalCase` sesuai kebiasaan Godot (`WordCard.tscn`, `RumorScorer.gd`).
+Nama file scene dan script memakai `snake_case` sesuai [panduan gaya GDScript](https://docs.godotengine.org/en/4.7/tutorials/scripting/gdscript/gdscript_styleguide.html) (`word_card.tscn`, `rumor_scorer.gd`), karena Windows tidak membedakan huruf besar-kecil sedangkan path di Android membedakannya. Nama class dan autoload tetap `PascalCase` (`RumorScorer`, `GameState`). Kunci teks UI di `localization/ui.csv` memakai awalan `UI_` (`UI_KIRIM`).
+
+Kode dibuat modular: satu tanggung jawab per script, batas lunak ±300 baris per file. Kalau sebuah file mulai gemuk, pecah logika tambahannya ke file baru.
 
 ## Git
 

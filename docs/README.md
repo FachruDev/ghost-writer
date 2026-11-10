@@ -20,7 +20,7 @@ Game satir portrait untuk Android: racik rumor dari kartu kata, lihat rumornya m
 | [versi/1.0.0/README.md](versi/1.0.0/README.md) | Isi setiap rilis 0.1.0 sampai 1.0.0 | Saat memulai versi baru |
 | [versi/1.0.0/mvp/mvp-v1.md](versi/1.0.0/mvp/mvp-v1.md) | Fase, gerbang keputusan, scope, risiko | Saat menentukan lanjut atau tidak |
 | [versi/1.0.0/mvp/CHECKLIST.md](versi/1.0.0/mvp/CHECKLIST.md) | Daftar centang semua versi | Setiap hari kerja |
-| [versi/1.0.0/event/EVENT.md](versi/1.0.0/event/EVENT.md) | Sistem event dan 12 event v1 | Saat membuat atau menyeimbangkan event |
+| [versi/1.0.0/event/EVENT.md](versi/1.0.0/event/EVENT.md) | Sistem event dan 14 event v1 | Saat membuat atau menyeimbangkan event |
 | [versi/1.0.0/aset/](versi/1.0.0/aset/) | Daftar suara, musik, animasi, gambar, ikon | Saat membuat atau mencari aset |
 | [versi/2.0.0/IDE.md](versi/2.0.0/IDE.md) | Tempat parkir ide setelah v1 | Setiap muncul ide baru di tengah jalan |
 | [../CHANGELOG.md](../CHANGELOG.md) | Apa yang benar-benar berubah per versi | Setiap selesai mengerjakan sesuatu |
