@@ -46,10 +46,10 @@ Semua pakai kotak abu-abu dan teks polos. **Jangan sentuh art.**
 
 **Hari 6–7: mainkan dan putuskan**
 
-- [ ] Main sendiri minimal 3 sesi × 10 menit
-- [ ] Catat: kapan mulai bosan? Kombinasi mana yang terasa lucu? Apakah melihat rumor menjalar itu memuaskan?
-- [ ] Ubah angka di `balancing/angka.csv`, coba lagi
-- [ ] Putuskan lanjut / ubah / buang sesuai [gerbang keputusan](mvp-v1.md#gerbang-keputusan-prototipe)
+- [x] Main sendiri minimal 3 sesi × 10 menit
+- [x] Catat: kapan mulai bosan? Kombinasi mana yang terasa lucu? Apakah melihat rumor menjalar itu memuaskan? — catatan sesi tidak tersimpan di repo; hasilnya tercatat di `CHANGELOG.md` `[0.1.0]`
+- [x] Ubah angka di `balancing/angka.csv`, coba lagi — angka penyebaran disetel lewat simulasi Monte Carlo; warga ragu ikut bercerita 1 detik (`DURASI_MENULAR_RAGU_DETIK`)
+- [x] Putuskan lanjut / ubah / buang sesuai [gerbang keputusan](mvp-v1.md#gerbang-keputusan-prototipe) — **lanjut**: "seru dimainkan tanpa art" (`CHANGELOG.md` `[0.1.0]`, 2026-11-05); tag `v0.1.0` di commit prototipe `018df6e`
 
 ## 0.2.0 — MVP
 
