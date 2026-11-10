@@ -86,6 +86,27 @@ func test_uang_muncul_dari_warga_yang_paling_baru_percaya() -> void:
 	assert_vector(animasi._titik_warga(0)).is_equal_approx(harap, Vector2(0.5, 0.5))
 
 
+## Rumor server memancarkan uang puluhan kali per detik: per distrik digabung jadi satu pil (jumlah
+## totalnya tetap), dan pil yang tampil bersamaan dibatasi.
+func test_uang_digabung_per_distrik_dan_pil_dibatasi() -> void:
+	await _bingkai(5)
+	var animasi := _main.find_child("KirimanAnimasi", true, false) as KirimanAnimasi
+	var kota := animasi.kota
+	var sebelum := kota.get_child_count()
+	for k in 30:
+		Events.uang_dari_distrik.emit(0, 2)
+	await _bingkai(2)
+	var pil_baru: Array = kota.get_children().slice(sebelum)
+	assert_int(pil_baru.size()).is_equal(1)
+	assert_str((pil_baru[0].find_children("*", "Label", true, false)[0] as Label).text).is_equal("+" + Bahasa.angka(60))
+	for k in 40:
+		for d in DataDB.districts.size():
+			Events.uang_dari_distrik.emit(d, 1)
+		await _bingkai(1)
+	assert_int(animasi._pil_hidup).is_less_equal(KirimanAnimasi.MAKS_PIL)
+	assert_int(kota.get_child_count() - sebelum).is_less_equal(KirimanAnimasi.MAKS_PIL)
+
+
 func test_feed_mutasi_berkedip_dari_headline_asli_ke_mutasi() -> void:
 	var kata := {"subjek": "pak_rt", "aksi": "menari_malam", "tempat": "pasar", "sumber": "tetangga"}
 	var mutasi := kata.duplicate()

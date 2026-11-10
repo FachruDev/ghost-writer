@@ -13,6 +13,8 @@ signal siap
 const VARIASI := 30  # Palet.KULIT (5) × Palet.RAMBUT (6); idx % 30 menentukan keduanya
 const STATUS := 4
 const KOLOM := 12
+## Jari-jari lingkaran putih di sel cahaya, dalam kelipatan jari-jari wajah.
+const JARI_CAHAYA := 1.9
 
 var tekstur: Texture2D = null
 
@@ -84,4 +86,4 @@ func _gambar() -> void:
 	for s in STATUS:
 		for v in VARIASI:
 			GambarWajah.gambar(_kanvas, _rect_sel(s * VARIASI + v).get_center(), _r, s, v, 0.0)
-	_kanvas.draw_circle(region_cahaya().get_center(), _r * 1.9, Color.WHITE)
+	_kanvas.draw_circle(region_cahaya().get_center(), _r * JARI_CAHAYA, Color.WHITE)

@@ -89,6 +89,11 @@ func waktu() -> float:
 	return _waktu
 
 
+## Atlas wajah (juga punya sel lingkaran putih untuk titik animasi); bisa belum siap.
+func atlas() -> AtlasWajah:
+	return _atlas
+
+
 ## Posisi layar warga siap dipakai (simulasi ada dan peta cukup besar untuk digambar).
 func siap() -> bool:
 	if _sim == null or _sim.posisi.is_empty():
